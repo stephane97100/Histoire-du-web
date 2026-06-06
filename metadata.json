@@ -1,0 +1,6 @@
+{
+  "name": "Histoire du Web et Code Lab",
+  "description": "Une application pédagogique sur l'évolution du web, d'HTML-CSS aux navigateurs, avec simulateur de code, glossaire et quiz interactif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
