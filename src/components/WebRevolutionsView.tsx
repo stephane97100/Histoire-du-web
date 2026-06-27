@@ -22,6 +22,7 @@ import {
   MousePointer2
 } from 'lucide-react';
 import ShareButtons from './ShareButtons';
+import GlossaryTooltip from './GlossaryTooltip';
 
 interface WebRevolutionsViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
@@ -63,6 +64,47 @@ export default function WebRevolutionsView({ theme }: WebRevolutionsViewProps) {
     { id: 'bob', name: 'Bob (Lead Dev)', x: 210, y: 95, color: '#3b82f6' },
   ]);
 
+  // Game simulation states (Dofus retro & modern)
+  const [iopCell, setIopCell] = useState<number>(12);
+  const [iopAP, setIopAP] = useState<number>(6);
+  const [iopMP, setIopMP] = useState<number>(3);
+  const [iopLogs, setIopLogs] = useState<string[]>(['[10:15] Iop : Combat lancé !', '[10:15] Un Bouftou sauvage apparaît en cellule 8 !']);
+  const [dofusTech, setDofusTech] = useState<'flash' | 'html5_unity'>('flash');
+
+  const resetCombat = () => {
+    setIopCell(12);
+    setIopAP(6);
+    setIopMP(3);
+    setIopLogs(['[10:15] Combat réinitialisé aux valeurs initiales.']);
+  };
+
+  const moveIop = (cellId: number) => {
+    if (iopCell === cellId) return;
+    if (iopMP <= 0) {
+      setIopLogs(prev => [...prev, "❌ Mode Tactique : PM insuffisants pour ce déplacement !"]);
+      return;
+    }
+    setIopCell(cellId);
+    setIopMP(prev => Math.max(0, prev - 1));
+    setIopLogs(prev => [...prev, `🏃 Déplacement du personnage en cellule ${cellId}. (-1 PM)`]);
+  };
+
+  const castIopSpell = () => {
+    if (iopAP < 3) {
+      setIopLogs(prev => [...prev, "❌ PA insuffisants pour lancer l'attaque Pression !"]);
+      return;
+    }
+    setIopAP(prev => Math.max(0, prev - 3));
+    const dmg = Math.floor(Math.random() * 20) + 32;
+    setIopLogs(prev => [...prev, `💥 Lancement du sort 'Pression' ! Le Bouftou subit -${dmg} PV. (-3 PA)`]);
+  };
+
+  const endTurn = () => {
+    setIopAP(6);
+    setIopMP(3);
+    setIopLogs(prev => [...prev, "🔄 Fin de tour. PA et PM restaurés pour le tour suivant !"]);
+  };
+
   // Handle fake cursor movements in Figma canvas
   useEffect(() => {
     if (activeRevId !== 'figma') return;
@@ -94,6 +136,61 @@ export default function WebRevolutionsView({ theme }: WebRevolutionsViewProps) {
     setFigmaShapes(prev => [...prev, newShape]);
   };
 
+  // SaaS simulation states
+  const [saasNodes, setSaasNodes] = useState([
+    { id: 'earth', name: 'Serveur Terrestre (Paris/NYC)', latency: '12ms', active: true, load: 24 },
+    { id: 'orbit', name: 'Micro-serveur Orbital (Satellite ISS)', latency: '85ms', active: false, load: 0 },
+    { id: 'moon', name: 'Relais Lunaire (Base Artemis - Luna-1)', latency: '2400ms', active: false, load: 0 },
+  ]);
+  const [saasLogs, setSaasLogs] = useState<string[]>([
+    "📂 [Connexion SaaS] Portails synchronisés.",
+    "🚀 Votre bureau de travail virtuel est disponible n'importe où."
+  ]);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const toggleSaasNode = (nodeId: string) => {
+    setSaasNodes(prev => prev.map(node => {
+      if (node.id === nodeId) {
+        const nextActive = !node.active;
+        const logMsg = nextActive 
+          ? `⚡ [SaaS Cloud Deploy] Déploiement logiciel configuré pour : ${node.name}. Liaison active !`
+          : `⚠️ [SaaS Cloud Deploy] Retrait de l'instance pour : ${node.name}.`;
+        setSaasLogs(l => [...l, logMsg]);
+        return { ...node, active: nextActive, load: nextActive ? Math.floor(Math.random() * 30) + 10 : 0 };
+      }
+      return node;
+    }));
+  };
+
+  const triggerSaasSync = () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    setSaasLogs(l => [...l, "🔄 [SaaS Sync] Lancement d'une mise à jour de données bidirectionnelle globale..."]);
+    
+    setTimeout(() => {
+      setSaasLogs(l => [...l, "🌍 [Sync Terrestre] Sauvegarde persistée sur Terre (Paris/NYC) - Réponse en 12ms."]);
+    }, 450);
+
+    const orbitActive = saasNodes.find(n => n.id === 'orbit')?.active;
+    if (orbitActive) {
+      setTimeout(() => {
+        setSaasLogs(l => [...l, "🛰️ [Sync Orbite] Liaison Satellite OK ! Application synchronisée en direct de l'espace en 85ms."]);
+      }, 1000);
+    }
+
+    const moonActive = saasNodes.find(n => n.id === 'moon')?.active;
+    if (moonActive) {
+      setTimeout(() => {
+        setSaasLogs(l => [...l, "🌙 [Sync Lunaire] SUCCESS ! Données répliquées en Base Artemis. Le logiciel est disponible sur la Lune en 2.4s !"]);
+      }, 1800);
+    }
+
+    setTimeout(() => {
+      setIsSyncing(false);
+      setSaasLogs(l => [...l, "✅ [SaaS Sync] Cycle de réplication achevé !"]);
+    }, 2100);
+  };
+
   const revolutions: RevolutionItem[] = [
     {
       id: 'flash',
@@ -123,6 +220,42 @@ export default function WebRevolutionsView({ theme }: WebRevolutionsViewProps) {
   ctx.fillRect(10, 10, 150, 150);
 </script>`,
       technicalKeywords: ['Vector graphics', 'ActionScript', 'Streaming FLV', 'SWF files']
+    },
+    {
+      id: 'jeux_en_ligne',
+      name: 'Les Jeux en Ligne & Navigateurs',
+      year: '1999 - Lancement & Mutation',
+      icon: '🎮',
+      brief: 'Lancer des univers de jeux persistants directement dans un onglet : de l\'hégémonie de Macromedia Flash jusqu\'au passage forcé vers le HTML5 Canvas, WebGL et WebAssembly.',
+      impactTitle: 'L\'essor du divertissement instantané en ligne :',
+      beforeText: 'Des jeux d\'époque purement textuels en PHP (comme OGame, Kraland, Nécrofolia) ou de lentes applications clientes Java exigeant l\'installation risquée de la machine virtuelle d\'Oracle (JRE).',
+      revolutionPower: 'Le plugin Flash a démocratisé le jeu instantané : des millions d\'internautes découvrent le "casual gaming" (pionniers comme Miniclip, Kongregate ou Armor Games). Des studios visionnaires comme Ankama créent l\'événement en septembre 2004 avec DOFUS, un MMORPG d\'une profondeur inouïe avec système de combat tactique au tour par tour dessiné entièrement en vectoriel sous Flash (ActionScript), ouvrant la voie à des millions de joueurs simultanés.',
+      afterText: 'La mort décrétée d\'Adobe Flash fin 2020 a poussé l\'industrie vers des réarchitectures d\'envergure : Dofus et d\'autres légendes migrent vers Unity, WebGL ou des moteurs HTML5 hybrides robustes, prouvant que le navigateur web est une véritable console de jeu.',
+      vintageCodeTitle: 'Extrait ActionScript 2 (Dofus - Gestionnaire tactique) :',
+      vintageCode: `// ActionScript vintage d'Ankama (moteur de combat d'époque)
+on(release) {
+    var cellId = _root.getMouseHoverCell();
+    if (_root.isCellWalkable(cellId)) {
+        _root.character.api.moveToCell(cellId);
+        _root.soundCabinet.playFx("move_grass_heavy");
+    }
+}`,
+      modernCodeTitle: 'Équivalent d\'un moteur de jeu HTML5 Canvas / Javascript Modern (Phaser) :',
+      modernCode: `// Code moderne Phaser 3 de rendu WebGL matériel
+import Phaser from 'phaser';
+
+const config = {
+  type: Phaser.AUTO, // Rendu WebGL prioritaire si compatible
+  width: 800,
+  height: 600,
+  physics: { default: 'arcade' },
+  scene: {
+    preload() { this.load.image('iop', 'assets/iop.png'); },
+    create() { this.add.sprite(400, 300, 'iop'); }
+  }
+};
+const game = new Phaser.Game(config);`,
+      technicalKeywords: ['Ankama Dofus', 'Macromedia Flash', 'Phaser Engine', 'WebGL Render', 'ActionScript 2.0']
     },
     {
       id: 'ajax',
@@ -221,39 +354,42 @@ xhr.send();`,
     },
     {
       id: 'websockets',
-      name: 'WebSockets & Temps Réel',
-      year: '2011 - persistent live tunnel',
+      name: 'WebSockets, Mercure & Temps Réel',
+      year: '2011+ - real-time push revolution',
       icon: '💬',
-      brief: 'Fini le "Short Polling" (requête AJAX répétée toutes les 5 secondes). WebSockets ouvre un canal TCP bidirectionnel persistant sans latence.',
+      brief: 'Fini le "Short Polling" (requête AJAX répétée toutes les 5 secondes). WebSockets ouvre un tunnel bidirectionnel permanent sans latence, tandis que Mercure unifie le push temps réel moderne basé sur HTTP/2 & Server-Sent Events (SSE).',
       impactTitle: 'Le Web actif et vivant instantanément :',
-      beforeText: 'Le navigateur devait harceler constamment le serveur en AJAX toutes les quelques secondes pour voir si un nouveau message ou une notification était disponible, écroulant la bande passante sous des en-têtes HTTP superflus.',
-      revolutionPower: 'Le protocole WebSocket (normalisé par l\'IETF sous le RFC 6455) permet d\'établir une poignée de main unique pour transformer la connexion HTTP en une liaison TCP socket pure bidirectionnelle : le serveur pousse l\'information en temps réel au client sans attendre de requête.',
-      afterText: 'Une interactivité synchrone instantanée de niveau applicatif lourd (jeux multijoûeurs, clavardage, édition de documents collaboratifs en direct).',
-      vintageCodeTitle: 'Exemple d\'intervalle AJAX lourd d\'époque (Short-Polling) :',
+      beforeText: 'Le navigateur devait harceler constamment le serveur en AJAX toutes les quelques secondes pour voir si un nouveau message était disponible, écroulant la bande passante sous des requêtes HTTP superflues répétitives.',
+      revolutionPower: 'Le protocole WebSocket (RFC 6455) offre une connexion TCP persistante full-duplex. Parallèlement, Mercure se présente comme l\'alternative moderne par excellence : il repose sur les Server-Sent Events (SSE) natifs et HTTP/2 ou HTTP/3. Avec Mercure Hub, pas besoin de serveurs de sockets complexes : le serveur pousse l\'information instantanément au client, gère l\'autorisation jwt, le reconnexion auto et le rattrapage de messages de façon native.',
+      afterText: 'Une interactivité synchrone instantanée (jeux multijoueurs, clavardages, édition collaborative). Mercure permet de propager ce flux à chaud en respectant les standards du web et l\'authentification cookie/en-tête de façon ultra-performante.',
+      vintageCodeTitle: 'Exemple de Short-Polling AJAX d\'époque (Harcèlement) :',
       vintageCode: `// Harcèlement du serveur toutes les 5 secondes
 setInterval(function() {
   $.ajax({
     url: "/api/check-messages",
     success: function(newMessages) {
-      if(newMessages.length > 0) {
+      if (newMessages.length > 0) {
         updateChatWindow(newMessages);
       }
     }
   });
 }, 5000);`,
-      modernCodeTitle: 'Communication WebSockets élégante :' ,
-      modernCode: `// Liaison socket réactive ouverte
-const socket = new WebSocket('wss://api.mon-site.com/live');
+      modernCodeTitle: 'Abonnement Temps Réel moderne via Mercure Hub (SSE) :',
+      modernCode: `// Connexion native au hub Mercure via EventSource (SSE)
+const url = new URL('https://demo.mercure.rocks/.well-known/mercure');
+url.searchParams.append('topic', 'https://mon-site.com/salon_discussions');
 
-socket.onopen = () => {
-  socket.send(JSON.stringify({ type: 'join', room: 'salon_webmaster' }));
+const eventSource = new EventSource(url);
+
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  displayLiveMessage(data.text); // Réception en temps réel !
 };
 
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  displayLiveMessage(data.text);
+eventSource.onerror = (err) => {
+  console.error("Erreur de reconnexion auto gérée par SSE :", err);
 };`,
-      technicalKeywords: ['RFC 6455', 'Full-duplex TCP', 'Push notifications', 'Zero overhead']
+      technicalKeywords: ['RFC 6455 Sockets', 'Mercure Hub', 'Server-Sent Events', 'HTTP/3 Push', 'Dual channel Real-time']
     },
     {
       id: 'figma',
@@ -311,6 +447,107 @@ const { calculer_physique_rust } = wasmModule.instance.exports;
 // Exécution multithread à la vitesse du processeur local !
 const result = calculer_physique_rust(10000000);`,
       technicalKeywords: ['Binary Instruction Format', 'Near-native speed', 'Rust / C++ compilation', 'Client-side heavy rendering']
+    },
+    {
+      id: 'api',
+      name: 'Les API et l\'Écosystème SaaS',
+      year: '2005+ - The Service Era',
+      icon: '🧩',
+      brief: 'L\'abstraction du logiciel : Transformer le code complexe en services "Lego" consommables par de simples appels réseau sécurisés (REST/GraphQL).',
+      impactTitle: 'L\'interconnexion et la démocratisation des services :',
+      beforeText: 'Avant les API, installer un logiciel d\'entreprise signifiait acheter des serveurs, insérer un CD-ROM, et passer des mois à configurer le tout en local.',
+      revolutionPower: 'La spécialisation extrême (Stripe, Twilio, SendGrid) et le modèle économique à l\'usage ont transformé le code en commodité, permettant des intégrations en 5 minutes. Les clés API identifient précisément les appels, démocratisant l\'accès à des technologies surpuissantes pour les start-ups. Au lieu de réinventer la roue (cartographier le monde, envoyer des mails), on branche des services tiers, enrichissant instantanément les fonctionnalités avec des données globales.',
+      afterText: 'Une émancipation totale du Front-End : L\'ère du Headless et du BaaS permet de découpler totalement la logique métier du rendu. La base de données est abstraite derrière des routes d\'API, sécurisant l\'étanchéité entre le client et les données tout en rendant le développement universel pour Web, iOS et Android.',
+      vintageCodeTitle: 'La complexité avant les API (Gestion locale) :',
+      vintageCode: `// Avant, on devait coder tout le système complexe...
+function verifierPaiementLocal(montant) {
+  // Gérer base de données, sécurité serveur, protocoles bancaires...
+  // Des milliers de lignes de code critiques à maintenir !
+}`,
+      modernCodeTitle: 'La simplicité moderne (API REST en Front) :',
+      modernCode: `// En React, la base de données est résumée à une simple URL
+useEffect(() => {
+  fetch('https://api.villes.fr/communes?codePostal=75000', {
+    headers: { 'Authorization': \`Bearer \${process.env.REACT_APP_API_KEY}\` }
+  })
+  .then(res => res.json())
+  .then(data => setVilles(data));
+}, []);`,
+      technicalKeywords: ['SaaS', 'REST', 'GraphQL', 'Stripe', 'Twilio', 'BaaS', 'Headless CMS']
+    },
+    {
+      id: 'saas',
+      name: 'Les SaaS : Logiciel disponible même sur la Lune',
+      year: '2013+ - Cloud-software era',
+      icon: '☁️',
+      brief: 'L\'externalisation complète du logiciel : plus d\'installation locale pénible, vos applications s\'exécutent et stockent leurs données à chaud dans le nuage, accessibles depuis n\'importe quel navigateur sur Terre (ou dans l\'espace).',
+      impactTitle: 'La mort de la disquette de licence d\'utilisation :',
+      beforeText: 'L\'achat de licences physiques (boîtes Windows, packs Office en CD-ROM, disquettes de serveurs). Chaque mise à jour exigeait de racheter une version complète ou d\'installer un patch obscur.',
+      revolutionPower: 'Le Logiciel en tant que Service (SaaS). Grâce à des API unifiées, des infrastructures serveurs conteneurisées (Docker/Kubernetes) et l\'ubiquité du haut débit, l\'utilisateur s\'abonne à un service distant accessible par simple login. Le navigateur n\'est plus un simple visualisateur mais le terminal d\'accueil d\'un ordinateur planétaire partagé.',
+      afterText: 'Une agilité commerciale sans précédent pour les entreprises et les particuliers : des déploiements instantanés, des corrections de bugs transparentes en temps réel, et la fin définitive de la maintenance matérielle locale.',
+      vintageCodeTitle: 'La méthode d\'époque : Clé produit certifiée en local chez le client :',
+      vintageCode: `// Vérification locale d'une clé de licence physique (CD-ROM)
+function validerCleUnique(licenceUser) {
+  const cleDure = "XXXX-1234-ABCD-9999";
+  if (licenceUser === cleDure) {
+    this.debloquerLogiciel(); // Facile à pirater en mémoire ou via patch
+    return true;
+  }
+  return false;
+}`,
+      modernCodeTitle: 'Équivalent d\'une vérification d\'autorisation SaaS Cloud (REST API + Stripe JWT) :',
+      modernCode: `// Appel d'API sécurisé pour vérifier l'abonnement actif dans le Cloud
+async function checkSaaSSubscription(userToken) {
+  const res = await fetch('https://api.mon-saas.com/v1/billing/status', {
+    headers: { 'Authorization': \`Bearer \${userToken}\` }
+  });
+  const status = await res.json();
+  // Sécurité hébergée dans le Cloud, totalement infalsifiable côté client
+  return status.plan === 'enterprise' && status.active;
+}`,
+      technicalKeywords: ['SaaS', 'Cloud Hosting', 'Subscription model', 'Multi-tenant', 'Stripe API']
+    },
+    {
+      id: 'docker',
+      name: 'Docker : La Conteneurisation',
+      year: '2013+ - L\'ère des conteneurs',
+      icon: '🐳',
+      brief: 'L\'isolation logicielle totale : Packager une application et toutes ses dépendances dans un conteneur standardisé, garantissant qu\'elle s\'exécute exactement de la même manière partout.',
+      impactTitle: 'Le "Write Once, Run Anywhere" :',
+      beforeText: 'Avant Docker, les environnements de développement et de production différaient souvent, menant au fameux problème : "ça marche sur ma machine !".',
+      revolutionPower: 'Docker permet de packager le code avec son runtime, ses librairies et ses configurations dans un conteneur léger. Cela offre une portabilité totale : le conteneur fonctionne sur n\'importe quel OS hôte compatible, éliminant les conflits de dépendances.',
+      afterText: 'Une standardisation absolue du déploiement : les applications deviennent des composants interchangeables, facilitant la gestion de micro-services complexes.',
+      vintageCodeTitle: 'Le chaos des dépendances locales :',
+      vintageCode: `// Exemple : Installation manuelle (conflit de version probable)
+sudo apt-get install python=2.7
+// Si le serveur a besoin d'une version différente... conflit !`,
+      modernCodeTitle: 'Le standard Dockerfile :',
+      modernCode: `FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]`,
+      technicalKeywords: ['Docker', 'Containers', 'Infrastructure as Code', 'Microservices', 'Portability']
+    },
+    {
+      id: 'composer',
+      name: 'Composer : Le Chef d\'orchestre PHP',
+      year: '2012+ - La standardisation PHP',
+      icon: '🎼',
+      brief: 'L\'outil de gestion des dépendances par excellence pour PHP, structurant les projets via composer.json et le dossier vendor.',
+      impactTitle: 'La maturité de l\'écosystème PHP :',
+      beforeText: 'Avant Composer, l\'inclusion manuelle de bibliothèques téléchargées par FTP était la norme, rendant les mises à jour et les dépendances cauchemardesques.',
+      revolutionPower: 'Composer automatise tout : il télécharge les bibliothèques, gère leurs propres dépendances et crée un autoloader performant (chargement automatique des classes). Le fichier composer.json définit tout le projet.',
+      afterText: 'PHP a rattrapé son retard, permettant de construire des architectures robustes et modulaires, pilier des frameworks modernes comme Symfony ou Laravel.',
+      vintageCodeTitle: 'La gestion manuelle (le chaos des includes) :',
+      vintageCode: `// Avant : inclusion manuelle de chaque fichier...
+require_once 'lib/dossier/classeA.php';
+require_once 'lib/dossier/classeB.php';`,
+      modernCodeTitle: 'L\'élégance de Composer :',
+      modernCode: `// composer.json définit les dépendances
+require 'vendor/autoload.php';
+$log = new Monolog\Logger('name');`,
+      technicalKeywords: ['PHP', 'Composer', 'Dependencies', 'Autoloading', 'vendor']
     }
   ];
 
@@ -515,6 +752,151 @@ const result = calculer_physique_rust(10000000);`,
                 </div>
               )}
 
+              {activeRevId === 'jeux_en_ligne' && (
+                <div className={css.interactiveBox}>
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2 flex-wrap gap-2 text-left">
+                    <strong className="text-[10px] uppercase font-mono text-amber-500 font-extrabold flex items-center gap-1.5">
+                      ⚔️ Simulateur Tactique d'Époque : "Dofus Arena" (Simulateur)
+                    </strong>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9.5px] text-slate-400">Technologie active :</span>
+                      <button
+                        onClick={() => setDofusTech(dofusTech === 'flash' ? 'html5_unity' : 'flash')}
+                        className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold transition cursor-pointer border ${
+                          dofusTech === 'flash' 
+                            ? 'bg-amber-955/40 border-amber-500/50 text-amber-400' 
+                            : 'bg-emerald-955/40 border-emerald-500/50 text-emerald-400'
+                        }`}
+                      >
+                        {dofusTech === 'flash' ? '🎬 Macromedia Flash Player (SWF v8)' : '🚀 HTML5 / Canvas WebGL (Moderne)'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-[10.5px] text-slate-350 leading-relaxed mb-3 text-left">
+                    Pour honorer le MMORPG d'Ankama, simulez les affrontements au tour par tour d'époque. Cliquez sur une case adjacente à votre personnage <span className="text-amber-400 font-bold">Iop 🧑‍🦰</span> pour vous déplacer, ou utilisez les sorts :
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    {/* Tactical Grid (Isometric simulation using orthogonal divs) */}
+                    <div className="md:col-span-7 flex flex-col items-center">
+                      <div className="grid grid-cols-5 gap-1.5 p-3.5 bg-slate-950/80 rounded-xl border border-slate-850 relative">
+                        {/* Custom background color to match Flash vs Canvas flavor */}
+                        {dofusTech === 'flash' && (
+                          <div className="absolute inset-x-0 top-0 text-[8px] font-mono text-amber-500/30 text-center uppercase tracking-wider py-0.5 select-none">
+                            Adobe Flash Player 8.0 - Rendu Vectoriel 24 FPS
+                          </div>
+                        )}
+                        {dofusTech === 'html5_unity' && (
+                          <div className="absolute inset-x-0 top-0 text-[8px] font-mono text-emerald-500/30 text-center uppercase tracking-wider py-0.5 select-none">
+                            WebGL 2.0 Engine - 60 FPS GPU Accelerated
+                          </div>
+                        )}
+                        
+                        {Array.from({ length: 25 }).map((_, idx) => {
+                          const isPlayer = idx === iopCell;
+                          const isMonster = idx === 8;
+                          const isWalkable = !isMonster && !isPlayer;
+                          const row = Math.floor(idx / 5);
+                          const col = idx % 5;
+                          const pRow = Math.floor(iopCell / 5);
+                          const pCol = iopCell % 5;
+                          // Distance calculation (Manhattan distance for adjacent moves)
+                          const distance = Math.abs(row - pRow) + Math.abs(col - pCol);
+                          const isAdjacent = distance === 1;
+
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                if (isMonster) {
+                                  setIopLogs(prev => [...prev, "💥 Ciblez le monstre avec le sort 'Pression' !"]);
+                                } else if (isAdjacent) {
+                                  moveIop(idx);
+                                } else {
+                                  setIopLogs(prev => [...prev, "❌ Hors de portée de déplacement (1 case max par action)"]);
+                                }
+                              }}
+                              className={`w-10 h-10 rounded flex flex-col items-center justify-center transition relative ${
+                                isPlayer 
+                                  ? 'bg-amber-500/20 border-2 border-amber-500 shadow shadow-amber-500/50' 
+                                  : isMonster 
+                                  ? 'bg-rose-600/30 border-2 border-rose-500 animate-pulse' 
+                                  : isAdjacent && iopMP > 0
+                                  ? 'bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/40 cursor-pointer animate-pulse'
+                                  : 'bg-slate-900 border border-slate-800 hover:border-slate-700'
+                              }`}
+                              title={`Cellule ${idx}`}
+                            >
+                              <span className="text-[7.5px] font-mono text-slate-550 absolute top-0.5 left-1 select-none">
+                                {idx}
+                              </span>
+                              {isPlayer && <span className="text-sm">🧑‍🦰</span>}
+                              {isMonster && <span className="text-sm">🐑</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Stats view */}
+                      <div className="flex gap-4 mt-2.5 text-[11px] font-mono bg-slate-950/50 px-3 py-1.5 rounded-lg border border-slate-850 w-full justify-around">
+                        <span className="flex items-center gap-1">
+                          🟢 <b>Cell :</b> {iopCell}
+                        </span>
+                        <span className="flex items-center gap-1 text-sky-400">
+                          🔵 <b>{iopAP} PA</b>
+                        </span>
+                        <span className="flex items-center gap-1 text-emerald-400">
+                          🏃 <b>{iopMP} PM</b>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action buttons and Combat log (5 width) */}
+                    <div className="md:col-span-5 flex flex-col justify-between space-y-2">
+                      <div className="space-y-1.5 text-left">
+                        <span className="text-[9px] uppercase font-mono text-slate-400 font-extrabold block">
+                          📖 Journal de combat :
+                        </span>
+                        <div className="bg-slate-950 border border-slate-850 p-2.5 rounded-lg h-32 overflow-y-auto space-y-1 text-[9.5px] font-mono text-slate-350 leading-relaxed max-w-full">
+                          {iopLogs.slice(-6).map((log, lIdx) => (
+                            <div 
+                              key={lIdx} 
+                              className={log.includes('sort') || log.includes('💥') ? 'text-amber-400 font-semibold' : log.includes('❌') ? 'text-rose-450' : 'text-slate-350'}
+                            >
+                              {log}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={castIopSpell}
+                          className="py-1.5 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold shadow-md cursor-pointer transition flex items-center justify-center gap-1 uppercase"
+                        >
+                          💥 Sort "Pression" (3 PA)
+                        </button>
+                        <button
+                          onClick={endTurn}
+                          className="py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold shadow-md cursor-pointer transition flex items-center justify-center gap-1 uppercase"
+                        >
+                          🔄 Finir le Tour
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={resetCombat}
+                        className="py-1 w-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-450 hover:text-slate-300 rounded text-[9px] font-mono cursor-pointer transition"
+                      >
+                        [Réinitialiser le Combat]
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
               {activeRevId === 'websockets' && (
                 <div className={css.interactiveBox}>
                   <strong className="block text-[10px] uppercase font-mono text-[#8f9bff] mb-1">🎮 Clavardage en "Temps Réel" (Sockets vs Polling) :</strong>
@@ -661,6 +1043,139 @@ const result = calculer_physique_rust(10000000);`,
                 </div>
               )}
 
+              {activeRevId === 'api' && (
+                <div className={css.interactiveBox}>
+                  <strong className="block text-[10px] uppercase font-mono text-indigo-400 mb-1">🔗 Simulateur de Clé API : Échange de données</strong>
+                  <p className="text-slate-300 text-xs mb-3">Visualisez l'échange entre une clé d'accès et une réponse JSON sécurisée :</p>
+                  
+                  <div className="bg-slate-950 p-4 rounded-xl border border-indigo-500/30 flex flex-col gap-3 font-mono text-[10px] overflow-hidden">
+                    <motion.div 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      className="flex gap-2 bg-slate-900 p-2 rounded border border-indigo-900/50"
+                    >
+                      <span className="text-indigo-400">Request:</span>
+                      <span className="text-slate-300 truncate">GET /api/recipes/1?key=sk_live_...</span>
+                    </motion.div>
+
+                    <button
+                      onClick={() => setSaasLogs(l => [...l, '📡 API : Clé validée, réponse JSON reçue !'])}
+                      className="bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 rounded cursor-pointer uppercase font-bold"
+                    >
+                      Appeler API
+                    </button>
+                    
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      className="text-emerald-400 bg-emerald-950/20 p-2 rounded border border-emerald-500/20"
+                    >
+                      Response: {'{ "status": "success", "data": "Recette des cookies" }'}
+                    </motion.div>
+                  </div>
+                </div>
+              )}
+
+              {activeRevId === 'saas' && (
+                <div className={css.interactiveBox}>
+                  <div className="flex items-center justify-between border-b border-slate-800/40 pb-2 mb-2 flex-wrap gap-2 text-left">
+                    <strong className="block text-[10px] uppercase font-mono text-indigo-400 mb-1">
+                      🌌 Console Multi-Nœuds SaaS : Liaison Terrestre & Spatiale (Lunaire)
+                    </strong>
+                    <button
+                      onClick={triggerSaasSync}
+                      disabled={isSyncing}
+                      className={`px-3 py-1 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white font-bold rounded text-[10px] transition cursor-pointer font-mono uppercase`}
+                    >
+                      {isSyncing ? "⚡ Synchronisation..." : "📡 Synchroniser tout à chaud"}
+                    </button>
+                  </div>
+
+                  <p className="text-[10.5px] text-slate-400 mb-3 leading-relaxed text-left">
+                    Gérez et déployez votre logiciel SaaS dans des recoins inexplorés ! Activez le nœud de relais de l'ISS ou de la Base Artemis sur la Lune pour simuler à quel point les API Cloud gèrent la réplication asynchrone universelle de vos données de navigation.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {saasNodes.map(node => (
+                      <div 
+                        key={node.id} 
+                        className={`p-3 rounded-xl border transition-all text-left flex flex-col justify-between ${
+                          node.active 
+                            ? 'bg-indigo-950/25 border-indigo-500/35 shadow-sm shadow-indigo-550/10' 
+                            : 'bg-slate-950/50 border-slate-850 opacity-60'
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-1 mb-1">
+                            <span className="text-xs font-bold text-slate-200">{node.name}</span>
+                            <span className={`w-2 h-2 rounded-full ${node.active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-600'}`}></span>
+                          </div>
+                          
+                          <div className="space-y-1 text-[10px] font-mono text-slate-400">
+                            <div>📶 Latence : <span className="text-indigo-400">{node.latency}</span></div>
+                            <div>📊 Charge : <span className="text-slate-300">{node.active ? `${node.load}%` : 'HORS LIGNE'}</span></div>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => toggleSaasNode(node.id)}
+                          className={`mt-3 py-1 px-1.5 rounded text-[9.5px] font-bold font-mono transition cursor-pointer text-center uppercase ${
+                            node.active 
+                              ? 'bg-rose-950/40 text-rose-300 hover:bg-rose-900/40 border border-rose-500/20' 
+                              : 'bg-slate-900 text-slate-300 hover:bg-slate-850 border border-slate-800'
+                          }`}
+                        >
+                          {node.active ? "🔴 Fermer" : "🟢 Déployer"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Terminal log for syncing output */}
+                  <div className="mt-3 text-left">
+                    <span className="text-[9px] uppercase font-mono text-slate-400 font-bold block mb-1">
+                      Terminaux de Synchronisation Multi-Nœuds (Logs) :
+                    </span>
+                    <div className="bg-[#040406] border border-slate-850 p-2.5 rounded-lg h-28 overflow-y-auto space-y-1 text-[9.5px] font-mono text-slate-350 max-w-full">
+                      {saasLogs.map((log, lIdx) => (
+                        <div 
+                          key={lIdx} 
+                          className={log.includes('SUCCESS') || log.includes('Lunaire') ? 'text-emerald-400 font-bold' : log.includes('Satellite') || log.includes('Orbite') ? 'text-sky-400' : log.includes('⚠️') || log.includes('Retrait') ? 'text-amber-400' : 'text-slate-350'}
+                        >
+                          {log}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeRevId === 'docker' && (
+                <div className={css.interactiveBox}>
+                  <strong className="block text-[10px] uppercase font-mono text-sky-400 mb-1">🐳 Simulateur Docker : Conteneurisation</strong>
+                  <p className="text-slate-400 text-xs mb-3">Cliquez pour créer un conteneur et isoler une application. Chaque conteneur possède ses propres librairies et dépendances.</p>
+                  <button 
+                    onClick={() => setSaasLogs(l => [...l, '🐳 Docker : Conteneur créé avec succès ! Isolation confirmée.'])}
+                    className="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded text-xs transition cursor-pointer font-mono"
+                  >
+                    docker run -d my-app
+                  </button>
+                </div>
+              )}
+
+              {activeRevId === 'composer' && (
+                <div className={css.interactiveBox}>
+                  <strong className="block text-[10px] uppercase font-mono text-amber-400 mb-1">🎼 Composer : Gestion des dépendances</strong>
+                  <p className="text-slate-400 text-xs mb-3">Simulez l'installation des dépendances définies dans votre fichier <code>composer.json</code>.</p>
+                  <button 
+                    onClick={() => setSaasLogs(l => [...l, '🎼 Composer : Installation des packages dans le dossier /vendor... Succès !'])}
+                    className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition cursor-pointer font-mono"
+                  >
+                    composer install
+                  </button>
+                </div>
+              )}
+
             </div>
 
             {/* Code comparator panels representing the evolution */}
@@ -688,13 +1203,16 @@ const result = calculer_physique_rust(10000000);`,
 
             {/* Keyword tags and Share elements */}
             <div className="pt-2 border-t border-slate-800/40 text-left space-y-3">
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 font-sans">
                 {activeRev.technicalKeywords.map((tag, tagIdx) => (
-                  <span 
-                    key={tagIdx} 
-                    className="text-[9.5px] font-mono bg-indigo-950/30 text-indigo-300 border border-indigo-500/20 px-2 py-0.5 rounded"
-                  >
-                    🚀 #{tag}
+                  <span key={tagIdx}>
+                    <GlossaryTooltip term={tag}>
+                      <span 
+                        className="text-[9.5px] font-mono bg-indigo-950/30 text-indigo-300 border border-indigo-500/20 px-2 py-0.5 rounded block cursor-help font-bold"
+                      >
+                        🚀 #{tag}
+                      </span>
+                    </GlossaryTooltip>
                   </span>
                 ))}
               </div>

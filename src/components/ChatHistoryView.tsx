@@ -110,7 +110,7 @@ export default function ChatHistoryView({ theme }: ChatHistoryViewProps) {
       period: '1999 - 2013',
       icon: '👥',
       category: 'social',
-      slogan: 'L\'icône absolue des années collège/lycée avec ses deux petits bonshommes vert et bleu.',
+      slogan: 'Le roi des années collège/lycée avec ses deux petits bonshommes vert et bleu.',
       historyText: 'Incontournable entre 2000 et 2010, MSN Messenger a remplacé les salons de tchat publics par des conversations privées. C\'était l\'époque des adresses e-mail Hotmail obligatoires, des pseudos colorés truffés d\'émojis complexes et de caractères spéciaux, et de la possibilité de configurer "Ce que j\'écoute" en temps réel avec Winamp ou Windows Media Player.',
       mainFeatures: [
         'Les célèbres Émoticônes animées géantes et bruits associés (les Clins d\'œil).',
@@ -119,6 +119,38 @@ export default function ChatHistoryView({ theme }: ChatHistoryViewProps) {
       ],
       deathReason: 'Racheté par Microsoft pour remplacer Skype, MSN a été délaissé par son jeune public parti vers Facebook Chat à partir de 2008-2009. L\'impossibilité pour MSN de fonctionner proprement sur l\'écosystème mobile naissant (iOS, Android) sans vider complètement la batterie en raison de sa connexion persistante obligatoire a scellé sa disparition définitive en 2013.',
       nostalgiaAnecdote: 'Se connecter et se déconnecter à répétition toutes les 3 minutes pour qu\'une notification pop-up s\'affiche en bas à droite de l\'écran de la personne qu\'on convoitait secrètement.'
+    },
+    {
+      id: 'jeuxvideo',
+      name: 'Forums Jeuxvideo.com (JVC)',
+      period: '1997 - Présent',
+      icon: '🎮',
+      category: 'social',
+      slogan: 'Le cœur battant des forums francophones et le générateur suprême de mèmes de la culture web française.',
+      historyText: 'Créé en 1997 et initialement centré sur l\'astuce de jeux vidéo, Jeuxvideo.com a vu naître ses mythiques forums de discussion de communauté (comme le légendaire 15-18 ou le 18-25). C\'est devenu le plus grand espace de discussion d\'Europe, ayant un impact culturel, social, linguistique et politique majeur et durable en France. Ses forums ont forgé les codes humoristiques d\'une génération (le smiley "Noel", "Risitas", "Issou").',
+      mainFeatures: [
+        'Un système de forums thématiques interconnectés par jeux ou thèmes généraux (15-18, 18-25, Blabla...).',
+        'Le langage et les codes communautaires uniques (les smileys culte tels que :noel: ou :hap: et le culte de Risitas).',
+        'Une réactivité inégalée en temps réel pour commenter l\'actualité ou organiser des projets collectifs immenses.'
+      ],
+      deathReason: 'Le lent déclin s\'explique par la transition vers des plateformes de messageries comme Discord, un durcissement drastique de la modération face à des cyber-harcèlements massifs et des polémiques médiatiques répétées, ainsi que le rachat par Webedia ayant standardisé et lissé le portail.',
+      nostalgiaAnecdote: 'Le souvenir mythique des "tutos du soir" sur le 15-18 ou l\'effervescence collective lors des grands "raids" pacifiques du smiley Noel.'
+    },
+    {
+      id: 'doctissimo',
+      name: 'Forums Doctissimo',
+      period: '2000 - Présent',
+      icon: '🏥',
+      category: 'social',
+      slogan: 'Le plus grand espace francophone d\'entraide humaine et d\'hypocondrie collective.',
+      historyText: 'Lancé en 2000 par les médecins Laurent Alexandre et Claude Malhuret, Doctissimo est très vite devenu bien plus qu\'un portail d\'information médicale : ses forums de discussion thématiques (santé, nutrition, grossesse, psychologie, amour) ont accueilli des millions de contributions. Il représentait un pilier rassurant du web d\'entraide humaine, mais aussi le berceau d\'un imaginaire d\'auto-diagnostics alarmistes et de discussions intimes de légende.',
+      mainFeatures: [
+        'Des milliers de sous-forums spécialisés sur chaque symptôme, pathologie ou étape de la vie quotidienne.',
+        'Un espace d\'anonymat propice aux confidences affectives, familiales et sexuelles les plus intimes.',
+        'L\'animation d\'une communauté forte de "modérateurs bénévoles" dévoués, régissant les débats avec rigueur.'
+      ],
+      deathReason: 'Le déclin s\'explique par la désertion des utilisateurs vers les groupes fermés Facebook et des chaînes Reddit thématiques, mais aussi par la généralisation de moteurs de recherche et d\'IA (Doc Doctissimo, ChatGPT) orientant directement les patients, ainsi que la baisse de la visibilité des anciens forums textuels.',
+      nostalgiaAnecdote: 'Se connecter tard le soir pour soigner un simple rhume de cerveau et ressortir du forum persuadé d\'avoir contracté une mystérieuse maladie tropicale incurable.'
     },
     {
       id: 'skyblog',

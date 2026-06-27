@@ -83,6 +83,21 @@ export default function AdultFinancingHistoryView({ theme }: AdultFinancingHisto
         'De nombreux éditeurs de sites web ont réinvesti leurs colossaux gains du Minitel dans le développement et l\'achat de serveurs pour le nouveau réseau Internet dans les années 1990.'
       ],
       deathReason: 'Le Minitel a souffert de la fermeture définitive de son réseau le 30 juin 2012. Le public a migré en masse vers les ordinateurs personnels avec des écrans couleur haute définition complexes, rendant le terminal Minitel monochrome noir et blanc désuet.'
+    },
+    {
+      id: 'rencontres',
+      name: 'L\'Histoire des Sites de Rencontre',
+      era: '1995 - Présent (De l\'abonnement au Swipe)',
+      techType: 'Abonnements, Freemium, Freemium-Paywall & Micro-transactions',
+      icon: '❤️',
+      explanation: 'Parallèlement aux prélèvements directs par téléphone, l\'industrie des rencontres amicales et amoureuses en ligne a structuré son propre empire de monétisation, inventant des modèles de souscriptions récurrentes extrêmement robustes et des boucles de rétroaction addictives.',
+      howItWorked: [
+        'L\'ère pionnière (1995 - 2000) : Des sites comme Kiss.com ou Match.com naissent aux États-Unis. En France, Netclub (1997) pose les jalons du web relationnel. La monétisation est timide, s\'appuyant principalement sur la publicité ou des abonnements d\'appoint facturés manuellement.',
+        'Le paywall rigide et bilatéral (2001 - 2010) : Marc Simoncini lance Meetic en 2001, instaurant un modèle payant par abonnement mensuel récurrent. Pour réguler le ratio hommes-femmes, l\'accès (lecture et écriture de messages) est souvent payant pour les hommes et gratuit pour les femmes, une asymétrie tarifaire devenue classique.',
+        'Le raz-de-marée Freemium & Géolocalisé (2010 - 2018) : L\'essor du smartphone (GPS intégré) donne naissance à Grindr (2009) puis Tinder (2012). L\'application est gratuite à installer et à utiliser basiquement ("Swipe" gauche/droite), mais un paywall invisible se lève dès que l\'utilisateur souhaite débloquer des fonctionnalités clés.',
+        'La micro-transaction et le matching algorithmique (2018 - Présent) : Pour maximiser le revenu moyen par utilisateur (ARPU), les applications multiplient les options d\'achat unitaire : "Super Likes" pour se démarquer, "Boosts" de visibilité de 30 minutes, ou forfaits ultra-premium (Tinder Select à 500$/mois).'
+      ],
+      deathReason: 'Ce modèle n\'est pas mort, il domine toujours l\'économie applicative mondiale avec des géants comme Match Group et Bumble. Néanmoins, il fait face à d\'immenses défis : la taxe de 30% des app stores, la fatigue algorithmique des nouvelles générations qui boudent les applications au profit de rencontres réelles, et les critiques éthiques sur la rétention délibérée des utilisateurs (créer de la frustration pour forcer l\'abonnement).'
     }
   ];
 
@@ -128,6 +143,31 @@ export default function AdultFinancingHistoryView({ theme }: AdultFinancingHisto
             <p className="text-[10px] opacity-75 mt-0.5">Comprendre objectivement les ingénieuses et périlleuses architectures de paiement d\'époque.</p>
           </div>
         </div>
+      </div>
+
+      {/* Disclaimer Spécifique Éthique et Pédagogique */}
+      <div className={`p-4 rounded-xl border ${
+        theme === 'ie6' 
+          ? 'bg-[#ffffff] border-2 border-red-600 text-black' 
+          : theme === 'terminal' 
+          ? 'bg-black border border-red-650 text-red-500 font-mono' 
+          : 'bg-red-950/15 border-red-500/20 text-slate-300'
+        } text-left text-[11px] space-y-2`}
+        id="adult-ethical-disclaimer"
+      >
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-red-500 shrink-0" />
+          <span className="font-extrabold uppercase text-red-500 tracking-wider text-[10px]">
+            ⚠️ Avertissement Déontologique, Éthique &amp; Pédagogique
+          </span>
+        </div>
+        <p className="leading-relaxed">
+          Ce musée virtuel a été créé exclusivement dans un <strong>but didactique, d'archivage et de recherche historique</strong>. 
+          L'histoire du web pour adultes y est mentionnée ou expliquée uniquement sous l'angle de son impact sur les infrastructures techniques, télécoms et financières d'époque, car ce secteur a fait partie intégrante de l'évolution économique et technique d'Internet, au même titre qu'aujourd'hui.
+        </p>
+        <p className="leading-relaxed font-semibold text-rose-350 bg-red-950/20 p-2.5 border border-red-500/15 rounded-lg text-[10.5px]">
+          🛑 En aucun cas, le Musée du Web n'encourage, ne normalise ou ne cautionne les violences sexuelles, sexistes ou physiques faites aux femmes, aux hommes ou à toute autre personne. Nous condamnons fermement l'exploitation, les dérives coercitives et toute forme d'abus commis sous couvert du réseau de télécommunication ou d'Internet.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -218,6 +258,89 @@ export default function AdultFinancingHistoryView({ theme }: AdultFinancingHisto
                   ))}
                 </div>
               </div>
+
+              {/* Why dead text */}
+              {activeMech.id === 'minitel' && (
+                <div className="p-4 bg-purple-950/15 border border-purple-550/20 rounded-xl space-y-3 text-left">
+                  <div className="flex items-center gap-2 text-purple-400 font-extrabold uppercase text-[11px] font-mono">
+                    <span>📟</span>
+                    <h4>Focus Légende : Le Phénomène mythique de "3615 ULLA"</h4>
+                  </div>
+                  <div className="space-y-2.5 text-[11px] text-slate-350 leading-relaxed">
+                    <p>
+                      S'il y a un code d'accès qui a marqué l'inconscient collectif français de la télématique, c'est indubitablement <span className="text-purple-400 font-bold font-mono">3615 ULLA</span>. Lancée au milieu des années 1980 et exploitée par des entrepreneurs hardis (dont Xavier Niel à ses débuts avec d'autres messageries), cette messagerie rose s'est imposée comme le plus grand salon de rencontre interactif virtuel de France avant l'arrivée du Web.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-[10.5px]">
+                      <div className="p-2.5 bg-slate-950/45 border border-slate-850 rounded-lg">
+                        <strong className="text-purple-400 block mb-0.5">💬 Pseudonymes & clavistes en coulisses</strong>
+                        <p>
+                          Les utilisateurs payaient la somme astronomique de 60 francs l'heure (environ 9€/heure) pour échanger des messages textuels pixelisés sous des pseudonymes fantaisistes. Pour s'assurer que les connectés restent le plus longtemps possible en ligne, des agents appelés "clavistes" (ou animateurs) de messagerie répondaient aux internautes pour animer la conversation et entretenir le fantasme.
+                        </p>
+                      </div>
+                      <div className="p-2.5 bg-slate-950/45 border border-slate-850 rounded-lg">
+                        <strong className="text-purple-400 block mb-0.5">🔒 Discrétion et prélèvement invisible</strong>
+                        <p>
+                          Le secret absolu de son succès fou résidait dans l'absence totale de carte bleue. Le service n'était pas mentionné explicitement sur la facture de téléphone France Télécom, seule la mention globale des services kiosques "3615" s'affichait. Un atout de discrétion imparable pour les abonnés soucieux de leur anonymat.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-slate-950/30 border-l-2 border-purple-500 rounded text-slate-400 italic text-[10.5px]">
+                      L'histoire raconte que la marque "ULLA" dépensait des budgets publicitaires vertigineux dans les magazines papier et sur les ondes radio pour asseoir sa notoriété nationale, devenant synonyme d'amour virtuel pixelisé.
+                    </div>
+
+                    <div>
+                      <strong className="text-indigo-400 block text-[10.5px] uppercase">📉 La transition manquée et l'extinction lente avec l'Internet :</strong>
+                      <p className="mt-0.5">
+                        Dès la fin des années 1990, avec l'éclosion du web moderne, de la gratuité (salons IRC, Caramail, ICQ) puis l'arrivée des sites de rencontre web structurés (comme Meetic en 2001), l'usage du Minitel onéreux et archaïque s'est effondré.
+                      </p>
+                      <p className="mt-1">
+                        La marque ULLA a tenté de s'adapter en migrant ses activités sur le portail <code className="bg-slate-950 px-1 py-0.5 rounded text-purple-400 font-mono">ulla.com</code> et via des applications mobiles. Mais privée de la rente de situation monopolistique du 3615, elle s'est noyée dans la masse des géants nés du Web. La fermeture définitive du réseau Télétel national de France Télécom le 30 juin 2012 a tiré définitivement le rideau sur l'un des plus grands phénomènes de communication numérique de l'histoire française.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeMech.id === 'rencontres' && (
+                <div className="p-4 bg-rose-950/15 border border-rose-550/20 rounded-xl space-y-3 text-left">
+                  <div className="flex items-center gap-2 text-rose-450 font-extrabold uppercase text-[11px] font-mono">
+                    <span>❤️</span>
+                    <h4>Focus Économie : Des papillons dans le code & l'empire de l'abonnement</h4>
+                  </div>
+                  <div className="space-y-2.5 text-[11px] text-slate-350 leading-relaxed">
+                    <p>
+                      L'industrie du dating virtuel est l'une des plus lucratives de la Toile, combinant la psychologie comportementale, la théorie des graphes et des modèles économiques d'une finesse chirurgicale.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-[10px]">
+                      <div className="p-2.5 bg-slate-950/45 border border-slate-850 rounded-lg">
+                        <strong className="text-rose-400 block mb-0.5">💰 Modèle à Abonnement (SaaS)</strong>
+                        <p>
+                          Popularisé par Meetic et Match.com, ce modèle mise sur l'exclusion commerciale : l'accès gratuit permet de s'inscrire et de regarder, mais un "Paywall" rigide bloque l'envoi de messages. L'utilisateur paie un forfait mensuel récurrent (souvent de 15€ à 30€/mois).
+                        </p>
+                      </div>
+                      <div className="p-2.5 bg-slate-950/45 border border-slate-850 rounded-lg">
+                        <strong className="text-rose-400 block mb-0.5">🔓 Le Freemium Invisible</strong>
+                        <p>
+                          Avec les applications géolocalisées, la barrière de l'abonnement tombe au profit du volume d'utilisateurs. Le matching de base est gratuit, mais des limites artificielles invisibles (ex : 50 swipes par jour maximum) créent une frustration calculée pour pousser à l'achat impulsif de passes Premium.
+                        </p>
+                      </div>
+                      <div className="p-2.5 bg-slate-950/45 border border-slate-850 rounded-lg">
+                        <strong className="text-rose-400 block mb-0.5">🎰 La Gamification & Micro-achats</strong>
+                        <p>
+                          L'interface imite le fonctionnement des machines à sous de casino : le geste de "Swipe" addictif déclenché par un système de récompenses aléatoires. Les achats "à l'acte" immédiats (comme le Boost à 5€) court-circuitent la rationalité pour capitaliser sur l'impulsion instantanée de visibilité.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-slate-950/30 border-l-2 border-rose-500 rounded text-slate-400 italic text-[10.5px]">
+                      Le dilemme historique de l'industrie : Si le produit fonctionne parfaitement et que l'utilisateur trouve l'amour de sa vie, il supprime l'application. La monétisation maximale repose donc sur la promesse de la rencontre tout en s'assurant de retenir le client le plus longtemps possible dans le tunnel de frustration.
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Why dead text */}
               <div className="p-3.5 bg-rose-950/5 border border-rose-500/10 rounded-xl text-left text-xs space-y-1.5">

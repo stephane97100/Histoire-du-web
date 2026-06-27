@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { htmlVersionsSpecs, cssVersionsSpecs, timelineEvents } from '../data/timelineData';
-import { Calendar, Cpu, Layers, Code2, AlertTriangle, Eye, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Calendar, Cpu, Layers, Code2, AlertTriangle, Eye, RefreshCw } from 'lucide-react';
 
 interface TimelineViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
@@ -574,7 +574,7 @@ export default function TimelineView({ theme }: TimelineViewProps) {
                     {getSimulatedDemoMarkup()}
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2 text-[10px] text-slate-400">
-                    <CheckCircle2 className="w-3 text-emerald-400" />
+                    <Layers className="w-3 text-emerald-400" />
                     <span>Lumière sur les balises : <b>{selectedHtml.keyFeatures.join(', ')}</b></span>
                   </div>
                 </div>
@@ -799,7 +799,7 @@ export default function TimelineView({ theme }: TimelineViewProps) {
                       <span className="md:hidden font-mono font-bold text-indigo-400 mr-2 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-xs">
                         {event.year}
                       </span>
-                      <h4 className="font-bold text-slate-150 text-sm group-hover:text-white transition-all">
+                      <h4 className="font-bold text-sm text-slate-150 group-hover:text-white transition-all">
                         {event.title}
                       </h4>
                     </div>

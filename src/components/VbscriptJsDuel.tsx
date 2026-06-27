@@ -318,6 +318,211 @@ for ($i = 1; $i <= 5; $i++) {
 
       </div>
 
+      {/* Detailed Technical Analysis Section */}
+      <div className="bg-slate-900 border border-slate-750 rounded-xl p-6 text-left space-y-5" id="detailed-technical-duel-analysis">
+        <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-3">
+          <Code2 className="w-5 h-5 text-indigo-400" />
+          {duelMode === 'client' 
+            ? 'Analyse technique approfondie : JScript vs VBScript Côté Navigateur' 
+            : 'Analyse technique approfondie : Le Match d\'Architecture ASP vs PHP'}
+         </h3>
+
+        {duelMode === 'client' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed" id="detailed-client-analysis">
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60">
+                <h4 className="font-extrabold text-amber-550 mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                  ⚠️ VBScript & "ILOVEYOU" : Le séisme sécuritaire de l'an 2000
+                </h4>
+                <p>
+                  En mai 2000, le ver informatique <b className="text-slate-200">"ILOVEYOU"</b> se propage à la vitesse de la lumière à travers la planète. Son secret ? Un simple script VBScript d'une centaine de lignes exécuté par les victimes.
+                </p>
+                <p className="mt-2 text-slate-400">
+                  Sous Windows d'époque, le moteur local <b>Windows Script Host</b> permettait aux fichiers <code className="bg-slate-950 px-1 py-0.5 rounded text-pink-400 font-mono">.vbs</code> d'accéder sans aucune restriction aux APIs du système (manipulation de fichiers, écriture dans la base de registre, envoi discret de courriels massifs via Outlook). Cette faille monumentale a scellé le destin de la sécurité des extensions ActiveX chez les clients professionnels.
+                </p>
+              </div>
+
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60 font-sans">
+                <h4 className="font-extrabold text-emerald-400 mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  🐞 "On Error Resume Next" : L'anti-pattern absolu
+                </h4>
+                <p>
+                  VBScript a popularisé une commande restée tristement célèbre auprès des ingénieurs Windows : <code className="bg-slate-950 px-1.5 py-1 rounded text-emerald-400 font-mono">On Error Resume Next</code>.
+                </p>
+                <p className="mt-2 text-slate-400">
+                  Cette ligne simple ordonnait au moteur d'ignorer absolument toutes les exceptions bloquantes ou variables indéfinies qui survenaient dans le script pour foncer directement à l'exécution de la ligne suivante. Si cela offrait une apparente tolérance aux pannes à l'écran, cela masquait des corruptions d'état catastrophiques en arrière-plan, rendant l'écriture de grands logiciels impossible.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60">
+                <h4 className="font-extrabold text-indigo-400 mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                  ⚙️ Comparatif technique des moteurs d'exécutions
+                </h4>
+                <div className="space-y-2 mt-2 font-mono text-[11px]">
+                  <div className="flex justify-between border-b border-slate-800 pb-1.5 text-slate-400 font-bold">
+                    <span>Fonctionnalité</span>
+                    <span className="text-indigo-400">JavaScript / JScript</span>
+                    <span className="text-amber-500">VBScript</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Sensibilité de casse</span>
+                    <span>Sensible (Style C)</span>
+                    <span>Insensible (Visual Basic)</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Gestion mémoire</span>
+                    <span>Garbage Collector (Fluide)</span>
+                    <span>Reference Counting (COM)</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Sécurité sandbox</span>
+                    <span className="text-emerald-400">Hermétique & isolée</span>
+                    <span className="text-rose-500">Accès ActiveX (Dangereux)</span>
+                  </div>
+                  <div className="flex justify-between pb-1">
+                    <span className="text-slate-400">Standardisation</span>
+                    <span className="text-emerald-400">ECMAScript (Ouvert)</span>
+                    <span>Propriétaire Microsoft (Fermé)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-indigo-950/15 rounded-xl border border-indigo-500/10 text-sans">
+                <h4 className="font-extrabold text-indigo-400 mb-1 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  🌐 Le monopole raté de la JVM Microsoft & JScript
+                </h4>
+                <p className="text-[11.5px] leading-relaxed text-slate-350">
+                  Dans sa volonté d'étouffer Netscape et Sun Microsystems, Microsoft avait également conçu sa propre machine virtuelle Java et intégré <b>JScript</b> avec des extensions exclusives à Windows. Face aux actions en justice intentées par Sun et aux exigences d'innocuité du monde open-source, les développeurs ont massivement refusé ces chaînes de dépendance technique pour se tourner vers le standard ouvert et universel d'ECMA.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed" id="detailed-server-analysis">
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60 font-sans">
+                <h4 className="font-extrabold text-sky-400 mb-2.5 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  💾 Connexion BDD : Le choc de la lisibilité
+                </h4>
+                <p className="mb-3">
+                  La différence de productivité originelle entre PHP et ASP saute aux yeux dans l'écriture de la requête de base de données :
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-sky-400 block mb-1 font-mono">ASP Classic avec ADODB (Lourd et Verbeux) :</span>
+                    <pre className="text-[10px] text-slate-350 font-mono bg-slate-950 p-2 rounded border border-slate-850 leading-relaxed">
+{`Set conn = Server.CreateObject("ADODB.Connection")
+conn.Provider = "Microsoft.Jet.OLEDB.4.0"
+conn.Open Server.MapPath("mabase.mdb") ' Fichier Access !
+Set rs = conn.Execute("SELECT * FROM clients")`}
+                    </pre>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 block mb-1 font-mono">PHP 3/4 avec MySQL (Simple et Linéaire) :</span>
+                    <pre className="text-[10px] text-slate-350 font-mono bg-slate-950 p-2 rounded border border-slate-850 leading-relaxed">
+{`$db = mysql_connect("localhost", "root", "mdp");
+mysql_select_db("mabase", $db);
+$res = mysql_query("SELECT * FROM clients");`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60 font-sans">
+                <h4 className="font-extrabold text-amber-500 mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  💣 L'enfer des DLLs partagées (DLL Hell) & plantages IIS
+                </h4>
+                <p>
+                  Dans l'environnement Windows Server avec IIS et ASP Classic des années 2000, lorsque l'on voulait envoyer un e-mail ou retailler une image, il n'existait pas d'instruction native simple au sein du langage.
+                </p>
+                <p className="mt-2 text-slate-400">
+                  Le webmaster devait acheter des composants compilés tiers (fichiers <code className="bg-slate-950 px-1 py-0.5 rounded text-pink-400 font-mono">.dll</code> payants comme ASPMail ou JMail) et les installer physiquement sur le serveur. Si l'installation d'une nouvelle DLL écrasait une bibliothèque système existante d'une autre version, tout le serveur web IIS finissait par planter en cascade, un phénomène redouté appelé le <b>DLL Hell</b>.
+                </p>
+              </div>
+
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60 font-sans">
+                <h4 className="font-extrabold text-sky-400 mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  📁 Le fichier global.asa : Le chef d'orchestre de l'application ASP
+                </h4>
+                <p className="text-[11.5px] leading-relaxed">
+                  En ASP Classic, l'ensemble du cycle de vie de l'application et des sessions utilisateur était piloté par un précieux fichier d'initialisation facultatif nommé <strong>global.asa</strong> (Active Server Application), positionné obligatoirement à la racine de l'application web IIS.
+                </p>
+                <p className="mt-2 text-slate-400 text-[11.5px] leading-relaxed">
+                  Ce fichier interceptait les événements du serveur web pour y adosser des scripts VBScript ou de déclarations d'objets globaux, orchestrant notamment les fonctions clés :
+                </p>
+                <ul className="list-disc pl-4 mt-1.5 space-y-1 text-slate-400 text-[11px]">
+                  <li><code>Application_OnStart</code> : S'exécute une seule fois à l'initialisation du serveur (pratique pour configurer des variables d'environnement, des variables globales ou des chaînes de connexion).</li>
+                  <li><code>Session_OnStart</code> : Se lance dès qu'un nouvel internaute ouvre une session de navigation (permettant d'initialiser des timeouts ou d'incrémenter des compteurs d'utilisateurs actifs).</li>
+                  <li><code>Session_OnEnd</code> et <code>Application_OnEnd</code> : Libèrent les ressources mémoire et décrémentent proprement les sessions détruites.</li>
+                </ul>
+                <div className="mt-3">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1 font-mono">Exemple classique de global.asa :</span>
+                  <pre className="text-[10px] text-slate-350 font-mono bg-slate-950 p-2 rounded border border-slate-850 leading-relaxed">
+{`<script language="VBScript" runat="Server">
+Sub Application_OnStart
+  Application("ConnString") = "Provider=Microsoft.Jet.OLEDB..."
+  Application("OnlineUsers") = 0
+End Sub
+Sub Session_OnStart
+  Application.Lock
+  Application("OnlineUsers") = Application("OnlineUsers") + 1
+  Application.UnLock
+End Sub
+</script>`}
+                  </pre>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-950/40 rounded-xl border border-slate-850/60 font-mono text-[11px]">
+                <h4 className="font-extrabold text-[#777bb3] mb-2 flex items-center gap-1.5 uppercase tracking-wider text-[11.5px]">
+                  ⚙️ Comparatif d'infrastructure : WINTEL contre LAMP
+                </h4>
+                <div className="space-y-2.5 mt-2">
+                  <div className="flex justify-between border-b border-slate-800 pb-1.5 text-slate-400 font-bold">
+                    <span>Critère</span>
+                    <span className="text-[#3ea4f5]">ASP & Windows NT / IIS</span>
+                    <span className="text-[#8fa2ff]">PHP & Apache Linux</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Base de données d'élection</span>
+                    <span>MS Access / SQL Server</span>
+                    <span>MySQL / PostgreSQL</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Coûts de licences</span>
+                    <span className="text-rose-400">Élevés (Payant à l'OS)</span>
+                    <span className="text-emerald-400">Totalement Gratuit (GPL)</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-850 pb-1.5">
+                    <span className="text-slate-400">Mécanisme d'Extension</span>
+                    <span>Composants ActiveX / COM+</span>
+                    <span>Extensions C natives adaptables</span>
+                  </div>
+                  <div className="flex justify-between pb-1">
+                    <span className="text-slate-400">Stabilité des Processus</span>
+                    <span className="text-amber-500">Un composant instable plante IIS</span>
+                    <span className="text-emerald-400">Isolation processus (Prefork)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-indigo-950/15 rounded-xl border border-indigo-500/10 font-sans">
+                <h4 className="font-extrabold text-[#8fa2ff] mb-1 flex items-center gap-1.5 uppercase tracking-wider text-[11px] font-mono">
+                  📉 La rupture brutale d'ASP en 2002 : La trahison historique
+                </h4>
+                <p className="text-[11.5px] leading-relaxed text-slate-350">
+                  En 2002, pour contrer la montée en puissance de Java d'entreprise, Microsoft a complètement modifié sa stratégie serveur en lançant le framework <b>ASP.NET</b>. En faisant cela, ils ont totalement abandonné l'interpréteur classique d'ASP, cassant brutalement toute la compatibilité avec les applications écrites par des centaines de milliers de webmasters. Cette décision a poussé la quasi-totalité des développeurs déçus à migrer leurs compétences vers PHP, asseyant la domination écrasante de ce dernier pour les décennies à venir.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Pop-up Dialog alerts Simulator Sandbox */}
       <AnimatePresence>
         {popups.map((popup) => (

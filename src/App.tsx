@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import TimelineView from './components/TimelineView';
+import HistoryOfTheWebView from './components/HistoryOfTheWebView';
 import HistoryProtocolsBrowsers from './components/HistoryProtocolsBrowsers';
 import VbscriptJsDuel from './components/VbscriptJsDuel';
 import GlossaryView from './components/GlossaryView';
@@ -13,7 +14,6 @@ import QuizView from './components/QuizView';
 import RetroSimulator from './components/RetroSimulator';
 import CemeteryView from './components/CemeteryView';
 import ModernTechView from './components/ModernTechView';
-import ForgottenGiantsView from './components/ForgottenGiantsView';
 import WebRevolutionsView from './components/WebRevolutionsView';
 import ChatHistoryView from './components/ChatHistoryView';
 import AdultFinancingHistoryView from './components/AdultFinancingHistoryView';
@@ -23,9 +23,14 @@ import SoundCabinetView from './components/SoundCabinetView';
 import W3cVersioner from './components/W3cVersioner';
 import TorrentHistoryView from './components/TorrentHistoryView';
 import EasterEggsView from './components/EasterEggsView';
-import DockerDestroyedView from './components/DockerDestroyedView';
+import FranceContributionsView from './components/FranceContributionsView';
+import WebPhilosophyView from './components/WebPhilosophyView';
+import OutsideCodeView from './components/OutsideCodeView';
+import PageRendererSimulator from './components/PageRendererSimulator';
+import CaseStudiesView from './components/CaseStudiesView';
 import { playWin95Startup, playModemDialup } from './lib/audioSynth';
 import OfflineEbookModal from './components/OfflineEbookModal';
+import { timelineEvents } from './data/timelineData';
 import { 
   History, 
   BookOpen, 
@@ -34,6 +39,7 @@ import {
   BadgeHelp, 
   Compass, 
   Settings, 
+  Code2,
   Terminal as TermIcon, 
   Sparkles,
   Layers,
@@ -50,10 +56,16 @@ import {
   PhoneCall,
   Download,
   Gift,
-  Box
+  Globe,
+  Sun,
+  Moon,
+  Palette,
+  Monitor,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
-type AppTab = 'timeline' | 'protocols' | 'glossary' | 'duel' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'forgotten_giants' | 'web_revolutions' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'docker_destroyed';
+type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies';
 type ThemeMode = 'modern' | 'ie6' | 'terminal';
 
 export default function App() {
@@ -64,6 +76,21 @@ export default function App() {
     () => (localStorage.getItem('web_history_retro_sound') as any) || 'muted'
   );
   const [isEbookModalOpen, setIsEbookModalOpen] = useState(false);
+  const [isLightMode, setIsLightMode] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('web_history_light_mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleLightMode = () => {
+    const nextVal = !isLightMode;
+    setIsLightMode(nextVal);
+    try {
+      localStorage.setItem('web_history_light_mode', String(nextVal));
+    } catch (e) {}
+  };
 
   // Interaction-triggered starting sound effect
   useEffect(() => {
@@ -116,8 +143,8 @@ export default function App() {
           containerClass: 'bg-[#d4d0c8] text-black border-2 border-white max-w-7xl mx-auto rounded-none shadow-[2px_2px_15px_rgba(0,0,0,0.4)]',
           headerClass: 'bg-[#000080] text-white px-4 py-2 border-b border-slate-300 font-bold font-sans flex flex-col md:flex-row md:items-center justify-between',
           sidebarClass: 'bg-[#d4d0c8] border-r-2 border-[#808080] p-4 text-black font-sans shrink-0',
-          activeTabClass: 'bg-[#c0c0c0] text-black font-bold border-2 border-inset border-white shadow-[inset_1px_1px_2px_#333] rounded-none',
-          inactiveTabClass: 'bg-[#d4d0c8] text-black border-2 border-outset border-white rounded-none hover:bg-[#c0c0c0]',
+          activeTabClass: 'text-black font-bold border-transparent rounded-none',
+          inactiveTabClass: 'bg-[#d4d0c8]/20 text-black border-2 border-outset border-white rounded-none hover:bg-[#c0c0c0]',
           cardClass: 'bg-[#c0c0c0] border-2 border-white p-6 shadow-[1px_1px_0px_white_inset]',
           titleFont: 'font-sans font-extrabold text-blue-900',
           logoClass: 'text-xl font-black font-serif italic text-white tracking-wider flex items-center gap-1'
@@ -128,7 +155,7 @@ export default function App() {
           containerClass: 'bg-[#0a0a0a] text-[#ffb000] border border-[#ffb000]/60 max-w-7xl mx-auto rounded-none shadow-[0_0_20px_rgba(255,176,0,0.15)]',
           headerClass: 'bg-black border-b border-[#ffb000]/40 px-4 py-3 flex flex-col md:flex-row md:items-center justify-between font-mono',
           sidebarClass: 'bg-[#050505] border-r border-[#ffb000]/30 p-4 font-mono shrink-0',
-          activeTabClass: 'bg-[#ffb000]/10 text-[#ffb000] font-black border border-[#ffb000] rounded-none shadow-[0_0_8px_rgba(255,176,0,0.3)]',
+          activeTabClass: 'text-[#ffb000] font-black border-transparent rounded-none shadow-[0_0_8px_rgba(255,176,0,0.3)]',
           inactiveTabClass: 'text-[#ffb000]/60 hover:text-[#ffb000] hover:bg-[#ffb000]/5 border border-transparent rounded-none',
           cardClass: 'bg-[#080808] border border-[#ffb000]/20 p-6',
           titleFont: 'font-mono text-xl font-bold tracking-tight text-[#ffb000] uppercase',
@@ -136,24 +163,75 @@ export default function App() {
         };
       default: // Modern - Geometric Balance Design Theme
         return {
-          wrapperClass: 'bg-[#0a0a0c] text-[#e0e0e0] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between',
-          containerClass: 'bg-[#0c0c0e] border border-[#2a2a2e] max-w-7xl mx-auto w-full rounded-xl shadow-2xl overflow-hidden flex-1 flex flex-col justify-between',
-          headerClass: 'bg-[#111114] px-6 py-4 border-b border-[#2a2a2e] flex flex-col md:flex-row md:items-center justify-between gap-4',
-          sidebarClass: 'bg-[#111114] border-r border-[#2a2a2e] p-5 shrink-0',
-          activeTabClass: 'bg-[#1d1d23] border-[#2a2a2e] text-[#3b82f6] font-bold shadow-md shadow-blue-500/5',
-          inactiveTabClass: 'text-[#8a8a93] hover:text-white hover:bg-[#1a1a1e] border-transparent',
-          cardClass: 'bg-[#111114] border border-[#2a2a2e] p-5 rounded-xl',
-          titleFont: 'font-sans text-xl font-light tracking-tight text-[#e0e0e0]',
-          logoClass: 'text-base font-bold text-white flex items-center gap-2'
+          wrapperClass: isLightMode 
+            ? 'bg-[#e5e7eb] text-[#111827] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between transition-all'
+            : 'bg-[#0a0a0c] text-[#e0e0e0] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between transition-all',
+          containerClass: isLightMode
+            ? 'bg-[#ffffff] border border-[#d1d5db] max-w-7xl mx-auto w-full rounded-2xl shadow-lg overflow-hidden flex-1 flex flex-col justify-between'
+            : 'bg-[#0c0c0e] border border-[#2a2a2e] max-w-7xl mx-auto w-full rounded-xl shadow-2xl overflow-hidden flex-1 flex flex-col justify-between',
+          headerClass: isLightMode
+            ? 'bg-[#f9fafb] px-6 py-4 border-b border-[#d1d5db] flex flex-col md:flex-row md:items-center justify-between gap-4'
+            : 'bg-[#111114] px-6 py-4 border-b border-[#2a2a2e] flex flex-col md:flex-row md:items-center justify-between gap-4',
+          sidebarClass: isLightMode
+            ? 'bg-[#f9fafb] border-r border-[#d1d5db] p-5 shrink-0'
+            : 'bg-[#111114] border-r border-[#2a2a2e] p-5 shrink-0',
+          activeTabClass: isLightMode
+            ? 'text-[#2563eb] font-bold border-transparent bg-[#dbeafe] shadow-sm'
+            : 'text-[#367bf0] font-bold border-transparent shadow-[#3b82f6]/5',
+          inactiveTabClass: isLightMode
+            ? 'text-[#4b5563] hover:text-[#111827] hover:bg-[#f3f4f6] border-transparent'
+            : 'text-[#8a8a93] hover:text-white hover:bg-[#1a1a1e] border-transparent',
+          cardClass: isLightMode
+            ? 'bg-[#ffffff] border border-[#d1d5db] p-6 rounded-2xl text-[#111827] shadow-sm'
+            : 'bg-[#111114] border border-[#2a2a2e] p-5 rounded-xl text-slate-100',
+          titleFont: isLightMode
+            ? 'font-sans text-xl font-bold tracking-tight text-[#111827]'
+            : 'font-sans text-xl font-light tracking-tight text-[#e0e0e0]',
+          logoClass: isLightMode
+            ? 'text-base font-bold text-[#111827] flex items-center gap-2'
+            : 'text-base font-bold text-white flex items-center gap-2'
         };
     }
   };
 
   const style = getThemeVars();
 
-  // Navigation schema linked to specified user requests
+  const navGroups = [
+    {
+      label: 'Fondamentaux & Histoire',
+      icon: History,
+      items: ['timeline', 'history_of_the_web', 'protocols', 'webmaster_evolution', 'web_philosophy', 'case_studies']
+    },
+    {
+      label: 'Révolutions & Tech',
+      icon: Zap,
+      items: ['web_revolutions', 'modern_tech', 'clean_code', 'w3c_versioner']
+    },
+    {
+      label: 'Réseau & Outils',
+      icon: Download,
+      items: ['torrent', 'outside_code']
+    },
+    {
+      label: 'Développement',
+      icon: Code2,
+      items: ['duel', 'sandbox', 'page_renderer', 'glossary']
+    },
+    {
+      label: 'Communauté',
+      icon: Users,
+      items: ['quiz', 'cemetery', 'soundboard', 'easter_eggs', 'tchat_with_me']
+    },
+    {
+      label: 'Divers',
+      icon: Settings,
+      items: ['pour_adultes', 'france_contributions']
+    }
+  ];
+
   const navItems = [
     { id: 'timeline', label: 'Chronologie & Versions', description: 'Du HTML1 au CSS3', icon: Compass },
+    { id: 'history_of_the_web', label: 'Histoire du Web', description: 'WWW, Protocoles, Navigateurs', icon: Globe },
     { id: 'web_revolutions', label: "Les Révolutions du Web", description: 'Flash, AJAX, CSS3, WebSockets...', icon: Zap },
     { id: 'torrent', label: 'Le Torrent & P2P', description: 'Histoire, Hadopi, sanctions...', icon: Download },
     { id: 'protocols', label: 'Histoire & Protocoles', description: 'DNS, HTTP & Navigateurs', icon: History },
@@ -163,7 +241,6 @@ export default function App() {
     { id: 'soundboard', label: 'Cabinet Acoustique', description: 'Sons mythiques d\'époque', icon: Volume2 },
     { id: 'cemetery', label: 'Le Cimetière du Web', description: 'Les reliques oubliées du réseau', icon: Skull },
     { id: 'modern_tech', label: "Technologies d'Aujourd'hui", description: 'PHP/Symfony, React, TS, Python...', icon: Sparkles },
-    { id: 'forgotten_giants', label: "Ça n'existe plus", description: 'Site du Zéro, AllHTML, Caramail...', icon: Heart },
     { id: 'tchat_with_me', label: "T'chat with me", description: 'MSN, Skype, Caramail, ICQ...', icon: MessageSquare },
     { id: 'pour_adultes', label: 'Section "Pour adultes"', description: 'Minitel rose, Audiotel, Dialers...', icon: PhoneCall },
     { id: 'webmaster_evolution', label: 'Le Webmaster (2000 - Présent)', description: 'Évolution et spécialisation du métier', icon: Users },
@@ -171,19 +248,27 @@ export default function App() {
     { id: 'sandbox', label: 'Création Landing Page', description: 'Éditeur rétro < 500 lignes', icon: PenTool },
     { id: 'quiz', label: 'Quiz d\'Histoire du Code', description: 'Testez vos connaissances', icon: BadgeHelp },
     { id: 'easter_eggs', label: 'Cabinet des Secrets', description: 'Easter Eggs & blagues d\'époque', icon: Gift },
-    { id: 'docker_destroyed', label: 'Docker a tout détruit', description: 'La fin du webmaster FTP (2013)', icon: Box },
+    { id: 'france_contributions', label: "L'apport de la France au Web", description: 'CYCLADES, Minitel, Freebox, Docker...', icon: Globe },
+    { id: 'web_philosophy', label: 'Philosophie du Web 2000', description: 'Idéal du gratuit, faillites, e-commerce...', icon: BookOpen },
+    { id: 'outside_code', label: "En dehors du code", description: "Design, Marketing, SEO & Rédacteur", icon: Palette },
+    { id: 'page_renderer', label: 'Simulateur de Rendu', description: 'Simulez Netscape / IE6', icon: Monitor },
+    { id: 'case_studies', label: 'Études de Cas : Code', description: 'Avant vs Après (HTML/CSS)', icon: Layers },
   ] as const;
+
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   return (
     <div 
       className={style.wrapperClass} 
       id="app-wrapper"
       style={{
-        filter: readingFilter === 'sepia' 
-          ? 'sepia(0.62) contrast(0.96) saturate(0.85) brightness(0.95)' 
-          : readingFilter === 'dim' 
-          ? 'brightness(0.76) contrast(0.95) saturate(0.9)' 
-          : 'none',
+        filter: ((isLightMode && themeMode !== 'modern') ? 'invert(1) hue-rotate(180deg) contrast(1.05) ' : '') + (
+          readingFilter === 'sepia' 
+            ? 'sepia(0.62) contrast(0.96) saturate(0.85) brightness(0.95)' 
+            : readingFilter === 'dim' 
+            ? 'brightness(0.76) contrast(0.95) saturate(0.9)' 
+            : ''
+        ) || 'none',
         transition: 'filter 0.35s ease'
       }}
     >
@@ -211,6 +296,29 @@ export default function App() {
           {/* Controls Bar Row */}
           <div className="flex flex-wrap items-center gap-3 self-start">
             
+            {/* Dedicated Light Mode Toggle Button */}
+            <button
+              onClick={toggleLightMode}
+              id="btn-toggle-lightmanagement"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono text-xs font-bold transition-all cursor-pointer ${
+                isLightMode 
+                  ? 'bg-amber-500/25 border-amber-500/80 text-amber-500' 
+                  : 'bg-slate-950/60 border-slate-750 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {isLightMode ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-500 animate-spin-slow" />
+                  <span className="text-amber-500">Mode Clair : ON</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Mode Clair : OFF</span>
+                </>
+              )}
+            </button>
+
             {/* Reading Eye Comfort Filter Controller */}
             <div className="flex items-center gap-2 bg-slate-950/60 p-1.5 rounded-xl border border-slate-750 text-xs font-mono font-bold">
               <span className="text-[10px] uppercase font-bold text-slate-450 mr-1 flex items-center gap-1">
@@ -299,52 +407,61 @@ export default function App() {
         </header>
 
         {/* Mid section: Nav & Component render */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 min-h-[580px] flex-1">
+        <div className="flex flex-col min-h-[580px] flex-1">
           
-          {/* Navigation drawer sidebar */}
-          <aside className={style.sidebarClass} id="app-sidebar">
-            <div className="space-y-4">
-              <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-slate-500 block mb-1">
-                -- MENU DU MUSÉE --
-              </span>
-              <nav className="flex flex-col gap-1.5">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
+          {/* Navigation drawer as top horizontal bar */}
+          <aside className={`${style.sidebarClass} !border-r-0 !border-b !p-4 w-full`} id="app-sidebar">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-slate-500 block">
+                  -- MENU PRINCIPAL DU SÉLECTEUR MUSÉE (↔ Défilement Horizontal) --
+                </span>
+                <span className="text-[9px] font-mono text-slate-500 hidden sm:inline">{navItems.length} Sections interactives</span>
+              </div>
+
+              <nav className="flex items-center gap-2 flex-wrap pb-2">
+                {navGroups.map((group) => {
+                  const Icon = group.icon;
+                  const isGroupActive = group.items.includes(activeTab);
                   return (
-                    <button
-                      key={item.id}
-                      id={`sidebar-tab-${item.id}`}
-                      onClick={() => setActiveTab(item.id)}
-                      className={`w-full text-left p-3 border rounded-xl flex items-start gap-3 transition-all cursor-pointer ${
-                        activeTab === item.id ? style.activeTabClass : style.inactiveTabClass
-                      }`}
-                    >
-                      <div className="p-1.5 rounded-lg shrink-0">
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold leading-none">{item.label}</h4>
-                        <p className="text-[10px] mt-1 opacity-70 leading-normal">{item.description}</p>
-                      </div>
-                    </button>
+                    <div className="relative" key={group.label}>
+                      <button
+                        onClick={() => setOpenGroup(openGroup === group.label ? null : group.label)}
+                        className={`px-4 py-2 border rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer shrink-0 z-0 text-left ${
+                          isGroupActive ? style.activeTabClass : style.inactiveTabClass
+                        }`}
+                      >
+                        <Icon className="w-3.5 h-3.5 shrink-0" />
+                        <span className="text-[11px] font-bold tracking-tight">{group.label}</span>
+                        {openGroup === group.label ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </button>
+
+                      {openGroup === group.label && (
+                        <div className="absolute top-full left-0 mt-2 p-2 bg-slate-900 border border-slate-700 rounded-xl z-[100] shadow-2xl flex flex-col gap-1 min-w-[200px]">
+                          {group.items.map(itemId => {
+                             const item = navItems.find(i => i.id === itemId);
+                             if (!item) return null;
+                             return (
+                               <button 
+                                 key={item.id}
+                                 onClick={(e) => { e.stopPropagation(); setActiveTab(item.id); setOpenGroup(null); }}
+                                 className={`px-3 py-2 text-xs text-left rounded-lg transition-colors ${activeTab === item.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800'}`}
+                               >
+                                 {item.label}
+                               </button>
+                             );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </nav>
-
-              {/* Pedagogy footnote metadata */}
-              <div className="pt-6 border-t border-slate-800/60 text-[10px] text-slate-500 space-y-1">
-                <span className="flex items-center gap-1 text-slate-400 font-bold uppercase tracking-wider">
-                  <Sparkles className="w-3 text-indigo-400" /> Vocation Pédagogique
-                </span>
-                <p className="leading-relaxed">
-                  Cette suite d'apprentissage explore l'évolution du dictionnaire W3C, de la physique de CERN aux structures asynchrones réactives modernes.
-                </p>
-              </div>
             </div>
           </aside>
 
           {/* Active view component display panel */}
-          <main className="lg:col-span-3 p-6 overflow-y-auto scrollbar-thin flex flex-col justify-between" id="app-view-panel">
+          <main className="w-full p-6 overflow-y-auto scrollbar-thin flex flex-col justify-between flex-1" id="app-view-panel">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -355,6 +472,7 @@ export default function App() {
                 className="flex-1 flex flex-col justify-between"
               >
                 {activeTab === 'timeline' && <TimelineView theme={themeMode} />}
+                {activeTab === 'history_of_the_web' && <HistoryOfTheWebView theme={themeMode} />}
                 {activeTab === 'web_revolutions' && <WebRevolutionsView theme={themeMode} />}
                 {activeTab === 'torrent' && <TorrentHistoryView theme={themeMode} />}
                 {activeTab === 'protocols' && <HistoryProtocolsBrowsers theme={themeMode} />}
@@ -364,7 +482,6 @@ export default function App() {
                 {activeTab === 'soundboard' && <SoundCabinetView theme={themeMode} />}
                 {activeTab === 'cemetery' && <CemeteryView theme={themeMode} />}
                 {activeTab === 'modern_tech' && <ModernTechView theme={themeMode} />}
-                {activeTab === 'forgotten_giants' && <ForgottenGiantsView theme={themeMode} />}
                 {activeTab === 'tchat_with_me' && <ChatHistoryView theme={themeMode} />}
                 {activeTab === 'pour_adultes' && <AdultFinancingHistoryView theme={themeMode} />}
                 {activeTab === 'webmaster_evolution' && <WebmasterEvolution theme={themeMode} />}
@@ -372,7 +489,11 @@ export default function App() {
                 {activeTab === 'sandbox' && <RetroSimulator theme={themeMode} />}
                 {activeTab === 'quiz' && <QuizView theme={themeMode} />}
                 {activeTab === 'easter_eggs' && <EasterEggsView theme={themeMode} />}
-                {activeTab === 'docker_destroyed' && <DockerDestroyedView theme={themeMode} />}
+                {activeTab === 'france_contributions' && <FranceContributionsView theme={themeMode} />}
+                {activeTab === 'web_philosophy' && <WebPhilosophyView theme={themeMode} />}
+                {activeTab === 'outside_code' && <OutsideCodeView theme={themeMode} isLightMode={isLightMode} />}
+                {activeTab === 'page_renderer' && <PageRendererSimulator theme={themeMode} isLightMode={isLightMode} />}
+                {activeTab === 'case_studies' && <CaseStudiesView theme={themeMode} isLightMode={isLightMode} />}
               </motion.div>
             </AnimatePresence>
           </main>

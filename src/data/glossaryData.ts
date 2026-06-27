@@ -163,5 +163,55 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'async / defer', description: 'Charge et exécute de manière non bloquante vis-à-vis du parseur HTML.', isDeprecated: false }
     ],
     retroTip: 'Pour masquer le code JavaScript aux très vieux navigateurs incapables de le lire (qui l\'affichaient directement au milieu de la mise en page), on encapsulait le code à l\'intérieur de commentaires HTML : <!-- code... // -->'
+  },
+  {
+    tag: 'API',
+    version: 'html5',
+    category: 'script',
+    description: 'Application Programming Interface : un intermédiaire qui permet à deux systèmes, logiciels ou applications de communiquer entre eux.',
+    codeSnippet: 'fetch("https://api.example.com/data", { headers: { "Authorization": "Bearer KEY" } })',
+    hasClosingTag: false,
+    attributes: [],
+    retroTip: 'Avant la généralisation des API modernes, l\'intégration de services tiers nécessitait des méthodes propriétaires complexes, souvent basées sur SOAP ou des fichiers plats échangés par FTP.'
+  },
+  {
+    tag: 'SaaS',
+    version: 'html5',
+    category: 'structure',
+    description: 'Software as a Service : modèle de distribution où le logiciel est hébergé dans le cloud et accessible via un navigateur web, évitant l\'installation locale.',
+    codeSnippet: '// Exemple de vérification d\'abonnement SaaS\nif (user.subscription.active) { ... }',
+    hasClosingTag: false,
+    attributes: [],
+    retroTip: 'Le SaaS a signé la fin des boîtes logicielles vendues en magasin avec des disquettes ou des CD-ROM de licences physiques.'
+  },
+  {
+    tag: 'JSON',
+    version: 'html5',
+    category: 'text',
+    description: 'JavaScript Object Notation : format léger d\'échange de données textuelles, devenu le standard universel pour les API.',
+    codeSnippet: '{ "id": 1, "nom": "API", "type": "JSON" }',
+    hasClosingTag: false,
+    attributes: [],
+    retroTip: 'JSON a supplanté le format XML, jugé trop verbeux et complexe à parser côté client pour des échanges rapides.'
+  },
+  {
+    tag: 'Fetch',
+    version: 'html5',
+    category: 'script',
+    description: 'API JavaScript moderne permettant d\'effectuer des requêtes réseau asynchrones de manière fluide.',
+    codeSnippet: 'fetch(url).then(res => res.json()).then(data => console.log(data));',
+    hasClosingTag: false,
+    attributes: [],
+    retroTip: 'Fetch a remplacé le vieillissant XMLHttpRequest, offrant une syntaxe plus lisible basée sur les Promesses.'
+  },
+  {
+    tag: 'Rate Limiting',
+    version: 'html5',
+    category: 'structure',
+    description: 'Technique utilisée par les serveurs pour limiter le nombre de requêtes qu\'un client peut effectuer sur une période donnée afin de prévenir les abus.',
+    codeSnippet: '// Exemple de réponse en cas d\'abus\n{ "error": "Too Many Requests", "retry_after": 60 }',
+    hasClosingTag: false,
+    attributes: [],
+    retroTip: 'Le Rate Limiting est indispensable pour protéger les ressources des API et assurer une qualité de service équitable à tous les utilisateurs.'
   }
 ];

@@ -40,6 +40,7 @@ interface ModernTech {
 
 export default function ModernTechView({ theme }: ModernTechViewProps) {
   const [activeTechId, setActiveTechId] = useState<string>('typescript');
+  const [activeEditorTab, setActiveEditorTab] = useState<'all' | 'npp' | 'sublime' | 'vim' | 'vscode' | 'antigravity'>('all');
 
   const techs: ModernTech[] = [
     {
@@ -440,6 +441,31 @@ self.addEventListener('fetch', (event) => {
   </footer>
 </article>`,
       ecosystem: ['Normes WCAG 2.2', 'WAI-ARIA specifications', 'Lecteurs d\'écran (NVDA / JAWS / VoiceOver)', 'Audits automatisés (Lighthouse / Axe-core)']
+    },
+    {
+      id: 'modern_editors',
+      name: 'Éditeurs Modernes (VS Code, PhpStorm, Antigravity...)',
+      category: 'Tool',
+      badgeStyle: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
+      logo: '💻',
+      whyItRules: 'Fini le code tabulaire généré en cachette ! Les éditeurs contemporains comme VS Code (Microsoft), PhpStorm/WebStorm (JetBrains) et l\'environnement d\'agent d\'ingénierie Antigravity représentent une révolution cognitive. Ils s\'appuient sur l\'analyse statique de l\'arbre de syntaxe abstraite (AST) pour offrir de l\'autocomplétion absolue (IntelliSense), du refactoring sécurisé et la détection d\'erreurs en direct. L\'agent Antigravity introduit la programmation assistée par IA autonome, traduisant vos instructions en français directement en code robuste rédigé de façon chirurgicale sur de grands projets complets.',
+      descentText: 'Bloc-notes d\'époque ➔ Dreamweaver / FrontPage WYSIWYG ➔ Sublime Text (25ms startup) ➔ VS Code (2015) ➔ Agentic IDE Spaces (Antigravity, 2026).',
+      modernSnippetTitle: 'Exemple d\'orchestration d\'agent IA (Antigravity SDK) :',
+      modernSnippet: `// Exemple de compilation pilotée par agent pour migrer d'anciennes structures
+import { AntigravityAgent } from '@antigravity/sdk';
+
+const agent = new AntigravityAgent({
+  workspace: './src/components',
+  temperature: 0.1
+});
+
+// L'agent analyse le code et applique les correctifs
+await agent.executeTask({
+  task: "Remplacer les spacer.gifs de Dreamweaver par des espaces Tailwind CSS gap-4",
+  autoBuild: true,
+  runLinter: true
+});`,
+      ecosystem: ['VS Code Extensions', 'PhpStorm AST Inspections', 'Antigravity Workspace Engine', 'ESLint & Prettier Formatters']
     }
   ];
 
@@ -580,6 +606,352 @@ self.addEventListener('fetch', (event) => {
               </div>
 
             </div>
+
+            {activeTech.id === 'modern_editors' && (
+              <div className="space-y-5 mt-4 pt-4 border-t border-slate-800/60 text-left">
+                
+                {/* Interactive Sub-menu */}
+                <div className="flex flex-wrap gap-2 pb-1 bg-slate-950/25 p-2 rounded-xl border border-slate-800/40">
+                  <button
+                    onClick={() => setActiveEditorTab('all')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'all'
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-slate-100 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    📊 Comparatif Général
+                  </button>
+                  <button
+                    onClick={() => setActiveEditorTab('npp')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'npp'
+                        ? 'bg-emerald-650 text-white shadow-md shadow-emerald-650/20'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-emerald-400 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    🦎 Notepad++ (Note++)
+                  </button>
+                  <button
+                    onClick={() => setActiveEditorTab('sublime')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'sublime'
+                        ? 'bg-orange-600 text-white shadow-md shadow-orange-600/20'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-orange-400 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    📝 Sublime Text
+                  </button>
+                  <button
+                    onClick={() => setActiveEditorTab('vim')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'vim'
+                        ? 'bg-green-700 text-white shadow-md shadow-green-700/20'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-green-400 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    💚 Vim / Neovim
+                  </button>
+                  <button
+                    onClick={() => setActiveEditorTab('vscode')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'vscode'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-blue-400 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    🟦 VS Code (Microsoft)
+                  </button>
+                  <button
+                    onClick={() => setActiveEditorTab('antigravity')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeEditorTab === 'antigravity'
+                        ? 'bg-indigo-950 text-indigo-400 border border-indigo-500/30'
+                        : theme === 'ie6'
+                        ? 'bg-[#c0c0c0] text-black border border-white'
+                        : 'bg-slate-900/60 text-slate-400 hover:text-indigo-300 hover:bg-slate-900 border border-slate-800/70'
+                    }`}
+                  >
+                    🌌 Antigravity IDE
+                  </button>
+                </div>
+
+                {/* Sub-tab 1: All Editors & Comparison */}
+                {activeEditorTab === 'all' && (
+                  <div className="space-y-4">
+                    {/* Notepad++ Spotlight miniature */}
+                    <div className={`p-4 rounded-xl border ${
+                      theme === 'ie6' 
+                        ? 'bg-[#d4d0c8] border-inset border-white text-black' 
+                        : theme === 'terminal'
+                        ? 'bg-black border-[#ffb000]/40 text-[#ffb000]'
+                        : 'bg-gradient-to-r from-emerald-950/15 to-[#0b0c10] border-emerald-555/20'
+                    }`}>
+                      <span className="text-[10px] font-mono text-emerald-400 font-extrabold uppercase tracking-wide block mb-1">
+                        💚 Le Monument de la Légèreté : Notepad++ (Don Ho, 2003)
+                      </span>
+                      <div className="flex flex-col sm:flex-row items-start gap-4 text-xs">
+                        <span className="text-3xl select-none shrink-0" role="img" aria-label="Notepad++ logo">🦎</span>
+                        <div className="space-y-1.5 leading-relaxed">
+                          <p className={theme === 'ie6' ? 'text-black text-[11.5px]' : 'text-slate-200 text-[11.5px]'}>
+                            S'il y a bien un éditeur de texte qui mérite le respect des développeurs et artisans du web, c'est <strong>Notepad++</strong> (communément appelé <strong>Note++</strong> par ses fidèles). 
+                            Développé bénévolement en <strong>C++ pur</strong> par le programmeur français <strong>Don Ho</strong>, Notepad++ représente une prouesse d'optimisation matérielle. Il s'appuie directement sur l'API Win32 pure native et la bibliothèque Scintilla, lui permettant de se lancer en moins de 100 millisecondes et d'ouvrir des fichiers gigantesques de several gigadiagonales là où ses rivaux modernes s'engluent.
+                          </p>
+                          <ul className="list-disc pl-4 space-y-1 text-slate-300 text-[11px] font-sans">
+                            <li>
+                              <strong className="text-slate-200 font-bold">Sobriété énergétique absolue :</strong> Moins de 10 Mo de mémoire vive consommés au repos (à comparer aux 600 Mo requis par n'importe quel éditeur bâti sur Chromium/Electron).
+                            </li>
+                            <li>
+                              <strong className="text-slate-200 font-bold">Sauvegarde fantôme indestructible :</strong> Ses onglets gardent en cache locale temporaire vos brouillons de code non enregistrés. Une coupure de courant ou une mise à jour Windows forcée ? Votre travail n'est jamais perdu au démarrage.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Comparative Table */}
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-mono font-bold text-indigo-400 block uppercase tracking-wider">
+                        📊 Le Grand Comparatif des Éditeurs : De l'Époque à l'Autonomie IA
+                      </span>
+                      <div className="overflow-x-auto rounded-lg border border-slate-800/80">
+                        <table className={`w-full text-[11px] text-left border-collapse ${
+                          theme === 'ie6' 
+                            ? 'border-2 border-white text-black bg-[#d4d0c8]' 
+                            : theme === 'terminal'
+                            ? 'border border-[#ffb000] text-[#ffb000]'
+                            : 'border border-slate-800 text-slate-300 bg-slate-950/40'
+                        }`}>
+                          <thead>
+                            <tr className={
+                              theme === 'ie6' 
+                                ? 'bg-[#000080] text-white border-b-2 border-white' 
+                                : theme === 'terminal'
+                                ? 'bg-[#ffb000]/15 border-b border-[#ffb000]'
+                                : 'bg-indigo-950/30 border-b border-slate-800'
+                            }>
+                              <th className="p-2 border-r border-[#2d3748]/30">Éditeur</th>
+                              <th className="p-2 border-r border-[#2d3748]/30">Philosophie &amp; Moteur</th>
+                              <th className="p-2 border-r border-[#2d3748]/30 text-center">Vitesse &amp; RAM</th>
+                              <th className="p-2 border-r border-[#2d3748]/30 text-center font-mono">IA / Autocomplete</th>
+                              <th className="p-2">Point Fort Exceptionnel</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className={`border-b ${theme === 'ie6' ? 'border-white bg-[#ece9d8]' : 'border-slate-850/80'}`}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold">🦎 Notepad++ (Note++)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">Éditeur système ultra-rapide. Écrit en C++ natif pur.</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-emerald-400">⚡⚡⚡⚡⚡ <br/>(&lt;15 Mo RAM)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center text-slate-500">Syntaxes colorées de base</td>
+                              <td className="p-2 text-slate-350 text-[10.5px]">Se lance instantanément, pèse 5 Mo sur disque, indestructible face aux crashs.</td>
+                            </tr>
+                            <tr className={`border-b ${theme === 'ie6' ? 'border-white' : 'border-slate-850/80 bg-slate-900/5'}`}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold">📝 Sublime Text</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">Esthétisme épuré &amp; réactivité. Écrit en C++ &amp; Python.</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-emerald-450">⚡⚡⚡⚡ <br/>(50 Mo RAM)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center text-slate-405">Autocomplete locale rapide</td>
+                              <td className="p-2 text-slate-350 text-[10.5px]">Curseurs multiples ultra-fluides, mini-carte latérale révolutionnaire.</td>
+                            </tr>
+                            <tr className={`border-b ${theme === 'ie6' ? 'border-white bg-[#ece9d8]' : 'border-slate-850/80'}`}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold">💚 Vim / Neovim</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">Éditeur modal terminal légendaire. Configurable à l'infini (Lua/Vimscript).</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-emerald-400">⚡⚡⚡⚡⚡ <br/>(&lt;10 Mo RAM)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center text-slate-300 font-semibold text-cyan-400">⚡⚡⚡ <br/>(LSP / Treesitter)</td>
+                              <td className="p-2 text-slate-350 text-[10.5px]">Zéro souris. Efficacité ergonomique absolue pour le développement sur serveurs distants.</td>
+                            </tr>
+                            <tr className={`border-b ${theme === 'ie6' ? 'border-white' : 'border-slate-850/80'}`}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold">🟦 VS Code</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">Hub extensible géant. Chrome/Electron + Node.js.</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-yellow-555">⚡⚡ <br/>(400 Mo+ RAM)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-semibold text-cyan-400">⚡⚡⚡⚡ <br/>(Copilot / LSP)</td>
+                              <td className="p-2 text-slate-350 text-[10.5px]">Catalogue d'extensions sans limite, déboguage universel intégré. Le standard incontesté.</td>
+                            </tr>
+                            <tr className={`border-b ${theme === 'ie6' ? 'border-white' : 'border-slate-850/80 bg-slate-900/5'}`}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold">🐘 PhpStorm / IntelliJ</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">IDE lourd d'entreprise. Écrit en Java (JetBrains).</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-rose-500">⚡ <br/>(1,5 Go+ RAM)</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-bold text-emerald-400">⚡⚡⚡⚡⚡ <br/>(AST contextuel)</td>
+                              <td className="p-2 text-slate-350 text-[10.5px]">Refactoring automatique infaillible, détection sémantique profonde du PHP/SQL.</td>
+                            </tr>
+                            <tr className={theme === 'ie6' ? 'bg-[#ece9d8]' : 'bg-indigo-955/20'}>
+                              <td className="p-2 border-r border-[#2d3748]/20 font-bold text-[#a0a5ff]">🌌 Antigravity IDE</td>
+                              <td className="p-2 border-r border-[#2d3748]/20">Espace de programmation piloté par Agent AI autonome.</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center text-slate-400">Multi-thread Cloud</td>
+                              <td className="p-2 border-r border-[#2d3748]/20 text-center font-black text-amber-400">🧠🧠🧠🧠🧠 <br/>(Décisions autonomes)</td>
+                              <td className="p-2 text-indigo-250 text-[10.5px]">Comprend vos consignes vocales/textuelles, écrit le code multi-fichiers et s'auto-corrige.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-tab 2: Notepad++ In depth */}
+                {activeEditorTab === 'npp' && (
+                  <div className={`p-5 rounded-2xl border ${
+                    theme === 'ie6' ? 'bg-white text-black border-2 border-black' : 'bg-slate-900/40 border-slate-800'
+                  } space-y-4`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">🦎</span>
+                      <div>
+                        <h4 className="text-xs font-extrabold uppercase text-emerald-400">Notepad++ — L'Inflexible Champion du C++</h4>
+                        <p className="text-[10px] text-slate-400 font-mono">Lancé en novembre 2003 par Don Ho • Licence Libre GPL</p>
+                      </div>
+                    </div>
+
+                    <div className="text-[11.5px] leading-relaxed space-y-3 text-slate-300">
+                      <p>
+                        Créé par un développeur français frustré par la lourdeur phénoménale des IDE basés sur Java à son bureau, <strong>Notepad++</strong> a été optimisé chirurgicalement de A à Z. Écrit en <strong>C++ natif pur</strong>, il dialogue directement avec les API Win32 de Windows, sans runtimes complexes, conteneurs virtuels, ou interpréteurs web interposés (comme Node/V8).
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div className="p-3.5 bg-emerald-950/10 border border-emerald-500/10 rounded-xl space-y-1">
+                          <strong className="text-emerald-400 text-xs font-bold block">⚡ Rôle &amp; Philosophie Technique :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-350">
+                            Sa vocation est la légèreté absolue et l'économie d'énergie. Il peut s'exécuter confortablement sur des micro-ordinateurs de l'an 2000 avec seulement 16 Mo de mémoire vive ou être transporté sur une clé USB de secours (mode portable natif).
+                          </p>
+                        </div>
+                        <div className="p-3.5 bg-slate-950/30 border border-slate-850 rounded-xl space-y-1">
+                          <strong className="text-slate-200 text-xs font-bold block">🔒 Résilience Industrielle :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-350">
+                            Grâce à son système étanche de clichés temporaires en cache physique directe, ses onglets gardent en mémoire votre code même en cas d'extinction électrique brutale du système de développement.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <p className="font-semibold text-slate-200">🛠️ Pourquoi les artisans du web l'utilisent toujours aujourd'hui :</p>
+                        <ul className="list-disc pl-4 space-y-1 mt-1 text-slate-400 text-[11px]">
+                          <li>
+                            <strong className="text-slate-300">Recherche Regex Instantanée :</strong> Capacité à chercher et remplacer des modèles syntaxiques complexes à travers des répertoires de milliers de fichiers de code locaux en moins de 3 secondes.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Traitement de fichiers géants :</strong> Il ouvre des fichiers logs de base de données de 4 gigas sans broncher, là où VS Code provoque un "Out of Memory" du thread Electron.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Dépendance Zéro :</strong> Pas besoin d'accès à Internet, d'installation d'outils Node, ou de téléchargement d'extensions de 200 Mo pour inspecter un script.
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-tab 3: VS Code In depth */}
+                {activeEditorTab === 'vscode' && (
+                  <div className={`p-5 rounded-2xl border ${
+                    theme === 'ie6' ? 'bg-white text-black border-2 border-black' : 'bg-slate-900/40 border-slate-800'
+                  } space-y-4`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">🟦</span>
+                      <div>
+                        <h4 className="text-xs font-extrabold uppercase text-blue-400">VS Code — L'Écosystème aux Cent Mille Extensions</h4>
+                        <p className="text-[10px] text-slate-400 font-mono">Lancé en 2015 par Microsoft • Développé sur Electron &amp; TS</p>
+                      </div>
+                    </div>
+
+                    <div className="text-[11.5px] leading-relaxed space-y-3 text-slate-300">
+                      <p>
+                        Conçu sous la direction d'Erich Gamma (le célèbre auteur des Design Patterns originels en programmation), <strong>Visual Studio Code (VS Code)</strong> a profondément redéfini la façon dont les éditeurs modernes s'interfacent avec les compilateurs et systèmes d'exploitation.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div className="p-3.5 bg-blue-950/10 border border-blue-500/10 rounded-xl space-y-1">
+                          <strong className="text-blue-400 text-xs font-bold block">🌐 L'Architecture Electron :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-350">
+                            Bâti au-dessus de Chromium (le moteur de Google Chrome) et de Node.js. Bien qu'il consomme beaucoup plus de mémoire vive (souvent 400 à 1200 Mo de RAM), il permet aux développeurs de styliser l'éditeur avec des thèmes CSS riches et des interfaces interactives spectaculaires.
+                          </p>
+                        </div>
+                        <div className="p-3.5 bg-slate-950/30 border border-slate-850 rounded-xl space-y-1">
+                          <strong className="text-slate-200 text-xs font-bold block">⚡ Le Secret : Protocole LSP :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-350">
+                            Microsoft a inventé le <strong>Language Server Protocol (LSP)</strong>. Au lieu de coder l'analyse syntaxique pour chaque éditeur, le LSP déporte l'intelligence typée de TypeScript, Rust ou Python dans un processus d'arrière-plan autonome, offrant ainsi une autocomplétion parfaite.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <p className="font-semibold text-slate-200">🏅 Pourquoi il domine sans partage :</p>
+                        <ul className="list-disc pl-4 space-y-1 mt-1 text-slate-400 text-[11px]">
+                          <li>
+                            <strong className="text-slate-300">Intégration Git &amp; Terminaux :</strong> Un terminal de commande multi-shell fluide est nativement fusionné avec l'interface graphique de suivi des branches.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Hub Extensible Universel :</strong> N'importe quel développeur dans le monde peut publier un plugin sémantique, un linter, ou un visualisateur de base de données d'un clic depuis la marketplace intégrée.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Configuration Unifiée JSON :</strong> Tous les raccourcis, préférences de formateur et variables d'environnement sont gérés via des fichiers de configuration universels.
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-tab 4: Antigravity IDE In depth */}
+                {activeEditorTab === 'antigravity' && (
+                  <div className={`p-5 rounded-2xl border ${
+                    theme === 'ie6' ? 'bg-white text-black border-2 border-black' : 'bg-slate-900/40 border-indigo-950'
+                  } space-y-4`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">🌌</span>
+                      <div>
+                        <h4 className="text-xs font-extrabold uppercase text-indigo-400">Antigravity — L'Espace d'Ingénierie Agentique Autonome</h4>
+                        <p className="text-[10px] text-[#a3afee] font-mono">Conçu pour l'Ère de l'Intelligence Intégrée • Multi-thread Cloud</p>
+                      </div>
+                    </div>
+
+                    <div className="text-[11.5px] leading-relaxed space-y-3 text-slate-300">
+                      <p>
+                        L'environnement <strong>Antigravity IDE</strong> marque la rupture sémantique fondamentale de notre décennie. On ne parle plus de simple "auto-complétion" passive ou de suggestions générées de lignes isolées. L'IDE s'efface pour devenir un <strong>partenaire de génie logiciel interactif</strong>.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div className="p-3.5 bg-indigo-950/15 border border-indigo-500/15 rounded-xl space-y-1">
+                          <strong className="text-indigo-455 text-xs font-bold block">🧠 Programmation Orientée Intention :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-330">
+                            Le créateur dialogue en langage humain (ex : français). L'agent planifie des solutions globales multi-fichiers, crée les structures absentes, et injecte le code requis directement sans polluer l'éditeur ou briser l'architecture existante.
+                          </p>
+                        </div>
+                        <div className="p-3.5 bg-slate-950/30 border border-slate-850 rounded-xl space-y-1">
+                          <strong className="text-slate-200 text-xs font-bold block">⚙️ Boucles de Validation Intégrées :</strong>
+                          <p className="text-[11px] leading-relaxed text-slate-330">
+                            L'agent ne se contente pas d'écrire à l'aveuglette : il compile, analyse les rapports d'erreurs du linter TypeScript en direct et boucle intelligemment pour corriger ses propres erreurs de frappe syntaxiques avant de soumettre son travail au développeur.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <p className="font-semibold text-slate-200">🚀 Les piliers de la modernité didactique :</p>
+                        <ul className="list-disc pl-4 space-y-1 mt-1 text-slate-400 text-[11px]">
+                          <li>
+                            <strong className="text-slate-300">Lecture Sémantique Profonde :</strong> Compréhension absolue du graphe de types, de l'arborescence des imports et des dépendances tierces sans aucune dérive mémoire locale.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Éradication du "Tech-Larping" :</strong> L'agent s'interdit d'insérer des informations système obsolètes en marge de page, préférant soigner le design, l'esthétique interactive et l'ergonomie.
+                          </li>
+                          <li>
+                            <strong className="text-slate-300">Didactique Instantanée :</strong> Il explique ses choix de design de façon transparente, rationnelle et objective, agissant comme un instructeur chevronné.
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
 
             {/* Code example card */}
             <div className="space-y-1.5 text-left pt-2">

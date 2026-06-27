@@ -46,6 +46,183 @@ export default function W3cVersioner({ theme }: W3cVersionerProps) {
   const [activeTaskId, setActiveTaskId] = useState<string>('button');
   const [activeSpecId, setActiveSpecId] = useState<string>('2026');
 
+  // Répétoires d'exemples de codes pour le simulateur
+  const codeTemplates = {
+    clean: `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Musée du Web - Galerie d'Art</title>
+</head>
+<body>
+    <header>
+        <h1>Splendeurs de l'Internet d'époque</h1>
+        <nav>
+            <a href="#galerie">Galerie</a> - 
+            <a href="#a-propos">À Propos</a>
+        </nav>
+    </header>
+    <main id="galerie">
+        <article>
+            <h2>La Mobylette Bleue en JPEG</h2>
+            <p>Un fleuron de l'industrie rétro.</p>
+            <img src="mobylette.jpg" alt="Mobylette bleue d'époque garée dans une rue de Paris." width="400" />
+        </article>
+    </main>
+    <footer>
+        <p>&copy; 2026 Musée du Web. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>`,
+    slop: `<!-- Oubli du doctype crucial -->
+<html>
+<head>
+    <!-- Oubli du charset UTF-8 -->
+    <title>Mon Super Site Astro</title>
+</head>
+<body bgcolor="#000000" text="#FFFFFF">
+    <!-- Erreur : Utilisation de balises dépréciées <font> et <center> -->
+    <center>
+        <font size="6" face="Comic Sans MS" color="yellow">BIENVENUE CHEZ MOI !!</font>
+    </center>
+    
+    <!-- Erreur : Mauvaise imbrication de balises (B et P croisés) -->
+    <p><b>Visitez mon <i>livre d'or</b> s'il vous plaît !</i></p>
+    
+    <!-- Erreur : Image sans attribut alt obligatoire -->
+    <img src="banniere.gif" width="468" height="60">
+    
+    <!-- Erreur : ID dupliqué sur le même document -->
+    <div id="bloc1">Premier paragraphe</div>
+    <div id="bloc1">Deuxième paragraphe (ID double !)</div>
+    
+    <!-- Erreur : Balise fermante manquante pour un div -->
+    <div style="padding: 10px;">
+        <p>Ce paragraphe est enfermé dans un conteneur non refermé.
+</body>
+</html>`
+  };
+
+  const [validatorInput, setValidatorInput] = useState<string>(codeTemplates.clean);
+  const [validationResult, setValidationResult] = useState<{
+    status: 'idle' | 'scanning' | 'success' | 'failed';
+    errors: Array<{ line: number; type: 'error' | 'warning'; msg: string; context: string }>;
+  }>({ status: 'idle', errors: [] });
+
+  const runLiveW3cValidator = (htmlCode: string) => {
+    setValidationResult({ status: 'scanning', errors: [] });
+    
+    setTimeout(() => {
+      const errorsList: Array<{ line: number; type: 'error' | 'warning'; msg: string; context: string }> = [];
+      const lines = htmlCode.split('\n');
+      
+      const hasDoctype = htmlCode.match(/<!DOCTYPE\s+html/i) || htmlCode.match(/<!DOCTYPE\s+HTML/i);
+      if (!hasDoctype) {
+        errorsList.push({
+          line: 1,
+          type: 'error',
+          msg: "Doctype manquant ou non standard. Le navigateur passera en 'Quirks Mode' (Rendu rétro dégradé), ignorant certains standards CSS modernes indispensables.",
+          context: lines[0] || "Début du fichier"
+        });
+      }
+      
+      const hasCharset = htmlCode.match(/<meta\s+charset=/i) || htmlCode.match(/charset=/i);
+      if (!hasCharset) {
+        errorsList.push({
+          line: Math.min(lines.length, 6),
+          type: 'warning',
+          msg: "Encodage charset UTF-8 absent. Risque élevé d'accents de texte cassés ou d'affichage de hiéroglyphes sur certains serveurs web (ex :  ou Ã©).",
+          context: lines.find(l => l.includes('<head>')) || "Section <head>"
+        });
+      }
+
+      let divCount = 0;
+      let divCloseCount = 0;
+      const idsSeen: Record<string, number> = {};
+
+      lines.forEach((lineText, idx) => {
+        const lineNum = idx + 1;
+        
+        // Count divs
+        const openDivs = (lineText.match(/<div(\s|>)/gi) || []).length;
+        const closeDivs = (lineText.match(/<\/div>/gi) || []).length;
+        divCount += openDivs;
+        divCloseCount += closeDivs;
+
+        // Font tag
+        if (lineText.match(/<font/i)) {
+          errorsList.push({
+            line: lineNum,
+            type: 'warning',
+            msg: "Utilisation de la balise obsolète <font>. Le W3C recommande d'utiliser des propriétés CSS de typographies en feuille de style externe.",
+            context: lineText.trim()
+          });
+        }
+
+        // Center tag
+        if (lineText.match(/<center/i)) {
+          errorsList.push({
+            line: lineNum,
+            type: 'warning',
+            msg: "La balise <center> est dépréciée par le W3C. Privilégiez margin: auto, text-align ou les boîtes Flexbox/Grid CSS modernes.",
+            context: lineText.trim()
+          });
+        }
+
+        // Img alt checks
+        if (lineText.match(/<img/i) && !lineText.match(/alt=/i)) {
+          errorsList.push({
+            line: lineNum,
+            type: 'error',
+            msg: "Balise <img /> dépourvue de l'attribut obligatoire 'alt' (nécessaire à l'accessibilité des personnes malvoyantes et à l'indexation SEO).",
+            context: lineText.trim()
+          });
+        }
+
+        // Duplicate ID checks
+        const idMatches = lineText.match(/id=["']([^"']+)["']/g);
+        if (idMatches) {
+          idMatches.forEach(idStr => {
+            const idVal = idStr.replace(/id=["']|["']/g, '');
+            idsSeen[idVal] = (idsSeen[idVal] || 0) + 1;
+            if (idsSeen[idVal] > 1) {
+              errorsList.push({
+                line: lineNum,
+                type: 'error',
+                msg: `Identifiant répétitif : l'ID "${idVal}" est déclaré plusieurs fois. Chaque identifiant CSS/JS doit être rigoureusement unique sur la page.`,
+                context: idStr
+              });
+            }
+          });
+        }
+
+        // Tag nesting mismatch
+        if (lineText.match(/<b>.*<\/p>/i) || lineText.match(/<p>.*<\/b>/i) || lineText.match(/<b>.*<i>.*<\/b>/i)) {
+          errorsList.push({
+            line: lineNum,
+            type: 'error',
+            msg: "Imbrication croisée interdite. Les balises HTML doivent être fermées dans l'ordre inverse de leur ordre d'ouverture (LIFO).",
+            context: lineText.trim()
+          });
+        }
+      });
+
+      if (divCount !== divCloseCount) {
+        errorsList.push({
+          line: lines.length,
+          type: 'error',
+          msg: `Structure DOM altérée : ${divCount} balises <div> ouvertes pour seulement ${divCloseCount} fermées. Risque élevé de bugs d'affichage imprévisibles.`,
+          context: `Analyse globale du DOM`
+        });
+      }
+
+      setValidationResult({
+        status: errorsList.length === 0 ? 'success' : 'failed',
+        errors: errorsList
+      });
+    }, 1250);
+  };
+
   const tasks: SpecTask[] = [
     {
       id: 'button',
@@ -627,6 +804,253 @@ export default function W3cVersioner({ theme }: W3cVersionerProps) {
                 title={`Musée du Web — Comparateur ${activeTask.label} de ${activeSpecId}`}
                 text={`Regardez comment on codait ${activeTask.label} en ${activeSpecId} d'après l'évolution des spécifications W3C !`}
               />
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      {/* SECTION EXPLICATION W3C + SIMULATEUR DE VALIDATEUR */}
+      <div className="mt-8 pt-6 border-t border-slate-800/60 text-left space-y-6" id="w3c-academy-section">
+        
+        {/* Academic Card */}
+        <div className={`${
+          theme === 'ie6' 
+            ? 'bg-[#c0c0c0] border-2 border-white shadow-[inset_-1px_-1px_1px_#808080,inset_1px_1px_1px_white] p-5 text-black' 
+            : theme === 'terminal' 
+            ? 'bg-black border border-[#ffb000]/45 p-6 text-[#ffb000] font-mono' 
+            : 'bg-gradient-to-br from-[#121215] to-[#0c0c0e] border border-slate-800/80 p-6 rounded-2xl shadow-xl'
+          } space-y-5`}
+        >
+          <div className="flex items-center gap-2.5 pb-3 border-b border-slate-800/40">
+            <span className="text-xl">🌐</span>
+            <div>
+              <h3 className={`text-sm font-extrabold uppercase tracking-wider ${theme === 'ie6' ? 'text-blue-900 font-sans font-black' : 'text-slate-100'}`}>
+                Le W3C : Arbitre Universel de l'Interopérabilité
+              </h3>
+              <p className="text-[10px] text-gray-500 font-mono mt-0.5">Fondé en 1994 par Tim Berners-Lee — Créateur du World Wide Web</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 text-xs text-slate-300">
+            {/* Column 1: History & Mission */}
+            <div className="md:col-span-6 space-y-3">
+              <h4 className="font-extrabold text-indigo-400 flex items-center gap-1.5 uppercase text-[10.5px]">
+                🏛️ Le Gardien des Standards Ouverts
+              </h4>
+              <p className="leading-relaxed text-[11.5px]">
+                Au milieu des années 1990, le web risquait de se fragmenter sous l'effet des <strong>"Guerres des Navigateurs"</strong>. 
+                Netscape et Microsoft s'affrontaient en inventant chacun leurs propres balises non standards (comme les fameuses balises propriétaires <code>&lt;blink&gt;</code> de Netscape ou <code>&lt;marquee&gt;</code> d'Internet Explorer), créant un web fracturé où un site conçu pour l'un provoquait d'affreux plantages sur l'autre.
+              </p>
+              <p className="leading-relaxed text-[11.5px]">
+                Le <strong>W3C (World Wide Web Consortium)</strong> fut constitué pour être le parlement pacifique du réseau. Son rôle historique consiste à concevoir et à publier des <strong>spécifications techniques ouvertes</strong> (HTML, CSS, XML, SVG, API d'accessibilité) afin de garantir qu'aucun acteur privé ne puisse s'approprier ou privatiser les fondations de l'autoroute de l'information.
+              </p>
+            </div>
+
+            {/* Column 2: Why validation is the trademark of REAL creators */}
+            <div className={`md:col-span-6 p-4 rounded-xl space-y-3 border ${
+              theme === 'ie6' 
+                ? 'bg-[#d4d0c8] border-inset border-white text-black' 
+                : 'bg-slate-900/50 border-slate-800/80'
+            }`}>
+              <h4 className="font-extrabold text-emerald-400 flex items-center gap-1.5 uppercase text-[10.5px]">
+                🏆 Pourquoi les VRAIS créateurs de sites valident leur HTML ?
+              </h4>
+              <p className="leading-relaxed text-[11.5px] text-slate-300">
+                Aujourd'hui, n'importe quel générateur automatique ou IA bâclée sait produire du code visuellement acceptable à court terme. Mais pour les <strong>vrais artisans du code</strong> (les développeurs de métier), le passage par le <strong>Validateur W3C markup</strong> est un rituel de noblesse indispensable pour plusieurs raisons fondamentales :
+              </p>
+              <ol className="list-decimal pl-4 space-y-2 text-[11px] text-slate-400">
+                <li>
+                  <strong className="text-slate-200">Interopérabilité absolue :</strong> Un code valide d'après les spécifications strictes du W3C s'assure d'être rendu de manière fluide sur n'importe quel appareil : smartphones d'hier, navigateurs modernes de bureau, ou liseuses braille pour les personnes en situation de handicap.
+                </li>
+                <li>
+                  <strong className="text-slate-200">Guerilla SEO (Indexation naturelle) :</strong> Les robots des moteurs de recherche (Googlebot) parcourent le contenu selon la structure du DOM (Document Object Model). Des balises mal emboîtées ou des balises non refermées corrompent l'indexation et pénalisent sévèrement le classement naturel.
+                </li>
+                <li>
+                  <strong className="text-slate-200">Rendement CPU & Rapidité de Parsing :</strong> Face à un HTML incorrect, les fureteurs activent un mode d'erreur fatiguant (Quirks Mode) pour deviner vos intentions. Un code standardisé W3C permet au navigateur de parser l'interface instantanément en économisant la batterie et le processeur de l'utilisateur.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        {/* Validator Interactive Simulator Sandbox */}
+        <div className={`${
+          theme === 'ie6' 
+            ? 'bg-[#c0c0c0] border-2 border-white shadow-[inset_-1px_-1px_1px_#808080,inset_1px_1px_1px_white] p-5 text-black' 
+            : theme === 'terminal' 
+            ? 'bg-black border border-[#ffb000]/45 p-6 text-[#ffb000] font-mono' 
+            : 'bg-[#111114] border border-slate-800/90 p-6 rounded-2xl shadow-xl'
+          } space-y-5`}
+          id="w3c-validator-sandbox"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/40 pb-3.5 gap-2">
+            <div>
+              <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block tracking-wider">Audit de Conformité Sémantique</span>
+              <h3 className="text-xs font-bold text-gray-200 uppercase mt-0.5">💻 Simulateur de Validateur Officiel W3C</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => {
+                  setValidatorInput(codeTemplates.clean);
+                  setValidationResult({ status: 'idle', errors: [] });
+                }}
+                className="px-2.5 py-1 text-[10.5px] bg-emerald-550/15 border border-emerald-550/30 text-emerald-450 hover:bg-emerald-550/25 rounded-md transition font-semibold cursor-pointer"
+              >
+                ✅ Charger : Code d'Artisan
+              </button>
+              <button
+                onClick={() => {
+                  setValidatorInput(codeTemplates.slop);
+                  setValidationResult({ status: 'idle', errors: [] });
+                }}
+                className="px-2.5 py-1 text-[10.5px] bg-rose-550/15 border border-rose-550/30 text-rose-450 hover:bg-rose-550/25 rounded-md transition font-semibold cursor-pointer"
+              >
+                ❌ Charger : Code "Slop" d'Amateur
+              </button>
+            </div>
+          </div>
+
+          <p className="text-[11.5px] text-slate-400 leading-relaxed">
+            Pour comprendre l'importance d'une grammaire HTML irréprochable face aux arbitres du web, éditez le code ci-dessous à votre guise puis lancez l'analyseur. Le moteur scannera récursivement le DOM virtuel selon les règles rigoureuses du consortium.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Input Editor Code (7 columns) */}
+            <div className="lg:col-span-7 space-y-2">
+              <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block">Éditeur HTML standard :</span>
+              <textarea
+                value={validatorInput}
+                onChange={(e) => setValidatorInput(e.target.value)}
+                rows={14}
+                className={`w-full p-4 font-mono text-xs ${
+                  theme === 'ie6' 
+                    ? 'bg-white text-black border-2 border-inset border-[#808080] outline-none' 
+                    : theme === 'terminal' 
+                    ? 'bg-black text-[#ffb000] border border-[#ffb000] focus:ring-1 focus:ring-[#ffb000] outline-none' 
+                    : 'bg-[#060608] text-slate-200 border border-slate-800 rounded-xl focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 shadow-inner'
+                }`}
+                style={{ resize: 'vertical' }}
+              />
+
+              <div className="flex justify-end">
+                <button
+                  onClick={() => runLiveW3cValidator(validatorInput)}
+                  disabled={validationResult.status === 'scanning'}
+                  className={`px-5 py-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
+                    validationResult.status === 'scanning' ? 'opacity-50 cursor-not-allowed' : ''
+                  } ${
+                    theme === 'ie6'
+                      ? 'bg-[#d4d0c8] border-2 border-outset border-white text-black hover:bg-[#c0c0c0]'
+                      : theme === 'terminal'
+                      ? 'bg-[#ffb000] text-black border border-[#ffb000] hover:bg-black hover:text-[#ffb000]'
+                      : 'bg-indigo-650 hover:bg-indigo-600 text-white shadow-lg rounded-xl shadow-indigo-600/10 active:scale-98'
+                  }`}
+                >
+                  {validationResult.status === 'scanning' ? '🔄 Scan du Validateur...' : '🔍 Lancer la validation W3C'}
+                </button>
+              </div>
+            </div>
+
+            {/* Diagnostics Report (5 columns) */}
+            <div className="lg:col-span-5 space-y-3 h-full flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block mb-2">📋 Rapport d'Analyse Scientifique :</span>
+                
+                {/* Result screen */}
+                <div className={`p-4 border min-h-[290px] flex flex-col justify-center rounded-xl ${
+                  validationResult.status === 'idle' 
+                    ? 'bg-[#09090b] border-slate-800/80 border-dashed text-slate-500' 
+                    : validationResult.status === 'scanning'
+                    ? 'bg-indigo-950/10 border-indigo-500/20 text-indigo-400'
+                    : validationResult.status === 'success'
+                    ? 'bg-emerald-950/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-rose-950/10 border-rose-500/30 text-rose-450'
+                }`}>
+                  
+                  {/* Status IDLE */}
+                  {validationResult.status === 'idle' && (
+                    <div className="text-center p-6 space-y-2">
+                      <span className="text-3xl block animate-bounce">⏱️</span>
+                      <h4 className="text-xs font-black text-slate-400 uppercase">Validateur en attente</h4>
+                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                        Cliquez sur le bouton pour soumettre votre balisage et analyser les structures de balises.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Status SCANNING */}
+                  {validationResult.status === 'scanning' && (
+                    <div className="text-center p-6 space-y-3">
+                      <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin mx-auto" />
+                      <h4 className="text-xs font-black uppercase tracking-widest text-indigo-400 font-mono">Scrutage du code...</h4>
+                      <p className="text-[11px] text-indigo-300/80 leading-relaxed font-mono">
+                        Verification du doctype, de l'encodage hermétique, du nesting des balises et de l'accessibilité WAI.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Status VALID SUCCESS */}
+                  {validationResult.status === 'success' && (
+                    <div className="space-y-4 text-left">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">🎉</span>
+                        <div>
+                          <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">Audit validé avec les Honneurs</h4>
+                          <span className="text-[9px] font-mono bg-emerald-500/10 px-2 py-0.5 border border-emerald-500/20 text-emerald-400 rounded">HTML5 Standard compliant</span>
+                        </div>
+                      </div>
+                      
+                      <p className="text-[11.5px] text-slate-300 leading-relaxed">
+                        <strong>Félicitations !</strong> Le Validateur W3C n'a soulevé aucune irrégularité grammaticale. Votre document HTML5 est d'une pureté académique absolue.
+                      </p>
+                      
+                      <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 text-[10.5px] leading-relaxed text-slate-400">
+                        C'est l'exigence suprême des <strong className="text-emerald-350">vrais créateurs de sites web</strong> : garantir un code sémantique qui traverse l'épreuve des ans sans dérive de rendu.
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Status VALID FAILURE (Common issues listed) */}
+                  {validationResult.status === 'failed' && (
+                    <div className="space-y-3 text-left">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">⚠️</span>
+                        <div>
+                          <h4 className="text-xs font-black uppercase tracking-wider text-rose-400">Anomalies détectées ({validationResult.errors.length})</h4>
+                          <span className="text-[9px] font-mono bg-rose-500/10 px-2 py-0.5 border border-rose-500/20 text-rose-450 rounded">Markup non réglementaire</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-slate-350 leading-relaxed">
+                        Le validateur a décelé des déviances par rapport aux chartes standard d'interopérabilité. Voici les lignes à rectifier :
+                      </p>
+
+                      {/* Small compact table of bugs */}
+                      <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
+                        {validationResult.errors.map((err, idx) => (
+                          <div key={idx} className="p-2 rounded bg-[#1c0c0e] border border-rose-950/55 text-[10.5px] space-y-1">
+                            <div className="flex justify-between items-center text-[9px] font-mono">
+                              <span className={`px-1.5 py-0.2 rounded font-black ${err.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-500'}`}>
+                                {err.type === 'error' ? 'ERREUR' : 'AVERTISSEMENT'} - LIGNE {err.line}
+                              </span>
+                            </div>
+                            <p className="text-slate-300 leading-snug">{err.msg}</p>
+                            {err.context && (
+                              <code className="block bg-black/40 text-rose-300 font-mono text-[9.5px] p-1 rounded truncate">
+                                Context: {err.context}
+                              </code>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              </div>
             </div>
 
           </div>

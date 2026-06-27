@@ -38,6 +38,7 @@ interface PeerConnection {
 
 export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
   // Simulator state
+  const [simulatorMode, setSimulatorMode] = useState<'utorrent' | 'megaupload'>('utorrent');
   const [selectedTorrent, setSelectedTorrent] = useState<'music' | 'linux' | 'video'>('music');
   const [downloadProgress, setDownloadProgress] = useState(12);
   const [downloadSpeed, setDownloadSpeed] = useState(45); // in KB/s (retro!)
@@ -51,7 +52,85 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
     { ip: '109.23.4.156', client: 'BitComet 1.12', progress: 8, speed: '2 KB/s', type: 'leecher' }
   ]);
 
-  // Handle mock download progression
+  // Megaupload Simulator State
+  const [muFile, setMuFile] = useState<'movie' | 'series' | 'music'>('series');
+  const [muAccount, setMuAccount] = useState<'free' | 'premium'>('free');
+  const [muStatus, setMuStatus] = useState<'idle' | 'waiting' | 'downloading' | 'finished'>('idle');
+  const [muTimer, setMuTimer] = useState(45);
+  const [muCaptchaLine, setMuCaptchaLine] = useState('MEGA');
+  const [muCaptchaInput, setMuCaptchaInput] = useState('');
+  const [muProgress, setMuProgress] = useState(0);
+  const [muSpeed, setMuSpeed] = useState(0);
+  const [muError, setMuError] = useState(false);
+
+  // Initialize a random captcha for Megaupload
+  useEffect(() => {
+    const captchas = ['MEGA', 'F1LE', 'FAST', 'KIMD', 'DOWN', 'RAID', 'BZAR', 'HADO'];
+    setMuCaptchaLine(captchas[Math.floor(Math.random() * captchas.length)]);
+  }, []);
+
+  // Handle Megaupload Countdown & Download
+  useEffect(() => {
+    let timerInterval: any;
+    if (muStatus === 'waiting' && muTimer > 0) {
+      timerInterval = setInterval(() => {
+        setMuTimer(prev => prev - 1);
+      }, 1000);
+    } else if (muStatus === 'waiting' && muTimer === 0) {
+      setMuStatus('downloading');
+      setMuProgress(0);
+    }
+    return () => clearInterval(timerInterval);
+  }, [muStatus, muTimer]);
+
+  useEffect(() => {
+    let downloadInterval: any;
+    if (muStatus === 'downloading' && muProgress < 100) {
+      downloadInterval = setInterval(() => {
+        setMuProgress(prev => {
+          const isPrem = muAccount === 'premium';
+          const increment = isPrem ? (Math.random() * 8 + 6) : (Math.random() * 1.5 + 0.5);
+          const target = Math.min(100, Number((prev + increment).toFixed(1)));
+          
+          const maxSpeed = isPrem ? 9200 : 70; // Premium ~9 MB/s, Free ~70 KB/s
+          setMuSpeed(Math.floor(maxSpeed + (Math.random() - 0.5) * (isPrem ? 800 : 8)));
+
+          if (target >= 100) {
+            setMuStatus('finished');
+            return 100;
+          }
+          return target;
+        });
+      }, 300);
+    }
+    return () => clearInterval(downloadInterval);
+  }, [muStatus, muProgress, muAccount]);
+
+  const resetMu = () => {
+    setMuStatus(muAccount === 'premium' ? 'downloading' : 'idle');
+    setMuTimer(45);
+    setMuProgress(0);
+    setMuSpeed(0);
+    setMuCaptchaInput('');
+    setMuError(false);
+    const captchas = ['MEGA', 'F1LE', 'FAST', 'KIMD', 'DOWN', 'RAID', 'BZAR', 'HADO'];
+    setMuCaptchaLine(captchas[Math.floor(Math.random() * captchas.length)]);
+  };
+
+  const handleCaptchaVerify = () => {
+    if (muCaptchaInput.trim().toUpperCase() === muCaptchaLine) {
+      setMuStatus('waiting');
+      setMuTimer(45);
+      setMuError(false);
+    } else {
+      setMuError(true);
+      setMuCaptchaInput('');
+      const captchas = ['MEGA', 'F1LE', 'FAST', 'KIMD', 'DOWN', 'RAID', 'BZAR', 'HADO'];
+      setMuCaptchaLine(captchas[Math.floor(Math.random() * captchas.length)]);
+    }
+  };
+
+  // Handle mock download progression for Torrent
   useEffect(() => {
     let interval: any;
     if (isDownloading && downloadProgress < 100) {
@@ -149,15 +228,15 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
         <div className="flex items-center gap-3">
           <Download className="w-5 h-5 text-indigo-455 shrink-0 animate-bounce" />
           <div>
-            <h2 className="text-xs font-bold leading-none uppercase">💾 Le Torrent & P2P — L'Épopée du Partage Décentralisé</h2>
-            <p className="text-[10px] opacity-75 mt-0.5">De la révolution physique de Napster et BitTorrent aux tribunaux de la loi Hadopi et l'avènement du streaming.</p>
+            <h2 className="text-xs font-bold leading-none uppercase">💾 Le Torrent, P2P & Téléchargement Direct</h2>
+            <p className="text-[10px] opacity-75 mt-0.5">De Napster et eMule à l'empire hégémonique de Megaupload et le protocole BitTorrent face à la loi Hadopi.</p>
           </div>
         </div>
       </div>
 
       {/* Legal & Didactic Disclaimer */}
       <div className={`${
-        theme === 'ie6' 
+         theme === 'ie6' 
           ? 'bg-[#ffffcc] text-[#800000] border-2 border-[#800000] p-3' 
           : theme === 'terminal' 
             ? 'bg-red-950/20 border border-red-500/30 text-red-400 p-3 font-mono' 
@@ -168,7 +247,7 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
           Avertissement légal & But didactique
         </div>
         <p className="text-[11px] leading-relaxed opacity-92">
-          Ce module interactif et historique est proposé exclusivement à titre <b>didactique, éducatif et culturel</b> afin de documenter l'évolution technique et juridique des protocoles de transmission décentralisés (P2P). <b>Nous n'encourageons ni ne tolérons en aucun cas le téléchargement ou le partage illégal d'œuvres protégées.</b> Le client de téléchargement présenté ci-dessous est un simulateur purement fictif fonctionnant en circuit fermé avec des données fictives simulées localement.
+          Ce module interactif et historique est proposé exclusivement à titre <b>didactique, éducatif et culturel</b> afin de documenter l'évolution technique et juridique des protocoles de transmission décentralisés (P2P) et hébergements centralisés (DDL). <b>Nous n'encourageons ni ne tolérons en aucun cas le téléchargement ou le partage illégal d'œuvres protégées.</b> Les simulateurs présentés ci-dessous fonctionnent en circuit fermé virtuel avec des données simulées localement.
         </p>
       </div>
 
@@ -197,10 +276,23 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
 
               {/* eMule / Kazaa Era */}
               <div className="border-l-2 border-indigo-500/35 pl-4 relative space-y-1">
-                <div className="absolute w-3.5 h-3.5 bg-indigo-605 border-4 border-[#0c0c0e] rounded-full -left-[8px] top-1"></div>
+                <div className="absolute w-3.5 h-3.5 bg-indigo-655 border-4 border-[#0c0c0e] rounded-full -left-[8px] top-1"></div>
                 <span className="text-[10px] font-mono font-bold text-indigo-400">2002 - 2006 : Les Réseaux Gnutella, Kazaa et l'Âne d'eMule</span>
                 <p className="leading-relaxed text-slate-300">
                   Après Napster, le P2P s'est totalement décentralisé. <b>eMule (réseau eDonkey2000)</b> et <b>Kazaa (protocole FastTrack)</b> permettaient de partager tous types de fichiers (DivX obsolètes, logiciels lourds, albums entiers). Les files d'attente interminables de l'âne d'eMule ont forgé la patience d'une génération, qui laissait tourner les ordinateurs bruyants toute la nuit pour un seul fichier de 700 Mo.
+                </p>
+              </div>
+
+              {/* Megaupload Era */}
+              <div className="border-l-2 border-red-540/40 pl-4 relative space-y-1">
+                <div className="absolute w-3.5 h-3.5 bg-red-600 border-4 border-[#0c0c0e] rounded-full -left-[8px] top-1"></div>
+                <span className="text-[10px] font-mono font-bold text-red-400 flex items-center gap-1">
+                  🔥 2005 - 2012 : L'Empire Megaupload & Le Direct Download (DDL)
+                </span>
+                <p className="leading-relaxed text-slate-300">
+                  Parallèlement au P2P, le <b>Direct Download (DDL)</b> s'est imposé comme l'alternative hégémonique des séries et films. Échappant totalement aux radars de la loi Hadopi (qui ne scannait que le protocole P2P public), l'hébergeur <b>Megaupload</b>, fondé par l'excentrique milliardaire <b>Kim Dotcom</b>, est devenu un monstre incontournable représentant jusqu'à <b>4% du trafic mondial d'Internet</b>.
+                  <br className="my-1" />
+                  Pour regarder les dernières séries américaines (Lost, Desperate Housewives, puis Game of Thrones) ou des films en format DivX, des millions d'utilisateurs passaient leur temps sur des forums de référencement (Wawa-Mania, Liberty Land) qui renvoyaient vers des liens Megaupload. Les utilisateurs gratuits se souviennent avec nostalgie du CAPTCHA de sécurité et du <b>compte à rebours frustrant de 45 secondes</b> qui bridait la vitesse à 70 KB/s, tandis que l'abonnement Premium débloquait instantanément la pleine bande passante de l'ADSL. Son arrestation spectaculaire par le FBI en janvier 2012 a marqué le glas de cet âge d'or du DDL.
                 </p>
               </div>
 
@@ -226,7 +318,7 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
                 <div className="bg-amber-955/15 border border-amber-500/20 p-2.5 rounded-lg text-[10.5px] mt-2 text-amber-400 flex items-start gap-1.5 leading-normal">
                   <Info className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
                   <span>
-                    <b>Insolite :</b> Paradoxalement, la fragmentation excessive du marché actuel de la SVOD (qui oblige un cinéphile à souscrire à 5 abonnements différents : Netflix, Disney+, Prime Video, Apple TV+, Max pour tout voir) engendre un retour modéré et mesurable vers le Torrent ces dernières années !
+                    <b>Insolite :</b> Paradoxalement, la fragmentation excessive du marché actuel de la SVOD (qui oblige un cinéphile à souscrire à 5 abonnements différents : Netflix, Disney+, Prime Video, Apple TV+, Max pour tout voir) engendre un retour modéré et mesurable vers le Direct Download et le Torrent ces dernières années !
                   </span>
                 </div>
               </div>
@@ -282,134 +374,370 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
         <div className="lg:col-span-5 space-y-6">
           <div className={css.card}>
             
-            <div className="border-b border-slate-800/40 pb-3 text-left">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-slate-100 flex items-center gap-2">
-                <Download className="w-4 h-4 text-emerald-400" />
-                Interactif : µTorrent Classic Simulator (Client P2P Rétro)
-              </h3>
+            {/* Simulation Header Tabs */}
+            <div className="flex border-b border-zinc-800/80 font-mono text-[10px]" id="simulators-tab-nav">
+              <button
+                onClick={() => setSimulatorMode('utorrent')}
+                className={`flex-1 py-2 text-center font-bold tracking-wider uppercase border-b-2 transition cursor-pointer ${
+                  simulatorMode === 'utorrent'
+                    ? 'border-indigo-500 text-indigo-400 bg-slate-900/40'
+                    : 'border-transparent text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                💾 µTorrent (P2P)
+              </button>
+              <button
+                onClick={() => {
+                  setSimulatorMode('megaupload');
+                  resetMu();
+                }}
+                className={`flex-1 py-2 text-center font-bold tracking-wider uppercase border-b-2 transition cursor-pointer ${
+                  simulatorMode === 'megaupload'
+                    ? 'border-red-600 text-red-500 bg-red-950/10'
+                    : 'border-transparent text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                🔴 Megaupload (DDL)
+              </button>
             </div>
 
-            {/* µTorrent simulated interface */}
-            <div className="bg-slate-950/80 border border-slate-855 rounded-xl p-3 text-left text-xs font-sans space-y-3 shadow-inner">
-              
-              {/* Torrent Selector */}
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono text-slate-400">Fichier .torrent chargé :</span>
-                <div className="grid grid-cols-3 gap-1">
-                  <button
-                    onClick={() => {
-                      setSelectedTorrent('music');
-                      resetDownload();
-                    }}
-                    className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
-                      selectedTorrent === 'music' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
-                    }`}
-                  >
-                    🎵 Linkin_Park.torrent
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedTorrent('linux');
-                      resetDownload();
-                    }}
-                    className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
-                      selectedTorrent === 'linux' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
-                    }`}
-                  >
-                    💿 ubuntu_desktop.torrent
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedTorrent('video');
-                      resetDownload();
-                    }}
-                    className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
-                      selectedTorrent === 'video' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
-                    }`}
-                  >
-                    🎬 matrix_screener_avi.torrent
-                  </button>
-                </div>
-              </div>
-
-              {/* Transfer Metrics line */}
-              <div className="p-2.5 bg-slate-900 border border-slate-850 rounded-lg space-y-1.5 font-mono text-[10.5px] text-slate-300">
-                <div className="flex justify-between">
-                  <span>Satut : {isFinished ? <b className="text-emerald-400">Complété (Seed)</b> : isDownloading ? 'Téléchargement' : 'En Pause'}</span>
-                  <span>Vitesse : <b className="text-emerald-400">{downloadSpeed} KB/s</b></span>
-                </div>
-                <div className="flex justify-between text-[10px] text-slate-450 text-left">
-                  <span>Seeds (Sources actives) : {selectedTorrent === 'linux' ? '128' : '4'}</span>
-                  <span>Peers (Partageurs) : {selectedTorrent === 'linux' ? '30' : '6'}</span>
-                </div>
-              </div>
-
-              {/* Progress bar */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-[10.5px] font-mono">
-                  <span>{downloadProgress}%</span>
-                  <span>{selectedTorrent === 'linux' ? '700 Mo' : selectedTorrent === 'video' ? '680 Mo' : '68 Mo'}</span>
-                </div>
-                <div className="w-full h-4 bg-slate-900 border border-slate-800 rounded overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300 ease-out" 
-                    style={{ width: `${downloadProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons to trigger mock behavior */}
-              <div className="flex gap-1.5">
-                {!isDownloading ? (
-                  <button
-                    onClick={startDownload}
-                    className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    <Play className="w-3.5 h-3.5" /> Lancer µTorrent
-                  </button>
-                ) : (
-                  <button
-                    onClick={pauseDownload}
-                    className="flex-1 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    Pause
-                  </button>
-                )}
-                <button
-                  onClick={resetDownload}
-                  className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-850 text-slate-4c0 border border-slate-800 rounded font-bold text-xs cursor-pointer flex items-center justify-center"
-                  title="Réinitialiser"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* Connected Peers Table */}
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono text-slate-450 select-none block">Détails des connexions Client (P2P swarm) :</span>
-                
-                <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950 font-mono text-[9px]">
-                  <div className="grid grid-cols-4 bg-slate-900 p-1.5 text-slate-400 border-b border-slate-850">
-                    <div>Adresse IP</div>
-                    <div>Logiciel</div>
-                    <div>% Partagé</div>
-                    <div>Envoi</div>
+            {/* Simulated Interfaces based on selection */}
+            {simulatorMode === 'utorrent' ? (
+              <div className="bg-slate-950/80 border border-slate-850 rounded-xl p-3 text-left text-xs font-sans space-y-3 shadow-inner" id="utorrent-simulator">
+                {/* Torrent Selector */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono text-slate-400">Fichier .torrent chargé :</span>
+                  <div className="grid grid-cols-3 gap-1">
+                    <button
+                      onClick={() => {
+                        setSelectedTorrent('music');
+                        resetDownload();
+                      }}
+                      className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
+                        selectedTorrent === 'music' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
+                      }`}
+                    >
+                      🎵 Linkin_Park.torrent
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedTorrent('linux');
+                        resetDownload();
+                      }}
+                      className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
+                        selectedTorrent === 'linux' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
+                      }`}
+                    >
+                      💿 ubuntu_desktop.torrent
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedTorrent('video');
+                        resetDownload();
+                      }}
+                      className={`px-2 py-1.5 text-[10.5px] truncate font-semibold rounded transition ${
+                        selectedTorrent === 'video' ? 'bg-indigo-600 text-white font-black' : 'bg-slate-900 border border-slate-800 text-slate-400'
+                      }`}
+                    >
+                      🎬 matrix_screener_avi.torrent
+                    </button>
                   </div>
-                  <div className="max-h-24 overflow-y-auto divide-y divide-slate-900/50">
-                    {peers.map((peer, i) => (
-                      <div key={i} className="grid grid-cols-4 p-1.5 text-slate-300">
-                        <div className="truncate text-left text-slate-450">{peer.ip}</div>
-                        <div className="truncate text-left font-bold text-slate-350">{peer.client}</div>
-                        <div className="text-left">{peer.progress}%</div>
-                        <div className="text-left font-bold text-emerald-450">{peer.progress === 100 && isDownloading ? '14 KB/s' : '0 KB/s'}</div>
-                      </div>
+                </div>
+
+                {/* Transfer Metrics line */}
+                <div className="p-2.5 bg-slate-900 border border-slate-850 rounded-lg space-y-1.5 font-mono text-[10.5px] text-slate-300">
+                  <div className="flex justify-between">
+                    <span>Satut : {isFinished ? <b className="text-emerald-400">Complété (Seed)</b> : isDownloading ? 'Téléchargement' : 'En Pause'}</span>
+                    <span>Vitesse : <b className="text-emerald-400">{downloadSpeed} KB/s</b></span>
+                  </div>
+                  <div className="flex justify-between text-[10px] text-slate-450 text-left">
+                    <span>Seeds (Sources actives) : {selectedTorrent === 'linux' ? '128' : '4'}</span>
+                    <span>Peers (Partageurs) : {selectedTorrent === 'linux' ? '30' : '6'}</span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[10.5px] font-mono">
+                    <span>{downloadProgress}%</span>
+                    <span>{selectedTorrent === 'linux' ? '700 Mo' : selectedTorrent === 'video' ? '680 Mo' : '68 Mo'}</span>
+                  </div>
+                  <div className="w-full h-4 bg-slate-900 border border-slate-800 rounded overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300 ease-out" 
+                      style={{ width: `${downloadProgress}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Action Buttons to trigger mock behavior */}
+                <div className="flex gap-1.5">
+                  {!isDownloading ? (
+                    <button
+                      onClick={startDownload}
+                      className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Play className="w-3.5 h-3.5" /> Lancer µTorrent
+                    </button>
+                  ) : (
+                    <button
+                      onClick={pauseDownload}
+                      className="flex-1 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      Pause
+                    </button>
+                  )}
+                  <button
+                    onClick={resetDownload}
+                    className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-850 text-slate-4c0 border border-slate-800 rounded font-bold text-xs cursor-pointer flex items-center justify-center"
+                    title="Réinitialiser"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Connected Peers Table */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono text-slate-450 select-none block">Détails des connexions Client (P2P swarm) :</span>
+                  
+                  <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950 font-mono text-[9px]">
+                    <div className="grid grid-cols-4 bg-slate-900 p-1.5 text-slate-400 border-b border-slate-850">
+                      <div>Adresse IP</div>
+                      <div>Logiciel</div>
+                      <div>% Partagé</div>
+                      <div>Envoi</div>
+                    </div>
+                    <div className="max-h-24 overflow-y-auto divide-y divide-slate-900/50">
+                      {peers.map((peer, i) => (
+                        <div key={i} className="grid grid-cols-4 p-1.5 text-slate-300">
+                          <div className="truncate text-left text-slate-450">{peer.ip}</div>
+                          <div className="truncate text-left font-bold text-slate-350">{peer.client}</div>
+                          <div className="text-left">{peer.progress}%</div>
+                          <div className="text-left font-bold text-emerald-450">{peer.progress === 100 && isDownloading ? '14 KB/s' : '0 KB/s'}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Megaupload Interactive DDL Simulator */
+              <div className="bg-black border border-zinc-900 rounded-xl p-3.5 text-left text-xs font-sans space-y-4 shadow-inner" id="megaupload-simulator">
+                
+                {/* Top header decoration */}
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                  <div className="flex items-center gap-1 font-bold select-none">
+                    <span className="px-1.5 py-0.5 bg-zinc-800 text-white rounded font-mono font-black text-[10px]">MEGA</span>
+                    <span className="text-red-500 font-extrabold font-mono tracking-tighter text-xs">UPLOAD</span>
+                    <span className="text-[8px] text-zinc-500 font-normal lowercase ml-1">the leading online storage</span>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <button 
+                      onClick={() => {
+                        setMuAccount('free');
+                        resetMu();
+                      }}
+                      className={`px-2 py-0.5 text-[9px] font-mono rounded border transition ${
+                        muAccount === 'free' 
+                          ? 'bg-zinc-800 text-white border-zinc-650 font-black' 
+                          : 'bg-transparent text-zinc-500 border-transparent hover:text-zinc-300'
+                      }`}
+                    >
+                      Gratuit
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setMuAccount('premium');
+                        setMuStatus('downloading');
+                        setMuProgress(0);
+                        setMuError(false);
+                      }}
+                      className={`px-2 py-0.5 text-[9px] font-mono rounded border transition ${
+                        muAccount === 'premium' 
+                          ? 'bg-amber-500/20 text-yellow-400 border-amber-500/50 font-black animate-pulse' 
+                          : 'bg-transparent text-zinc-500 border-transparent hover:text-zinc-300'
+                      }`}
+                    >
+                      👑 Premium
+                    </button>
+                  </div>
+                </div>
+
+                {/* File selectors */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono text-zinc-400">Sélectionner un fichier historiquement culte :</span>
+                  <div className="grid grid-cols-3 gap-1">
+                    {[
+                      { id: 'series', label: 'Desperate_H_S03E12_FR.avi', size: '350 Mo' },
+                      { id: 'movie', label: 'Avatar_EXTENDED_DVDRip.avi', size: '1.4 Go' },
+                      { id: 'music', label: 'Daft_Punk_R_A_M_MP3.rar', size: '110 Mo' }
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setMuFile(item.id as 'series' | 'movie' | 'music');
+                          resetMu();
+                        }}
+                        className={`p-1.5 text-[9.5px] truncate rounded border text-left flex flex-col justify-between h-[42px] transition ${
+                          muFile === item.id 
+                            ? 'bg-red-950/20 text-red-400 border-red-500/40 font-bold' 
+                            : 'bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+                        }`}
+                      >
+                        <span className="truncate w-full leading-tight font-sans">{item.label}</span>
+                        <span className="text-[8px] font-mono opacity-50">{item.size}</span>
+                      </button>
                     ))}
                   </div>
                 </div>
 
-              </div>
+                {/* Screen frame */}
+                <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-3 space-y-3 font-sans relative min-h-[140px] flex flex-col justify-center">
+                  
+                  {/* IDLE CAPTCHA STATE */}
+                  {muStatus === 'idle' && (
+                    <div className="text-center space-y-2.5 py-1">
+                      <p className="text-zinc-400 text-[10.5px] leading-relaxed max-w-[240px] mx-auto text-center">
+                        Saisissez les 4 lettres pour tester le téléchargement gratuit d'époque :
+                      </p>
+                      
+                      {/* Generateur CAPTCHA */}
+                      <div className="flex justify-center items-center gap-2">
+                        <div className="px-3.5 py-1.5 bg-gradient-to-r from-red-600/10 via-zinc-800 to-red-650/10 border border-red-500/30 text-red-500 font-mono text-sm font-black tracking-widest select-none skew-x-12">
+                          {muCaptchaLine}
+                        </div>
+                        <input
+                          type="text"
+                          maxLength={4}
+                          placeholder="Code"
+                          value={muCaptchaInput}
+                          onChange={(e) => setMuCaptchaInput(e.target.value.toUpperCase())}
+                          className="w-16 px-2 py-1 bg-black border border-zinc-850 hover:border-zinc-700 focus:border-red-500 text-white font-mono text-center tracking-wider focus:outline-none uppercase text-xs"
+                        />
+                      </div>
 
-            </div>
+                      {muError && (
+                        <p className="text-red-550 font-bold text-[9px] animate-bounce">
+                          ⚠️ Code CAPTCHA erroné, réessayez !
+                        </p>
+                      )}
+
+                      <button
+                        onClick={handleCaptchaVerify}
+                        className="w-full max-w-[150px] mx-auto py-1 bg-red-600 hover:bg-red-500 text-white font-bold rounded text-[10px] uppercase tracking-wide transition cursor-pointer"
+                      >
+                        Valider le CAPTCHA
+                      </button>
+                    </div>
+                  )}
+
+                  {/* COUNTDOWN WAITING STATE */}
+                  {muStatus === 'waiting' && (
+                    <div className="text-center space-y-2 py-1">
+                      <p className="text-zinc-400 text-[10px]">
+                        Génération du lien de téléchargement gratuit...
+                      </p>
+                      <div className="text-xl font-bold font-mono text-red-500 bg-red-950/20 border border-red-500/20 py-1.5 rounded max-w-[80px] mx-auto">
+                        00:{muTimer < 10 ? '0' : ''}{muTimer}
+                      </div>
+                      <p className="text-[9.5px] text-zinc-500 max-w-[240px] mx-auto leading-normal">
+                        Bande passante bridée à 70 KB/s en mode Libre.
+                      </p>
+                      <button
+                        onClick={() => {
+                          setMuAccount('premium');
+                          setMuStatus('downloading');
+                          setMuProgress(0);
+                          setMuError(false);
+                        }}
+                        className="px-2.5 py-0.5 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase text-[8.5px] rounded shadow transition mx-auto cursor-pointer"
+                      >
+                        👑 Passer en PREMIUM (Bypass l'attente !)
+                      </button>
+                    </div>
+                  )}
+
+                  {/* DOWNLOADING DDL STATE */}
+                  {muStatus === 'downloading' && (
+                    <div className="space-y-2.5 py-1 font-mono text-[10.5px]">
+                      <div className="flex justify-between items-center text-[9px] text-zinc-400">
+                        <span>Fichier: <b className="text-red-400">{muFile === 'series' ? 'desperate_h.avi' : muFile === 'movie' ? 'avatar.avi' : 'daft_punk.rar'}</b></span>
+                        <span className={muAccount === 'premium' ? 'text-amber-400 animate-pulse font-bold' : 'text-zinc-500'}>
+                          {muAccount === 'premium' ? '👑 Premium' : 'Free 🐌'}
+                        </span>
+                      </div>
+
+                      <div className="p-2 bg-zinc-900 border border-zinc-850 rounded text-[9.5px] text-zinc-300 leading-relaxed text-left">
+                        <div className="flex justify-between">
+                          <span>Vitesse :</span>
+                          <b className={muAccount === 'premium' ? 'text-amber-400' : 'text-emerald-400'}>
+                            {muAccount === 'premium' ? `${(muSpeed / 1024).toFixed(1)} MB/s (Maximum)` : `${muSpeed} KB/s (Liaison bridée)`}
+                          </b>
+                        </div>
+                        <div className="flex justify-between text-[8px] text-zinc-550">
+                          <span>Technologie :</span>
+                          <span>Hébergement direct Megaupload</span>
+                        </div>
+                      </div>
+
+                      {/* Prog bar */}
+                      <div className="space-y-1 uppercase">
+                        <div className="flex justify-between text-[9px] text-zinc-400">
+                          <span>{muProgress}%</span>
+                          <span>{muFile === 'series' ? '350 Mo' : muFile === 'movie' ? '1.4 Go' : '110 Mo'}</span>
+                        </div>
+                        <div className="w-full h-2.5 bg-zinc-900 rounded overflow-hidden border border-zinc-800">
+                          <div 
+                            className={`h-full transition-all duration-300 ease-out ${muAccount === 'premium' ? 'bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_8px_rgba(234,179,8,0.4)]' : 'bg-red-600'}`}
+                            style={{ width: `${muProgress}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="text-left font-sans text-[9px]">
+                        <button 
+                          onClick={() => {
+                            setMuStatus('idle');
+                            resetMu();
+                          }}
+                          className="px-2 py-0.5 border border-zinc-800 hover:border-red-950 text-zinc-500 hover:text-red-400 rounded transition cursor-pointer"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* COMPLETED FINISHED STATE */}
+                  {muStatus === 'finished' && (
+                    <div className="text-center py-2 space-y-2">
+                      <div className="w-8 h-8 bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/30 flex items-center justify-center mx-auto mb-1">
+                        <FileCheck className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h5 className="font-extrabold text-emerald-400 text-xs text-center">Fichier d'époque obtenu !</h5>
+                        <p className="text-[9px] text-zinc-400 text-center leading-normal">
+                          Le fichier .avi a été téléchargé directement sur votre bureau Windows XP d'époque.
+                        </p>
+                      </div>
+
+                      <div className="bg-zinc-900 border border-zinc-850 p-2 rounded text-[9px] text-left max-w-[240px] mx-auto text-zinc-4s0 truncate">
+                        <b>Destination :</b> C:\downloads\{muFile === 'series' ? 'Desperate_H_S03E12_FR.avi' : muFile === 'movie' ? 'Avatar_EXTENDED_DVDRip.avi' : 'Daft_Punk_R_A_M_MP3.rar'}
+                      </div>
+
+                      <button
+                        onClick={resetMu}
+                        className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-[10px] font-bold cursor-pointer transition mx-auto flex items-center justify-center gap-1"
+                      >
+                        <RotateCcw className="w-3 h-3" /> Télécharger à nouveau
+                      </button>
+                    </div>
+                  )}
+
+                </div>
+
+              </div>
+            )}
 
             {/* Historical comparison summary */}
             <div className="rounded-xl p-3.5 bg-indigo-950/15 border border-indigo-500/10 text-left space-y-1.5 font-sans text-xs">
@@ -437,7 +765,7 @@ export default function TorrentHistoryView({ theme }: TorrentHistoryViewProps) {
               <ShareButtons
                 theme={theme}
                 title={`Musée du Web — Histoire d'Internet : Le Torrent`}
-                text={`Explorons comment le protocole BitTorrent et la loi Hadopi ont transformé le partage de données d'époque sur le Musée du Web !`}
+                text={`Explorons comment le protocole BitTorrent, Megaupload et la loi Hadopi ont transformé le partage de données d'époque sur le Musée du Web !`}
               />
             </div>
 

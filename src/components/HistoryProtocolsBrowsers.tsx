@@ -22,6 +22,7 @@ import {
   Landmark, 
   Sparkles 
 } from 'lucide-react';
+import BrowserMarketShareTimeline from './BrowserMarketShareTimeline';
 
 interface HistoryProtocolsBrowsersProps {
   theme: 'modern' | 'ie6' | 'terminal';
@@ -136,6 +137,11 @@ const EPOCHS: EpochData[] = [
         title: "L'avènement magique de PHP et des bases MySQL",
         desc: "En 1995, Rasmus Lerdorf assemble un lot de scripts en langage C baptisés 'Personal Home Page Tools' pour surveiller les consultations de son CV en ligne. Cet outil open-source se structure avec PHP 3 et le serveur MySQL pour bâtir le cœur du web dynamique libre.",
         tech: "PHP/FI 2.0"
+      },
+      {
+        title: "L'impact colossal de Perl & Java (Au-delà du simple CGI)",
+        desc: "Alors que CGI s'essouffle à cause de son architecture énergivore (un processus système lancé par requête), Perl et Java réinventent le serveur. Perl s'impose comme le 'couteau suisse' de l'Internet d'époque : il orchestre l'administration système, le parsing de volumes massifs de logs textuels, et le 'glue-code' de bases de données grâce à DBI/CPAN pour des colosses naissants comme Yahoo!, IMDb, ou Craigslist. En parallèle, Java (créé en 1995 par Sun Microsystems) s'affranchit des navigateurs (où les applets ralentissent tout) pour s'inviter en majesté sur le serveur avec les Servlets (1996) et JSP (JavaServer Pages) : il introduit le concept de cycle de vie en mémoire partagée haute performance, jetant les fondations des backends de banques, de télécoms et des architectures d'entreprise JEE hautement sécurisées.",
+        tech: "Servlet 1.0 / JSP / CPAN"
       },
       {
         title: "GeoCities et l'âge d'or du Web amateur",
@@ -311,6 +317,7 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
   const [dnsStatus, setDnsStatus] = useState<'idle' | 'dns-request' | 'dns-resolved' | 'http-request' | 'render-success'>('idle');
   const [selectedTopic, setSelectedTopic] = useState<'history' | 'protocols' | 'browsers'>('history');
   const [selectedEpochIdx, setSelectedEpochIdx] = useState<number>(0);
+  const [selectedRealtimePhase, setSelectedRealtimePhase] = useState<'polling' | 'websockets' | 'sse' | 'mercure'>('mercure');
 
   const selectedEpoch = EPOCHS[selectedEpochIdx];
 
@@ -534,6 +541,207 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                 </div>
 
               </div>
+
+              {/* Focus asynchrone & Mercure */}
+              <div className={style.card}>
+                <span className="text-[10px] font-mono font-black text-amber-500 uppercase tracking-widest block border-b border-[#2a2a2e]/60 pb-2 mb-4">
+                  -- ⚡ FOCUS TECHNIQUE : LA RÉVOLUTION ASYNCHRONES ET LE PROTOCOLE MERCURE --
+                </span>
+                
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-1.5">
+                    <h4 className="text-xs font-bold uppercase tracking-tight text-slate-100">
+                      Du cycle requête-réponse (PULL) au flux instantané poussé (PUSH)
+                    </h4>
+                    <p className="text-[11px] text-slate-400">
+                      Historiquement, le protocole HTTP est "sans état" et "unidirectionnel" : seul le client peut initier une demande. Pour obtenir une mise à jour en temps réel (ex: un tchat ou une notification), le Web a dû inventer plusieurs paradigmes. Cliquez sur les phases pour comprendre l'évolution technique :
+                    </p>
+                  </div>
+
+                  {/* Phases selector tabs */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { id: 'polling', label: '1. Polling (1998)', icon: '🔄', desc: 'Requêtes répétitives' },
+                      { id: 'websockets', label: '2. WebSockets (2011)', icon: '🔌', desc: 'Canal bidirectionnel' },
+                      { id: 'sse', label: '3. SSE (HTML5)', icon: '📡', desc: 'Flux unilatéral natif' },
+                      { id: 'mercure', label: '4. Mercure (2018+)', icon: '🌀', desc: 'Hub Server-to-Client' },
+                    ].map((phase) => {
+                      const isPressed = selectedRealtimePhase === phase.id;
+                      return (
+                        <button
+                          key={phase.id}
+                          onClick={() => setSelectedRealtimePhase(phase.id as any)}
+                          className={`p-2.5 text-left transition rounded-xl border flex flex-col gap-0.5 cursor-pointer hover:border-indigo-400/40 ${
+                            isPressed
+                              ? 'bg-indigo-650/15 border-indigo-500 text-indigo-400 shadow-sm'
+                              : 'bg-slate-950/45 border-slate-850/80 text-slate-450'
+                          }`}
+                        >
+                          <span className="text-[11px] font-bold flex items-center gap-1.5">
+                            <span>{phase.icon}</span>
+                            <span>{phase.label}</span>
+                          </span>
+                          <span className="text-[9px] text-slate-500 font-mono italic">
+                            {phase.desc}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Interactive Details Panel for selected Phase */}
+                  <div className="bg-[#0b0b0d] p-4 rounded-xl border border-slate-850 grid grid-cols-1 md:grid-cols-12 gap-5 leading-normal">
+                    {/* Diagram columns (5 cols) */}
+                    <div className="md:col-span-5 flex flex-col justify-center items-center p-3 bg-slate-950 rounded-lg border border-slate-900/60 font-mono text-[10px] space-y-3 min-h-[140px] text-center">
+                      <span className="text-[8.5px] font-bold text-slate-455 uppercase tracking-wider block">
+                        Schéma d'échange réseau
+                      </span>
+                      
+                      {selectedRealtimePhase === 'polling' && (
+                        <div className="space-y-1 w-full text-slate-400">
+                          <div className="text-red-400">Client ➔ Serveur : "Du neuf ?" (10kb)</div>
+                          <div className="text-slate-500">Serveur ➔ Client : "Non, rien." (01s)</div>
+                          <div className="text-red-400">Client ➔ Serveur : "Du neuf ?" (10kb)</div>
+                          <div className="text-slate-500">Serveur ➔ Client : "Non, rien." (01s)</div>
+                          <div className="text-emerald-400">Client ➔ Serveur : "Du neuf ?" (10kb)</div>
+                          <div className="text-emerald-500">Serveur ➔ Client : "Oui ! Message #1"</div>
+                        </div>
+                      )}
+
+                      {selectedRealtimePhase === 'websockets' && (
+                        <div className="space-y-1.5 w-full text-slate-400">
+                          <div className="text-indigo-400 border border-indigo-800/40 py-1 px-1 rounded bg-[#0b0b14]/50 leading-tight">
+                            Client ➔ Serveur :<br/>HANDSHAKE "Upgrade: websocket"
+                          </div>
+                          <div className="text-sky-400 font-bold block animate-pulse">
+                            ⚡ Canal TCP Unique Ouvert ⚡
+                          </div>
+                          <div className="text-emerald-400 text-[9.5px]">
+                            ⇄ Flux bidirectionnel binaire instantané
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedRealtimePhase === 'sse' && (
+                        <div className="space-y-1 w-full text-slate-400">
+                          <div className="text-emerald-400 border border-emerald-800/40 py-1 px-1 rounded bg-emerald-950/10 leading-tight">
+                            Client ➔ Serveur :<br/>GET /stream (Accept: text/event-stream)
+                          </div>
+                          <div className="text-slate-500 pt-1">
+                            Serveur ➔ Client : <span className="text-sky-400">data: {"{"}"id": 12{"}"}</span>
+                          </div>
+                          <div className="text-slate-500">
+                            Serveur ➔ Client : <span className="text-sky-400">data: {"{"}"id": 13{"}"}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedRealtimePhase === 'mercure' && (
+                        <div className="space-y-1.5 w-full text-slate-400">
+                          <div className="text-rose-400 font-bold text-[9.5px] uppercase border border-rose-900/60 rounded px-1.5 py-0.5 bg-rose-955/10">
+                            Hub Mercure central
+                          </div>
+                          <div className="grid grid-cols-2 gap-1 text-[8.5px]">
+                            <div className="p-1 border border-slate-800 bg-slate-900 leading-tight">
+                              <span className="text-emerald-400 block font-bold">1. PUBLISH</span>
+                              App ➔ POST Hub
+                            </div>
+                            <div className="p-1 border border-slate-800 bg-slate-900 leading-tight">
+                              <span className="text-sky-400 block font-bold">3. SUBSCRIBE</span>
+                              Clients ⇄ SSE Hub
+                            </div>
+                          </div>
+                          <p className="text-[8.5px] text-pink-400">
+                            Zéro charge sur l'application backend !
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Explanations columns (7 cols) */}
+                    <div className="md:col-span-7 flex flex-col justify-between text-left space-y-3">
+                      <div>
+                        {selectedRealtimePhase === 'polling' && (
+                          <div className="space-y-2">
+                            <h5 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                              <span>🔄 Polling (Sondage Périodique)</span>
+                              <span className="text-[10px] font-normal px-2 py-0.5 bg-red-950 text-red-400 rounded-full font-mono uppercase">Lourd &amp; Archaïque</span>
+                            </h5>
+                            <p className="text-[11px] text-slate-350 leading-relaxed font-sans">
+                              La première méthode consistait à programmer une boucle JavaScript (via <code>setInterval</code>) qui répétait une requête AJAX d'arrière-plan toutes les super-secondes.
+                            </p>
+                            <ul className="list-disc pl-4 text-[10.5px] text-slate-400 space-y-1">
+                              <li><b>Inconvénient :</b> Gaspillage insensé de bande passante. 99% des requêtes revenaient vides.</li>
+                              <li><b>Surcharge serveur :</b> Des milliers de connexions TCP s'ouvrent et se coupent chaque seconde, asphyxiant la machine hôte.</li>
+                            </ul>
+                          </div>
+                        )}
+
+                        {selectedRealtimePhase === 'websockets' && (
+                          <div className="space-y-2">
+                            <h5 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                              <span>🔌 WebSockets</span>
+                              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-950 text-[#10b981] rounded-full font-mono uppercase">Bidirectionnel</span>
+                            </h5>
+                            <p className="text-[11px] text-slate-350 leading-relaxed">
+                              Une rupture complète : on envoie une requête HTTP initiale avec un en-tête demandant la modification du protocole. Une fois accepté, le fureteur et la machine communiquent par un tuyau ouvert persistant bidirectionnel.
+                            </p>
+                            <ul className="list-disc pl-4 text-[10.5px] text-slate-400 space-y-1 font-sans">
+                              <li><b>Idéal pour :</b> Les jeux en ligne multijoueurs, terminaux interactifs ou outils collaboratifs complexes (type Figma).</li>
+                              <li><b>Contrainte :</b> Bypasse totalement l'écosystème HTTP standard. Lourd à scaler, incompatible avec les directives de cache conventionnelles ou les pare-feux stricts.</li>
+                            </ul>
+                          </div>
+                        )}
+
+                        {selectedRealtimePhase === 'sse' && (
+                          <div className="space-y-2">
+                            <h5 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                              <span>📡 Server-Sent Events (SSE) : Le Push Web Natif</span>
+                              <span className="text-[10px] font-normal px-2 py-0.5 bg-amber-950 text-amber-400 rounded-full font-mono uppercase">Unidirectionnel Natif</span>
+                            </h5>
+                            <p className="text-[11px] text-slate-350 leading-relaxed font-sans">
+                              Introduit par HTML5, SSE permet au fureteur de s'abonner à un flux de notifications continu. C'est l'inverse d'AJAX : le serveur garde la connexion ouverte pour envoyer des données textuelles dès qu'il le souhaite via une seule ligne de code.
+                            </p>
+                            <ul className="list-disc pl-4 text-[10.5px] text-slate-400 space-y-1">
+                              <li><b>Avantage :</b> Fonctionne à 100% sur le protocole HTTP standard. Reconnexion automatique intégrée nativement par le navigateur.</li>
+                              <li><b>Limite :</b> Nécessite de maintenir une connexion par client ouverte sur le serveur applicatif principal, saturant rapidement les threads d'exécution (comme avec PHP).</li>
+                            </ul>
+                          </div>
+                        )}
+
+                        {selectedRealtimePhase === 'mercure' && (
+                          <div className="space-y-2 font-sans">
+                            <h5 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                              <span>🌀 Le Protocole Mercure</span>
+                              <span className="text-[10px] font-black px-2 py-0.5 bg-indigo-950 text-indigo-400 rounded-full font-mono uppercase">Standard Hub</span>
+                            </h5>
+                            <p className="text-[11px] text-slate-350 leading-relaxed">
+                              Conçu par l'ingénieur français <b>Kévin Dunglas</b>, Mercure est une spécification moderne de push de données standardisée. Elle apporte le compromis ultime : déléguer toute l'asynchronie lourde à un <b>Hub Mercure centralisé</b>.
+                            </p>
+                            <p className="text-[10.5px] text-slate-400 leading-relaxed">
+                              Votre application serveur (ex: en Go, Node, Python, Symfony) n'a plus à s'occuper de conserver des milliers d'utilisateurs connectés. Dès qu'une modification survient sur votre back-office, vous faites une simple requête <span className="text-rose-455 font-bold">HTTP POST</span> vers le Hub Mercure. Ce dernier répartit instantanément l'information à tous les navigateurs abonnés en Server-Sent Events multiplexés (HTTP/2 ou HTTP/3).
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Small badge comparison info */}
+                      <div className="bg-slate-900/50 p-2 border border-slate-850 rounded text-[10px] text-slate-400 italic">
+                        {selectedRealtimePhase === 'mercure' ? (
+                          <span className="text-indigo-400 font-bold block">🚀 Pourquoi Mercure domine :</span>
+                        ) : (
+                          <span className="font-bold block">💡 Constat historique :</span>
+                        )}
+                        {selectedRealtimePhase === 'polling' && "Le Polling gaspillait jusqu'à 95% des ressources réseau de la bulle d'époque avec des millions de paquets TCP vides."}
+                        {selectedRealtimePhase === 'websockets' && "Le WebSocket nécessite un serveur d'état lourd/stateful et gère difficilement le chiffrement intermédiaire par proxy."}
+                        {selectedRealtimePhase === 'sse' && "Le Server-Sent Events reste le moyen le plus simple et léger de pousser du texte, mais exigeait un orchestrateur externe de répartition de charge."}
+                        {selectedRealtimePhase === 'mercure' && "Mercure est livré nativement avec la gestion fine des droits d'accès (JSON Web Tokens), la reprise automatique sur coupure, et l'économie drastique de ressources processeurs."}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </motion.div>
           )}
 
@@ -550,7 +758,7 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                 <span className="text-[10px] font-mono font-black text-amber-500 uppercase tracking-widest block border-b border-[#2a2a2e]/60 pb-2 mb-4">
                   -- 📬 LA PLOMBERIE DU WEB : DE L'ANNUAIRE DNS AU PROTOCOLE HTTP --
                 </span>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className={style.innerCard}>
                     <span className="text-indigo-400 font-mono text-xs font-bold block">1. DNS (Domain Name System)</span>
                     <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>L'Annuaire du Net</h5>
@@ -567,11 +775,19 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                     </p>
                   </div>
 
-                  <div className={`p-4 col-span-1 md:col-span-2 lg:col-span-1 ${style.innerCard}`}>
+                  <div className={style.innerCard}>
                     <span className="text-amber-400 font-mono text-xs font-bold block">3. Transport & Sécurité (TCP/IP & SSL)</span>
                     <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>Les Canaux Empilés</h5>
                     <p className="text-xs text-slate-400 leading-relaxed">
                       TCP vérifie que chaque octet d'HTML arrive intact dans l'ordre de d'envoi. TLS/SSL chiffre les messages sensibles constituant ainsi le protocole HTTPS sécurisé.
+                    </p>
+                  </div>
+
+                  <div className={style.innerCard}>
+                    <span className="text-rose-400 font-mono text-xs font-bold block">4. Mercure (Push & Flux SSE-based)</span>
+                    <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>L'Asynchronisme Natif</h5>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Protocole de push en temps réel bâti sur HTTP/2+ et les Server-Sent Events, coupant les requêtes en boucle pour actualiser les interfaces d'un claquement de doigts.
                     </p>
                   </div>
                 </div>
@@ -734,6 +950,9 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                   </div>
 
                 </div>
+
+                {/* Sub-component interactive frise / browser timeline of market share */}
+                <BrowserMarketShareTimeline />
 
                 <div className="p-4 bg-slate-950 border border-slate-750/75 rounded-xl space-y-2 text-xs">
                   <h5 className="font-extrabold tracking-widest text-[#ffb000] uppercase font-mono text-[10px]">

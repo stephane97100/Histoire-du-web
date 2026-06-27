@@ -42,10 +42,13 @@ interface Relic {
   modernSuccessor: string;
   retroAnecdote: string;
   specials: string[]; // tags like 'Microsoft', 'OpenSource Duel', etc.
+  category?: 'network' | 'editors';
 }
 
 export default function CemeteryView({ theme }: CemeteryViewProps) {
   const [activeRelicId, setActiveRelicId] = useState<string>('flash');
+  const [activeSubMenu, setActiveSubMenu] = useState<'network' | 'editors'>('network');
+  const [hoveredRelicId, setHoveredRelicId] = useState<string | null>(null);
 
   // Interactive data for "Le Cimetière du Web"
   const relics: Relic[] = [
@@ -474,10 +477,394 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       modernSuccessor: 'Quora (pour les questions généralistes), Reddit (pour les débats communautaires thématiques) et Stack Exchange.',
       retroAnecdote: `Parallèlement, la décennie 2000-2010 a vu l'essor de Doctissimo en France. Véritable équivalent et référence absolue des forums de santé et de vie quotidienne, Doctissimo partageait cette même double identité : un immense espace d'entraide humaine indispensable et bienveillant, doublé d'un vivier mythique d'hypocondrie collective et de discussions sentimentales ou intimes devenues des mèmes d'époque dans la culture web francophone.`,
       specials: ['Discussions Cultes', 'Disclaimer Bienveillance', 'Parallel Doctissimo', 'Points & Niveaux XML']
+    },
+    {
+      id: 'dreamweaver',
+      name: 'Dreamweaver 2 & 3',
+      icon: '🎛️',
+      birthYear: '1997',
+      deathYear: 'Racheté par Adobe en 2005',
+      category: 'editors',
+      epitaph: 'Ci-gît le mythique roi du WYSIWYG et du fenêtrage flottant multiple, qui a permis à toute une génération de concevoir des sites par tableaux imbriqués et GIFs transparents.',
+      summary: 'Édité à l\'origine par Macromedia en 1997, racheté par Adobe en 2005, Dreamweaver a régné en maître absolu sur la création de sites internet pour les professionnels et agences de communication au tournant du millénaire, en particulier via ses légendaires versions 2 (1998) et surtout 3 (1999).',
+      whyItRuled: 'À la fin des années 1990, écrire du code à la main était lent. Dreamweaver a révolutionné le marché en introduisant le concept de "split screen" automatique (Code & Plan Visuel synchronisés en temps réel). Intégrant parfaitement Flash et Fireworks, doté d\'un gestionnaire de transfert FTP robuste, il offrait la technologie "Roundtrip HTML" : contrairement à Microsoft FrontPage, il garantissait que l\'éditeur ne modifierait pas à votre insu le code source écrit manuellement. Les développeurs adoraient sa palette d\'objets invisibles, sa "Layout View" dessinant des tableaux de mise en page à la volée, et la génération programmée de roll-overs complexes en JavaScript d\'époque.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le déclin inéluctable de cet éditeur WYSIWYG s'explique par l'évolution profonde des paradigmes du Web :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La transition des tableaux HTML vers le CSS sémantique :</strong> Les éditeurs WYSIWYG généraient un code HTML extrêmement verbeux basé sur des tableaux imbriqués et des dizaines de GIFs transparents de 1 pixel ("spacer.gif") pour caler les éléments. Lorsque le W3C a imposé la séparation stricte du fond (HTML) et de la forme (Sass / CSS moderne avec divisions flexbox/grid), concevoir visiellement en glisser-déposer est devenu impossible.</li>
+          <li><strong class="text-indigo-400">Le passage à des architectures par composants réactifs :</strong> À partir de 2013, le développement moderne a basculé vers le Component-Driven development (React, Vue, TS). Un éditeur visuel ne peut pas modéliser le cycle de vie de composants réactifs, de requêtes API asynchrones ou de states, condamnant les outils WYSIWYG traditionnels.</li>
+          <li><strong class="text-indigo-400">Le rachat stratégique et l'avènement de VS Code :</strong> Après le rachat de Macromedia par Adobe en 2005, le développement de Dreamweaver s'est ralenti. La communauté a massivement basculé vers des éditeurs de code légers et hautement extensibles gratuits comme Sublime Text, Atom puis VS Code.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'VS Code ou Cursor pour le code pur et structuré ; Webflow ou Framer pour la composition visuelle contemporaine respectant les modèles CSS modernes.',
+      retroAnecdote: 'Le split-view de Dreamweaver 3 était si novateur qu\'il a instantanément défini l\'ergonomie standard de tous les outils de création web pour la décennie suivante.',
+      specials: ['Macromedia Era', 'Split View', 'Roundtrip HTML', 'WYSIWYG King']
+    },
+    {
+      id: 'frontpage',
+      name: 'Microsoft FrontPage',
+      icon: '📄',
+      birthYear: '1995',
+      deathYear: '2003 (Remplacé par Expression Web puis arrêté)',
+      category: 'editors',
+      epitaph: 'Ci-gît le traitement de texte déguisé en éditeur de pages Web, champion absolu du code HTML gonflé et des extensions serveurs propriétaires obligatoires.',
+      summary: 'Lancé par Vermeer Technologies puis racheté par Microsoft en 1996 pour l\'intégrer à la suite MS Office, FrontPage promettait de rendre la création d\'un site web aussi simple et intuitive qu\'écrire un document Word.',
+      whyItRuled: 'En ciblant le grand public et les secrétariats d\'entreprise, FrontPage a démocratisé la création de pages d\'accueil personnelles. L\'intégration parfaite avec Word et Excel permettait d\'importer des tableaux volumineux à la volée. FrontPage incluait des fonctionnalités instantanées magiques appelées "WebBots" (compteurs de visites, formulaires automatisés, barres de recherche locales) activables sans écrire la moindre ligne de code d\'arrière-plan.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Plusieurs faiblesses techniques insurmontables ont précipité sa fin :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">L'exigence des "FrontPage Server Extensions" :</strong> Pour faire fonctionner ses WebBots interactifs, le serveur d'hébergement devait installer des scripts et exécutables Microsoft propriétaires. C'était un cauchemar de sécurité (trous de mémoire, failles IIS) et de portabilité matérielle que les serveurs Linux interdisaient ou n'implémentaient pas universellement.</li>
+          <li><strong class="text-indigo-400">Un code HTML effroyablement lourd et non-standard :</strong> FrontPage insérait par défaut des centaines de lignes d'instructions XML propriétaires Microsoft Office (balises <code class="text-pink-450 bg-slate-900 px-1 py-0.5 rounded">&lt;o:p&gt;</code>, namespaces spécifiques), des chemins d'accès locaux absolus "C:\\My Documents", et du VBScript incompatible, rendant l'affichage des sites chaotique en dehors d'Internet Explorer.</li>
+          <li><strong class="text-indigo-400">Le triomphe général des standards du W3C :</strong> Au fil des années, la communauté web a vigoureusement rejeté les outils qui encourageaient la violation des normes universelles au profit de monopoles propriétaires, poussant Microsoft à abandonner le projet.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Outils SaaS de landing-pages (Wix, Squarespace) ou des CMS visuels respectueux du W3C.',
+      retroAnecdote: 'Les formulaires générés par FrontPage stockaient les saisies des internautes dans des fichiers bruts situés dans des dossiers cachés baptisés "_vti_cnf" ou "_private", lisibles en clair par toute personne tapant l\'adresse URL directe !',
+      specials: ['Microsoft Office', 'Server Extensions', 'WebBots', 'IE6 Target']
+    },
+    {
+      id: 'golive',
+      name: 'Adobe GoLive',
+      icon: '🎨',
+      birthYear: '1996',
+      deathYear: '2008 (Arrêt définitif)',
+      category: 'editors',
+      epitaph: 'Ci-gît GoLive (l\'audacieux CyberStudio originel de GoNet) et Netscape Composer, vaillants combattants de la mise en grille restés dans l\'ombre de Dreamweaver.',
+      summary: 'Adobe GoLive (conçu à l\'origine par GoNet sous le nom de CyberStudio avant d\'être acheté par Adobe en 1999) et Netscape Composer incarnent les alternatives de l\'époque pour dessiner de l\'hypertexte.',
+      whyItRuled: 'GoLive offrait aux graphistes professionnels des outils de tracé vectoriel précis, ainsi qu\'un éditeur de timeline pour concevoir des animations dynamiques complexes (Dynamic HTML) en modifiant les positions de calques. Netscape Composer, de son côté, excellait par sa simplicité absolue : intégré à la suite gratuite Netscape Communicator, il permettait de corriger instantanément une faute de frappe sur sa page personnelle en deux clics sans installer d\'outils externes.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Les raisons de leur effacement commercial définitif :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Un sabordage commercial interne chez Adobe :</strong> Suite au rachat spectaculaire de Macromedia par Adobe en 2005, Adobe s'est retrouvé propriétaire de deux éditeurs de premier plan rivaux : GoLive et Dreamweaver. L'entreprise a choisi de pérenniser Dreamweaver, tuant définitivement GoLive en 2008.</li>
+          <li><strong class="text-indigo-400">Le déclin lié au fureteur Netscape Navigator :</strong> Netscape Composer a suivi la trajectoire descendante globale de Netscape face à la déferlante Internet Explorer, sa compatibilité avec l'avancée rapide de la spécification CSS n'étant plus assurée.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Framer, Webflow ou l\'éditeur moderne basé sur les Web Composants modernes.',
+      retroAnecdote: 'Adobe GoLive possédait un module de visualisation magique en 3D représentant les calques d\'une page web sous forme de blocs d\'immeubles texturés, la hauteur de chaque pilier traduisant la valeur CSS "z-index" correspondante !',
+      specials: ['CyberStudio', 'Netscape Suite', 'z-index 3D View', 'Adobe Decisions']
+    },
+    {
+      id: 'skyblog',
+      name: 'Les Skyblogs (Skyrock)',
+      icon: '📔',
+      birthYear: '2002',
+      deathYear: '2023 (Archivé à la BnF)',
+      category: 'network',
+      epitaph: 'Ci-gît le temple absolu de l\'adolescence des années 2000, ses écritures SMS colorées, ses GIFs pailletés et le fameux et incontournable "Lâche tes coms !" d\'anthologie.',
+      summary: 'Créé par la radio Skyrock en 2002, Skyrock Blog (ou Skyblog) a été le plus grand réseau social de blogs en France et le 17e site mondial en 2007. Il a permis à une génération entière de s\'approprier un espace d\'intimité publique numérique.',
+      whyItRuled: 'Skyblog offrait une simplicité déroutante : en deux clics, on créait sa page sans connaître une ligne d\'HTML. Les adolescents y publiaient leurs chroniques de vie, photos pixelisées prises à la webcam ou d\'appareils argentiques, paroles de rap, dédiant des articles entiers à leur cercle d\'amis. Le bouton d\'engagement universel "Lâche tes coms !" ainsi que le compteur de visites ont introduit l\'économie de l\'attention et des likes bien avant Instagram ou Facebook. C\'était un espace libérateur d\'expression libre, de journal intime collectif et de construction de l\'identité numérique.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le déclin et la fermeture finale de cette plateforme culte en août 2023 répondent à des problématiques modernes :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La transition immédiate vers Facebook et le smartphone :</strong> À partir de 2008, l'arrivée de Facebook en français, puis des smartphones (iPhone, Android) avec des applications dédiées (Instagram, Snapchat) a instantanément ringardisé le format blog sur ordinateur. Les jeunes ont préféré des profils normalisés facilitant les clichés mobiles rapides.</li>
+          <li><strong class="text-indigo-400">Un design et une ergonomie figés :</strong> Resté attaché à sa mise en page rectiligne figée très Web 1.5, Skyblog était inadapté aux écrans mobiles responsifs et saturé de publicités d'époque.</li>
+          <li><strong class="text-indigo-400">Le poids de la conformité légale (RGPD) :</strong> Héberger des millions de blogs laissés à l'abandon depuis 15 ans avec des visages d'enfants mineurs et des données nominatives non sécurisées représentait une responsabilité juridique et financière colossale pour le groupe Skyrock, poussant sa direction à figer et couper les serveurs en 2023 (tout en transférant les archives à la BNF).</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Instagram, TikTok pour la mise en scène personnelle ; Tumblr ou Medium pour le blogging textuel.',
+      retroAnecdote: 'Les polices pailletées générées sur des sites comme "Dafont" ou des générateurs de textes d\'époque, collées en fond d\'image, rendaient la lecture de certains blogs physiquement douloureuse tant le contraste de couleurs était hasardeux.',
+      specials: ['Lâche tes coms', 'Génération MSN', 'Skyrock Radio', 'Archivé à la BNF']
+    },
+    {
+      id: 'multimania_standalone',
+      name: 'Multimania',
+      icon: '🏰',
+      birthYear: '1995',
+      deathYear: 'Racheté par Lycos puis arrêté',
+      category: 'network',
+      epitaph: 'Ci-gît la cité pionnière à l\'origine de l\'hébergement web francophone, victime de sa riposte tardive face à l\'offre d\'espace illimité.',
+      summary: 'Fondé en 1995 par Michel Meyer et Olivier de Baillenx, Multimania a été le premier hébergeur grand public gratuit francophone, offrant à chacun de quoi fonder sa parcelle numérique en échange d\'un bandeau de pub.',
+      whyItRuled: 'À une époque où héberger un site exigeait des abonnements onéreux, Multimania offrait 10 Mo (puis 50 Mo), un accès FTP et des outils d\'administration web simples. C\'était magique : n\'importe quel passionné pouvait publier son code HTML de fansite Star Wars ou d\'émulation console. Multimania a vu grandir les prémices du web francophone, hébergeant d\'immenses communautés de créateurs.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le pionnier a péri sous le feu de la concurrence et du changement de modèle :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le rachat par Lycos et la dégradation de l'expérience :</strong> Acheté en 2000 par Lycos Europe pour une somme colossale, Multimania a été progressivement étouffé sous les publicités intrusives. L'insertion forcée de fenêtres publicitaires sauvages ("pop-ups") à chaque chargement de page a fait fuir les créateurs d'origine.</li>
+          <li><strong class="text-indigo-400">L'offre imbattable de Free.fr :</strong> Free a lancé son offre d'hébergement "Pages Persos" entièrement gratuite, sans publicité obligatoire, et proposant d'emblée un grand espace disque avec le support de PHP et de bases de données MySQL, balayant instantanément le modèle publicitaire de Multimania.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'GitHub Pages, Vercel ou Netlify.',
+      retroAnecdote: 'La fureur des créateurs Multimania s\'est exprimée lors du rachat par Lycos, lorsque l\'hébergeur a imposé une barre publicitaire latérale permanente qui déballait entièrement les cadres ("frames") soignés façonnés par les webmasters.',
+      specials: ['FTP Upload', 'Pionnier FR', 'Popups Era', '10 Mo Gratuit']
+    },
+    {
+      id: 'lycos_standalone',
+      name: 'Lycos',
+      icon: '🐕',
+      birthYear: '1994',
+      deathYear: 'Déclin commercial au profit de Google',
+      category: 'network',
+      epitaph: 'Ci-gît le retriever le plus célèbre du web francophone, qui n\'a plus su où chercher une fois que le PageRank de Google a réinventé la navigation mondiale.',
+      summary: 'Né comme projet de recherche à l\'université Carnegie-Mellon en 1994, Lycos est devenu un moteur de recherche hégémonique et un portail d\'accueil universel au début des années 2000.',
+      whyItRuled: 'Porté par sa mascotte inoubliable, un chien noir ultra-dynamique obéissant au slogan "Lycos, va chercher !", le site faisait partie du top mondial des destinations web. En rachetant Multimania, Tripod et Spray, Lycos a constitué un empire d\'hébergement, d\'e-mails et de salons de tchat d\'époque.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Pourquoi le célèbre toutou d'Internet a-t-il mordu la poussière ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le rouleau compresseur Google :</strong> Lycos classait ses résultats par pertinence basique de mots-clés (facilement spammables par "keyword stuffing"). Google est arrivé avec son algorithme PageRank s'appuyant sur les liens hypertextes croisés, fournissant des résultats infiniment plus précis en une fraction de seconde, détrônant instantanément Lycos.</li>
+          <li><strong class="text-indigo-400">L'épuisement sous l'effet "portail" :</strong> À l'instar de Yahoo, Lycos a voulu devenir un portail fourre-tout saturé de météo, de cours de bourse, d'horoscope et de publicités, alors que les internautes voulaient simplement un champ de recherche vide et rapide.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Google, DuckDuckGo, Bing.',
+      retroAnecdote: 'Les spots publicitaires télévisés mettant en scène le retriever virtuel noir bondissant à travers les circuits informatiques pour "rapporter" un résultat de recherche ont marqué l\'imaginaire de la France du début de l\'ADSL.',
+      specials: ['Va Chercher !', 'Mascotte Culte', 'Portail 2000', 'Carnegie-Mellon']
+    },
+    {
+      id: 'voila_portal',
+      name: 'Voilà',
+      icon: '🍊',
+      birthYear: '1998',
+      deathYear: '2015 (Fermeture complète)',
+      category: 'network',
+      epitaph: 'Ci-gît le moteur de recherche historique de France Télécom, digne serviteur du Minitel 2.0 et de la boîte mail voilà.fr adorée des Français.',
+      summary: 'Lancé en 1998 par France Télécom (Orange), Voilà était à la fois un portail d\'actualités, un annuaire de référence, un moteur de recherche francophone et un service d\'e-mail gratuit massivement adopté en France.',
+      whyItRuled: 'Voilà régnait sur l\'Internet de l\'Hexagone grâce à sa position de page d\'accueil par défaut de tous les abonnements Wanadoo. Son annuaire était riche et mis à jour très précisément. Mais ce qui a assuré son immortalité, ce sont les adresses e-mails "@voila.fr" gratuites, faciles à prononcer et à retenir, qui ont servi de boîte aux lettres principale à des millions de foyers français.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le sabordage de Voilà s'explique par les mutations stratégiques de son opérateur d'origine :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">L'unification d'Orange :</strong> France Télécom a décidé d'unifier toutes ses marques (Wanadoo, Voilà, MaLigneTV) sous la bannière unique "Orange". Dès lors, Voilà a cessé de faire l'objet de développements techniques majeurs, se transformant en un portail de secours.</li>
+          <li><strong class="text-indigo-400">Le raz-de-marée Gmail de Google :</strong> L'arrivée de Gmail en 2004 avec son stockage de 1 Giga-Octet (contre 2 Mo ou 10 Mo pour Voilà à l'époque) puis l'apparition des applications asynchrones réactives ont rendu obsolète l'interface e-mail de Voilà, qui s'est progressivement vidée de ses utilisateurs.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Orange Mail, Gmail, ProtonMail.',
+      retroAnecdote: 'En 2015, l\'annonce de la fermeture définitive de Voilà et la suppression de toutes les boîtes e-mails ont déclenché une immense vague de colère en France, se soldant par des pétitions d\'utilisateurs désespérés de conserver l\'adresse e-mail de leur enfance.',
+      specials: ['France Télécom', 'Wanadoo Era', 'Mail @voila.fr', 'Patrimoine FR']
+    },
+    {
+      id: 'altavista',
+      name: 'AltaVista',
+      icon: '🔭',
+      birthYear: '1995',
+      deathYear: '2013 (Fermé définitivement par Yahoo)',
+      category: 'network',
+      epitaph: 'Ci-gît le tout premier télescope géant de la recherche web, capable d\'indexer l\'Internet mondial à la vitesse de la lumière avant que Google n\'en rationalise la pertinence.',
+      summary: 'Créé par les chercheurs de Digital Equipment Corporation (DEC) en 1995, AltaVista a été le premier moteur de recherche à indexer une part colossale de l\'Internet mondial avec un crawler performant (Scooter).',
+      whyItRuled: 'Avant AltaVista, chercher un site web prenait des plombes et on se butait à des annuaires incomplets. AltaVista a stupéfié le monde grâce à ses serveurs supercalculateurs 64 bits de DEC, effectuant des recherches sur des millions de pages web en quelques millisecondes. AltaVista a également inventé "Babelfish", le tout premier traducteur automatique de pages web en ligne au monde.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Comment le seigneur de l'indexation s'est-il fait balayer ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le fléau de la refonte en portail publicitaire :</strong> Racheté à plusieurs reprises, AltaVista a pris la décision dramatique d'abandonner son design d'origine super propre et centré sur la recherche pour copier AOL et Yahoo. Il est devenu un portail touffu chargé de pubs, de widgets boursiers et d'actualités, perdant l'identité visuelle que Google a justement reprise à son compte.</li>
+          <li><strong class="text-indigo-400">L'incapacité à déjouer le spam de mots-clés :</strong> L'algorithme d'AltaVista indexait seulement la récurrence de texte. Les référenceurs d'époque en ont abusé en écrivant des dizaines de mots-clés cachés en texte blanc sur fond blanc en bas de page pour tricher, dégradant gravement la qualité de ses recherches face à l'ingénieux PageRank de Google.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Google, Bing ou le traducteur DeepL/Google Translate (héritiers directs de Babelfish).',
+      retroAnecdote: 'AltaVista a été victime d\'un imbroglio financier légendaire : ils n\'avaient pas réservé le nom de domaine internet direct "altavista.com" au départ, devant reverser une somme phénoménale de 3,3 millions de dollars en 1998 pour racheter l\'adresse à la société AltaVista Technology !',
+      specials: ['DEC Alpha Servers', 'Babelfish Translate', 'First Real Crawler', 'Domain Scandal']
+    },
+    {
+      id: 'telecharger',
+      name: 'Télécharger.com',
+      icon: '📥',
+      birthYear: '1997',
+      deathYear: 'Fusionné et déclin des logiciels tiers',
+      category: 'network',
+      epitaph: 'Ci-gît le supermarché de la disquette numérique, temple suprême du shareware d\'époque, du crack inoffensif et des codecs DivX indispensables.',
+      summary: 'Lancé en 1997, Télécharger.com a été le portail francophone ultime de référencement de logiciels, jeux, démos et utilitaires pour PC et Mac à glisser sur disque dur.',
+      whyItRuled: 'Avant le très haut débit, trouver et télécharger un logiciel sûr (Winamp, VLC, MSN Messenger, IncrediMail ou Kazaa) relevait du parcours du combattant. Télécharger.com était la cathédrale sacrée du téléchargement : des serveurs haut débit français garantissant d\'excellents temps de réponse, une classification par catégories soignée et des avis détaillés de la rédaction de 01net de l\'époque.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le déclin de ce modèle s'explique par l'avènement des magasins d'applications contrôlés et du web SaaS-first :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le ras-le-bol des instalateurs publicitaires (Adwares) :</strong> Dans les années 2010, pour augmenter les profits, le site a commencé à empaqueter ses téléchargements dans des installeurs contenant des publicitaires forcés (adwares, barres d'outils types Babylon Search ou Ask Toolbar). Cela a ravagé la confiance des utilisateurs, qui ont fui vers les sites officiels des éditeurs de logiciels originels.</li>
+          <li><strong class="text-indigo-400">La domination des App Stores et du Cloud :</strong> Aujourd'hui, les ordinateurs (Windows Store, Mac App Store) et les mobiles intègrent d'office leur propre magasin sécurisé d'applications d'un clic. Le concept même de devoir télécharger manuellement un fichier installateur indépendant ".exe" ou ".dmg" a quasiment disparu du quotidien du grand public.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Mac App Store, Microsoft Store, dépôts de packages CLI de pointe (Chocolatey, Winget, Homebrew).',
+      retroAnecdote: 'C\'est sur Télécharger.com que la France entière s\'est ruée en 2002 pour télécharger le pack de codecs "Simo\'s DivX Pack" ou "K-Lite Codec Pack" afin de pouvoir lire les films compressés au format ".avi" récupérés en ligne sur eMule.',
+      specials: ['Anciens Sharewares', 'Winamp Skins', 'La Suite 01net', 'Codecs DivX']
+    },
+    {
+      id: 'jeuxflash',
+      name: 'AbsoluFlash / Jeux-Flash.com',
+      icon: '🎮',
+      birthYear: '1998',
+      deathYear: '2020 (Fin de Flash)',
+      category: 'network',
+      epitaph: 'Ci-gît la salle d\'arcade infinie des salles informatiques de collèges, paradis du "casual gaming" pionnier terrassé par l\'extinction définitive du lecteur Flash Player d\'Adobe.',
+      summary: 'Créés pour fédérer et proposer le catalogue de jeux interactifs vectoriels conçus sous Flash (ou Shockwave), les portails comme AbsoluFlash ou Jeux-Flash.com ont amusé des millions d\'enfants et de salariés s\'ennuyant devant leur écran d\'ordinateur.',
+      whyItRuled: 'Ces sites étaient des trésors de récréation instantanée. Pas besoin d\'installer de gros jeux sur le disque dur du PC familial : on cliquait, et le jeu se chargeait en 10 secondes. Ils offraient des heures de rigolade sur des références immortelles comme "Yetisports" (lancer de pingouin), "Defend Your Castle", les animations interactives d\'Happy Tree Friends, ou les excellents jeux d\'artillerie d\'esprit Flash légendaires.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Ces temples de la récréation numérique ont péri d'un coup de sabre logiciel :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le retrait mondial du plugin Flash Player en 2020 :</strong> Le 31 décembre 2020, Adobe décactive et bloque l'exécution de tout son code d'animation interactif dans les navigateurs. Sans support Flash, ces milliers de jeux d'antologie sont devenus instantanément illisibles, transformant ces annuaires de jeux en coquilles vides obsolètes.</li>
+          <li><strong class="text-indigo-400">Le basculement massif vers les jeux mobiles (App Store / Play Store) :</strong> Les créations casual se sont déplacées sur mobiles (Angry Birds, Candy Crush), détrônant le jeu sur page web par navigateur.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Portails HTML5 sémantiques (itch.io, CrazyGames) et les émulateurs de pointe en WebAssembly (Ruffle) pour faire revivre ces jeux rétro.',
+      retroAnecdote: 'Les administrateurs informatiques des écoles et administrations se livraient à une guerre permanente contre AbsoluFlash, devant bloquer manuellement l\'adresse IP de ces sites afin d\'éviter que les élèves n\'y passent l\'intégralité de leurs heures de cours en salle info !',
+      specials: ['Yetisports', 'Web Arcade', 'Shockwave Player', 'Ruffle Emulator']
+    },
+    {
+      id: 'habbo',
+      name: 'Habbo Hotel',
+      icon: '🏨',
+      birthYear: '2000',
+      deathYear: 'Déclin d\'audience (toujours actif en niche)',
+      category: 'network',
+      epitaph: 'Ci-gît le lobby en vue isométrique pixel-art le plus célèbre des années 2000, paradis de la discussion en bulles et des arnaques de meubles virtuels (Mobicartes).',
+      summary: 'Lancé en 2000 par la société finlandaise Sulake sous le nom d\'Hotelli Kultakala, Habbo Hotel est un monde virtuel et un espace de discussion destiné aux adolescents, représenté sous la forme d\'un immense hôtel en pixel-art isométrique.',
+      whyItRuled: 'Habbo a inventé la socialisation immersive en ligne d\'époque. L\'utilisateur personnalisait son avatar pixelisé, louait sa chambre virtuelle et l\'aménageait à l\'aide de meubles d\'époque stylés ("Furnis") achetés avec de vrais crédits terrestres. C\'était l\'endroit de ralliement culte après les cours pour discuter, participer à des jeux de rôle organisés par de jeunes animateurs en herbe, ou parader devant la piscine virtuelle de l\'hôtel.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Le déclin de cet empire virtuel en pixels s'explique par de multiples crises d'époque :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Les polémiques de sécurité et de cyberharcèlement :</strong> En 2012, un reportage de Channel 4 pointe du doigt l'absence de modération efficace面对 de graves dérives de prédateurs rôdant au milieu des adolescents. La plateforme a dû couper tous ses tchats ("Great Habbo Mute"), anéantissant l'interactivity d'origine.</li>
+          <li><strong class="text-indigo-400">La transition technique post-Flash traumatique :</strong> Habbo tournait sur Flash Player. La transition vers Unity puis HTML5 pour survivre en 2020 s'est soldée par une interface buggée, lourde et boudée par les nostalgiques qui ont regretté l'ancienne réactivité fluide.</li>
+          <li><strong class="text-indigo-400">L'émergence de jeux immersifs 3D (Minecraft, Roblox, Fortnite) :</strong> Les enfants ont rapidement préféré des mondes 3D à fort contrôle physique (Minecraft ou Roblox) aux chatrooms isométriques 2D statiques.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Roblox, VRChat, Discord pour les salons communautaires légers.',
+      retroAnecdote: 'Les crédits Habbo s\'achetaient massivement par de jeunes mineurs en dérobant le téléphone des parents pour composer des numéros Audiotel payants ou envoyer des SMS surtaxés récupérés au dos des "Mobicartes" d\'héritage SFR ou Wanadoo !',
+      specials: ['Sulake Pixelart', 'Furnis Market', 'La Piscine Habbo', 'Audiotel Crisis']
+    },
+    {
+      id: 'koreus',
+      name: 'LeBottinCinglé / Koreus',
+      icon: '🎬',
+      birthYear: '2002',
+      deathYear: 'Déclin d\'audience au profit des plateformes vidéo',
+      category: 'network',
+      epitaph: 'Ci-gît le point de triage des vidéos cultes, des diaporamas humoristiques PPT de secrétariat en entreprise et du LOL pré-historique d\'Internet.',
+      summary: 'Avant l\'arrivée de YouTube ou de Dailymotion, les portails francophones d\'esprit "curateur" comme Koreus ou LeBottinCinglé étaient l\'unique moyen de découvrir et visionner les mèmes et vidéos virales circulant sur le web.',
+      whyItRuled: 'Dans les années 2000, la vidéo en ligne ne s\'hébergeait pas gratuitement. Pour rire et se divertir, on se connectait quotidiennement sur Koreus ou LeBottinCinglé. Ces passionnés dénichaient de courtes animations d\'humour, des gags en fichiers ".wmv" ou de gros fichiers d\'animations flash insolites. C\'était le foyer de créations mémorables d\'époque partagées par e-mails.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Comment ces précurseurs du LOL se sont-ils fait dépasser ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La suprématie de YouTube :</strong> À partir de 2005/2006, YouTube fournit une infrastructure de diffusion mondiale illimitée, gratuite, de haute qualité avec un player Flash universel, rendant l'hébergement artisanal de petits clips vidéos lourds non économique pour ces annuaires.</li>
+          <li><strong class="text-indigo-400">L'essor des réseaux sociaux algorithmiques :</strong> Aujourd'hui, les mèmes se créent et se propagent de manière autonome en 5 secondes sur Twitter, TikTok ou Instagram sans passer par un intermédiaire de tri humain gérant un annuaire web statique de vidéos d'époque.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'TikTok, YouTube Shorts, Reddit (r/videos, r/funny) et Twitter.',
+      retroAnecdote: 'La moitié des vidéos partagées sur LeBottinCinglé arrivait dans les boîtes e-mails professionnelles sous forme de lourds diaporamas Microsoft PowerPoint au format ".pps" ou ".ppt", qu\'on s\'envoyait discrètement de collègue en collègue entre deux rendez-vous d\'affaires.',
+      specials: ['Pre-YouTube', 'Vidéos Insolites', 'Fichiers PPS', 'Culture Mèmes']
+    },
+    {
+      id: 'siteduzero',
+      name: 'Le Site du Zéro',
+      icon: '🎓',
+      birthYear: '1999',
+      deathYear: '2013 (OpenClassrooms)',
+      category: 'network',
+      epitaph: 'Ci-gît le temple de l\'apprentissage informatique de toute une génération de développeurs francophones, transformé en plateforme commerciale.',
+      summary: 'Le Site du Zéro était la plus grande communauté d\'apprentissage programmation de langue française, réputée pour ses tutoriels progressifs particulièrement adaptés aux novices démunis de connaissances préalables.',
+      whyItRuled: 'Créé en 1999 par Mathieu Nebra, alors âgé de 13 ans, le site proposait des tutoriels extrêmement limpides avec sa sainte mascotte Zozor et un ton convivial dénué de jargon lourd. Sa communauté d\'entraide comptait des millions de codeurs qui y ont fait leurs premiers pas sur l\'HTML, le PHP, le MySQL ou les langages compilés.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>Pourquoi cet esprit communautaire de partage bénévole gratuit a-t-il disparu ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le pivot commercial vers OpenClassrooms (2013) :</strong> Pour structurer l'entreprise et assurer une viabilité financière, l'équipe efface le nom historique, abandonne la mascotte Zozor et transforme le site en plateforme de formation certifiante par abonnements payants.</li>
+          <li><strong class="text-indigo-400">La perte de l'esprit ouvert libre :</strong> Cette mutation a écarté les rédacteurs amateurs bénévoles d'origine, laissant les nostalgiques orphelins de l'enthousiasme du web d'époque.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'OpenClassrooms, MDN Web Docs, freeCodeCamp, ou Grafikart.',
+      retroAnecdote: 'Les manuels "Concevez votre site web avec PHP et MySQL" édités par le Site du Zéro trônaient sur les bureaux de presque tous les étudiants en informatique des années 2000.',
+      specials: ['Zozor Mascotte', 'Tutoriels Libres', 'Mathieu Nebra', 'WAMP Guides']
+    },
+    {
+      id: 'allhtml',
+      name: 'AllHTML',
+      icon: '📁',
+      birthYear: '1998',
+      deathYear: '2009 (Déclin progressif)',
+      category: 'network',
+      epitaph: 'Ci-gît la première trousse à outils des "Webmasters" francophones, supplantée par la standardisation globale du W3C.',
+      summary: 'AllHTML fournissait aux webmasters des années 2000 des fiches de balises HTML, des règles CSS naissantes et des dizaines de générateurs de code légers.',
+      whyItRuled: 'Le site offrait des générateurs automatiques simples d\'utilisation : menus déroulants d\'un clic en JS, balises meta-tags SEO pour AltaVista, ou boîtes alertes pop-ups. Ses forums étaient bondés de concepteurs s\'entraidant pour brancher des serveurs FTP ou déboguer les fureteurs de l\'époque.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-355 leading-relaxed">
+        <p>Le déclin d'AllHTML s'explique par sa stagnation face à l'avènement des nouveaux standards :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La transition vers HTML5 et les frameworks modernes :</strong> AllHTML est resté attaché à sa configuration visuelle table-grid rétro et n'a pas survécu au responsive design et aux nouvelles API.</li>
+          <li><strong class="text-indigo-400">La montée du réseau MDN et de StackOverflow :</strong> Les ressources unifiées fiables de Mozilla ont déclassé les petits portails de webmasters amateurs isolés.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'MDN Web Docs, W3Schools et StackOverflow.',
+      retroAnecdote: 'Le compteur de connexions à l\'entrée d\'AllHTML affichait avec fierté plus de 20 millions de visites au début des années 2000.',
+      specials: ['Générateurs JS', 'CHMOD FTP', 'Dictionnaire Balises', 'Webmasters FR']
+    },
+    {
+      id: 'myspace',
+      name: 'MySpace',
+      icon: '🎵',
+      birthYear: '2003',
+      deathYear: '2008 (Déclin mondial au profit de Facebook)',
+      category: 'network',
+      epitaph: 'Ci-gît le seigneur absolu de la socialisation musicale en ligne, étouffé sous les injections de code CSS sauvage et la rapidité de Facebook.',
+      summary: 'Lancé en 2003, MySpace de Chris DeWolfe et Tom Anderson offrait un espace d\'expression musicale totale doté d\'une modification complète du HTML/CSS par profil.',
+      whyItRuled: 'Son succès venait de sa liberté d\'altérer la mise en page. Les membres injectaient des styles CSS délirants pour façonner leur page et y greffer des lecteurs de musiques MP3, devenant le tremplin d\'icônes musicales mondiales comme Lily Allen ou Arctic Monkeys.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-355 leading-relaxed">
+        <p>Comment MySpace a-t-il été terrassé par Facebook ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La lassitude face au désordre visuel :</strong> L'absence d'homogénéité a causé des temps de chargement catastrophiques et d'abondants profils d'utilisateurs cassés par des scripts et styles incompatibles.</li>
+          <li><strong class="text-indigo-400">L'émergence épurée de Facebook (2007) :</strong> Facebook a apporté un design blanc, uniforme, léger et structuré autour d'un fil d'actualités central fluide et sans fioritures publicitaires destructrices.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Facebook, Twitter, Instagram, et Bandcamp ou SoundCloud pour les artistes.',
+      retroAnecdote: 'Le co-fondateur de MySpace, Tom Anderson ("Tom"), était instantanément installé comme premier ami virtuel de chaque usager, célèbre par son cliché souriant devant son tableau blanc.',
+      specials: ['Top 8 Amis', 'Style CSS Sauvage', 'Indie Rock Wave', 'Tom Anderson']
+    },
+    {
+      id: 'dhtml',
+      name: 'DHTML (Dynamic HTML)',
+      icon: '✨',
+      birthYear: '1997',
+      deathYear: 'Début des années 2005 (DOM unifié / AJAX)',
+      category: 'network',
+      epitaph: 'Ci-gît l\'époque insouciante des rideaux de textes défilants, des traînées de souris scintillantes et des calques positionnés incompatibles.',
+      summary: 'Combinant HTML4, CSS naissant et scripts (JavaScript/VBScript), le Dynamic HTML était une formule marketing forte pour désigner l\'interactivité côté client au tournant de l\'an 2000, avant que les standards rigoureux du DOM et AJAX n\'unifient l\'architecture Web.',
+      whyItRuled: 'Avant le DHTML, une page web était désespérément figée. Le DHTML a tout éveillé : il a permis de créer les premiers menus déroulants interactifs, d\'animer et de déplacer des images en manipulant des calques absolus (<layer> chez Netscape et <div> absolute chez Internet Explorer), d\'ajouter des effets sonores au clic, ou de faire suivre le curseur par des cascades d\'étoiles colorées. C\'était l\'époque de l\'expérimentation visuelle décomplexée, adorée par tous les "webmasters" amateurs.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-300 leading-relaxed">
+        <p>Pourquoi la frénésie du DHTML s'est-elle éteinte ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">La guerre absurde du Document Object Model (DOM) :</strong> Microsoft et Netscape ont implémenté deux manières totalement incompatibles de cibler les éléments. Pour déplacer un calque en JavaScript, le développeur devait écrire des acrobaties : <code>if (document.all)</code> (pour IE) et <code>if (document.layers)</code> (pour Netscape). Cette dualité rendait l'écriture de grands sites épuisante et instable.</li>
+          <li><strong class="text-indigo-400">Le standard DOM unifié du W3C :</strong> Le W3C a mis fin au Far-West en standardisant l'accès universel et neutre via <code>document.getElementById()</code>, unifiant enfin les navigateurs.</li>
+          <li><strong class="text-indigo-400">L'éclosion d'AJAX (2005) :</strong> L'apparition d'un échange asynchrone sécurisé de données en arrière-plan sans recharger les pages a ringardisé le bricolage DHTML au profit des puissantes Single Page Applications.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'L\'API DOM moderne, les frameworks de pointe (React, Vue) avec des transitions CSS matérielles intégrées.',
+      retroAnecdote: 'Faire tomber de la neige virtuelle en cascade sur sa page personnelle en décembre à l\'aide d\'un script d\'une centaine de lignes DHTML "Javascript" était le summum du raffinement technique d\'un webmaster.',
+      specials: ['document.layers', 'Guerre des DOM', 'Trainée d\'étoiles', 'Concept Marketing', 'Dynamic HTML']
+    },
+    {
+      id: 'xml',
+      name: 'XML (Extensible Markup Language)',
+      icon: '📁',
+      birthYear: '1998',
+      deathYear: 'Remplacé massivement par le JSON (survit en de rares cas de niche/config)',
+      category: 'network',
+      epitaph: 'Ci-gît le langage de balisage ultra-rigide qui prétendait structurer toutes les données du globe, étouffé sous sa lourde et verbeuse bureaucratie syntaxique.',
+      summary: 'Promis par le W3C à un avenir hégémonique universel avec le XHTML, le XML a été le format roi de structuration de documents et d\'échanges de données d\'entreprise (SOAP, XML-RPC) avant de céder face à l\'extrême agilité et concision du format JSON.',
+      whyItRuled: 'À la fin de la décennie 1990, le Web s\'inquiétait de la transmission indisciplinée de données non structurées. Le XML offrait un cadre impitoyablement rigide : les développeurs pouvaient inventer leurs propres balises et forcer des validations de schémas (DTD, XSD). Le W3C croyait tellement à ce format qu\'il a échafaudé un écosystème géant tout-XML : XHTML pour forcer la fermeture de chaque balise HTML, XSLT pour transformer des documents et SOAP pour le web d\'entreprise.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-300 leading-relaxed">
+        <p>Pourquoi la promesse du tout-XML a-t-elle capitulé face à JSON ?</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">L'incontestable verbosité et lourdeur :</strong> Réécrire chaque balise d'ouverture à la fermeture (ex: <code>&lt;prenom&gt;Jean&lt;/prenom&gt;</code>) consommait d'immenses ressources de bande passante et s'avérait fastidieux par rapport au format JSON, léger, concis et naturellement décodé comme des objets mémoires par le JavaScript.</li>
+          <li><strong class="text-indigo-400">La "Yellow Screen of Death" du XHTML :</strong> En voulant remplacer le HTML robuste par du XML strict, les navigateurs cessaient brutalement d'afficher la page web au moindre oubli de fermeture de balise ou d'unesperluette non échappée. Les développeurs révoltés ont abandonné la rigueur du W3C pour participer à la fronde du WHATWG menant à la naissance du HTML5 tolérant.</li>
+          <li><strong class="text-indigo-400">Le pivot asynchrone vers JSON :</strong> Bien qu'AJAX contienne le terme XML, les concepteurs d'API ont rapidement banni le parsing fastidieux de documents XML (via responseXML) pour utiliser de simples requêtes JSON d'une vélocité incomparable.</li>
+        </ul>
+        <p class="text-slate-400 text-[11px] italic">
+          Note : Bien que détrôné pour les API web dominantes, le XML survit aujourd\'hui dans des niches industrielles : les configurations Maven (pom.xml), le Manifest Android, le format SVG, les flux d\'actualités RSS, ou sous le capot des fichiers Word (.docx) ou Excel (.xlsx).
+        </p>
+      </div>`,
+      modernSuccessor: 'Le format JSON pour les API, le format YAML pour l\'administration système et les configurations, et le HTML5 sémantique robuste.',
+      retroAnecdote: 'Certains universitaires de l\'époque recommandaient d\'écrire les articles et fiches de sites en XML brut, d\'y lier des fichiers XSLT de 1000 lignes pour générer le HTML de sortie... une usine à gaz incommensurable.',
+      specials: ['Validation XHTML', 'XML vs JSON', 'Yellow Screen of Death', 'Ecosystème SOAP', 'RSS Heritage', 'Survies de Niche']
     }
   ];
 
-  const activeRelic = relics.find(r => r.id === activeRelicId) || relics[0];
+  const selectSubMenu = (menu: 'network' | 'editors') => {
+    setActiveSubMenu(menu);
+    const firstOfCat = relics.find(r => {
+      if (menu === 'editors') return r.category === 'editors';
+      return !r.category || r.category === 'network';
+    });
+    if (firstOfCat) {
+      setActiveRelicId(firstOfCat.id);
+    }
+  };
+
+  const filteredRelics = relics.filter(r => {
+    if (activeSubMenu === 'editors') {
+      return r.category === 'editors';
+    }
+    return !r.category || r.category === 'network';
+  });
+
+  const activeRelic = relics.find(r => r.id === activeRelicId) || filteredRelics[0] || relics[0];
 
   // Theme styling mapping helper
   const getThemeCSS = () => {
@@ -523,6 +910,86 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
 
   const css = getThemeCSS();
 
+  const renderSubMenuSelectors = () => {
+    switch (theme) {
+      case 'ie6':
+        return (
+          <div className="flex border-b border-[#808080] mb-3" id="cemetery-submenu-ie6">
+            <button
+              onClick={() => selectSubMenu('network')}
+              className={`px-3 py-1.5 text-[10px] font-sans select-none cursor-pointer border-t border-l border-r border-[#808080] ${
+                activeSubMenu === 'network'
+                  ? 'bg-[#d4d0c8] font-bold border-t-white border-l-white border-r-[#808080] -mb-[1px] z-10'
+                  : 'bg-[#c0c0c0] text-slate-700 hover:bg-[#d4d0c8]'
+              }`}
+            >
+              🌐 Reliques
+            </button>
+            <button
+              onClick={() => selectSubMenu('editors')}
+              className={`px-3 py-1.5 text-[10px] font-sans select-none cursor-pointer border-t border-l border-r border-[#808080] ${
+                activeSubMenu === 'editors'
+                  ? 'bg-[#d4d0c8] font-bold border-t-white border-l-white border-r-[#808080] -mb-[1px] z-10'
+                  : 'bg-[#c0c0c0] text-slate-700 hover:bg-[#d4d0c8]'
+              }`}
+            >
+              💾 Anciens Éditeurs
+            </button>
+          </div>
+        );
+      case 'terminal':
+        return (
+          <div className="flex gap-3 border-b border-[#ffb000]/25 pb-2 mb-3 text-xs font-mono" id="cemetery-submenu-terminal">
+            <button
+              onClick={() => selectSubMenu('network')}
+              className={`hover:text-[#ffb000] cursor-pointer transition ${
+                activeSubMenu === 'network'
+                  ? 'text-[#ffb000] font-extrabold'
+                  : 'text-[#ffb000]/40'
+              }`}
+            >
+              {activeSubMenu === 'network' ? '[ * RESEAU ]' : '[   RESEAU ]'}
+            </button>
+            <button
+              onClick={() => selectSubMenu('editors')}
+              className={`hover:text-[#ffb000] cursor-pointer transition ${
+                activeSubMenu === 'editors'
+                  ? 'text-[#ffb000] font-extrabold'
+                  : 'text-[#ffb000]/40'
+              }`}
+            >
+              {activeSubMenu === 'editors' ? '[ * EDITEURS ]' : '[   EDITEURS ]'}
+            </button>
+          </div>
+        );
+      default:
+        return (
+          <div className="grid grid-cols-2 gap-1 p-1 bg-[#09090b]/85 rounded-xl border border-slate-800/80 mb-3" id="cemetery-submenu-modern">
+            <button
+              onClick={() => selectSubMenu('network')}
+              className={`py-1.5 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
+                activeSubMenu === 'network'
+                  ? 'bg-[#1e1e24] text-indigo-400 border border-indigo-500/20 shadow-md'
+                  : 'text-slate-400 hover:text-slate-200 border border-transparent'
+              }`}
+            >
+              🌐 Reliques Réseau
+            </button>
+            <button
+              onClick={() => selectSubMenu('editors')}
+              className={`py-1.5 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
+                activeSubMenu === 'editors'
+                  ? 'bg-[#1e1e24] text-indigo-400 border border-indigo-500/20 shadow-md'
+                  : 'text-slate-400 hover:text-slate-200 border border-transparent'
+              }`}
+            >
+              💾 Anciens Éditeurs
+            </button>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="space-y-6" id="cemetery-root">
       
@@ -547,14 +1014,27 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
           <span className="text-[10px] font-mono tracking-widest font-extrabold uppercase text-slate-400 block mb-1">
             🪦 Sélectionner une relique :
           </span>
+
+          {renderSubMenuSelectors()}
+
           <div className="flex flex-col gap-2">
-            {relics.map((relic) => {
+            {filteredRelics.map((relic) => {
               const isActive = relic.id === activeRelicId;
+              const isHovered = relic.id === hoveredRelicId;
+              
+              // Sibling ghost effect: if another relic is hovered, apply opacity & light blur to this one.
+              const isAnyHovered = hoveredRelicId !== null;
+              const ghostEffectCss = isAnyHovered && !isHovered
+                ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
               return (
                 <div
                   key={relic.id}
                   onClick={() => setActiveRelicId(relic.id)}
-                  className={css.listItem(isActive)}
+                  onMouseEnter={() => setHoveredRelicId(relic.id)}
+                  onMouseLeave={() => setHoveredRelicId(null)}
+                  className={`${css.listItem(isActive)} ${ghostEffectCss}`}
                   id={`tombstone-item-${relic.id}`}
                 >
                   <div className="flex items-center gap-3">
