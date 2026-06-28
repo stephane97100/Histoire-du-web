@@ -22,7 +22,6 @@ import {
 
 interface PageRendererSimulatorProps {
   theme: 'modern' | 'ie6' | 'terminal';
-  isLightMode?: boolean;
 }
 
 interface PresetSnippet {
@@ -99,7 +98,7 @@ const PRESETS: PresetSnippet[] = [
   }
 ];
 
-export default function PageRendererSimulator({ theme, isLightMode = false }: PageRendererSimulatorProps) {
+export default function PageRendererSimulator({ theme }: PageRendererSimulatorProps) {
   const [code, setCode] = useState<string>(PRESETS[0].code);
   const [selectedBrowser, setSelectedBrowser] = useState<'netscape' | 'ie6' | 'chrome'>('chrome');
   const [analysisReport, setAnalysisReport] = useState<string[]>([]);
@@ -243,8 +242,7 @@ export default function PageRendererSimulator({ theme, isLightMode = false }: Pa
       {/* Simulation Banner Info */}
       <div className={`p-5 rounded-2xl border ${
         theme === 'ie6' ? 'bg-[#c0c0c0] border-white text-black' :
-        theme === 'terminal' ? 'bg-[#ffb000]/10 border-[#ffb000]/40 text-[#ffb000]' :
-        isLightMode ? 'bg-[#f5f5f7] border-[#d2d2d7] text-[#1d1d1f]' : 'bg-[#111114] border-[#2a2a2e] text-slate-100'
+        theme === 'terminal' ? 'bg-[#ffb000]/10 border-[#ffb000]/40 text-[#ffb000]' : 'bg-[#111114] border-[#2a2a2e] text-slate-100'
       }`}>
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">

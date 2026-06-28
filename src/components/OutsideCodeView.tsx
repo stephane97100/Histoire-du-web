@@ -25,12 +25,11 @@ import {
 
 interface OutsideCodeViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
-  isLightMode?: boolean;
 }
 
 type SubSection = 'webdesign' | 'ergonomie_web' | 'marketing' | 'seo' | 'copywriter';
 
-export default function OutsideCodeView({ theme, isLightMode = false }: OutsideCodeViewProps) {
+export default function OutsideCodeView({ theme }: OutsideCodeViewProps) {
   const [activeSub, setActiveSub] = useState<SubSection>('webdesign');
   const [ergonomicMode, setErgonomicMode] = useState<'chaotic' | 'ergonomic'>('chaotic');
 
@@ -58,23 +57,15 @@ export default function OutsideCodeView({ theme, isLightMode = false }: OutsideC
           paraText: 'text-[#ffb000]/90 font-mono',
           labelColor: 'text-[#ffb000]'
         };
-      default: // Modern - Supports native isLightMode
+      default: // Modern
         return {
-          card: isLightMode 
-            ? 'bg-[#f5f5f7] border border-[#d2d2d7] p-6 rounded-2xl shadow-sm space-y-4 text-[#1d1d1f]' 
-            : 'bg-[#111114] border border-[#2a2a2e] p-6 rounded-2xl shadow-xl space-y-4 text-slate-100',
-          innerCard: isLightMode
-            ? 'p-4 bg-white border border-[#e5e5ea] rounded-xl space-y-3 text-[#1d1d1f]'
-            : 'p-4 bg-slate-900 border border-slate-750/70 rounded-xl space-y-3 text-slate-350',
+          card: 'bg-[#111114] border border-[#2a2a2e] p-6 rounded-2xl shadow-xl space-y-4 text-slate-100',
+          innerCard: 'p-4 bg-slate-900 border border-slate-750/70 rounded-xl space-y-3 text-slate-350',
           badgeActive: 'bg-indigo-500/20 text-indigo-500 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-indigo-500/30',
-          badgeInactive: isLightMode
-            ? 'bg-[#e5e5ea] text-[#8e8e93] text-[10px] font-medium uppercase px-2.5 py-0.5 rounded-full border border-transparent'
-            : 'bg-slate-950/40 text-slate-500 text-[10px] font-medium uppercase px-2.5 py-0.5 rounded-full border border-transparent',
-          title: isLightMode
-            ? 'text-[#1c1c1e] font-sans font-extrabold text-sm tracking-tight'
-            : 'text-white font-sans font-extrabold text-sm tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent',
+          badgeInactive: 'bg-slate-950/40 text-slate-500 text-[10px] font-medium uppercase px-2.5 py-0.5 rounded-full border border-transparent',
+          title: 'text-white font-sans font-extrabold text-sm tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent',
           accentText: 'text-indigo-500 font-semibold',
-          paraText: isLightMode ? 'text-[#3a3a3c] font-sans' : 'text-slate-405 font-sans',
+          paraText: 'text-slate-405 font-sans',
           labelColor: 'text-indigo-400 font-bold'
         };
     }
@@ -93,11 +84,6 @@ export default function OutsideCodeView({ theme, isLightMode = false }: OutsideC
         ? 'bg-[#ffb000]/15 text-[#ffb000] border border-[#ffb000] px-3 py-2 text-xs font-bold font-mono uppercase'
         : 'text-[#ffb000]/60 border border-[#ffb000]/20 hover:border-[#ffb000]/60 hover:text-[#ffb000] px-3 py-2 text-xs font-mono';
     } else { // Modern
-      if (isLightMode) {
-        return isActive
-          ? 'bg-indigo-500/10 border-indigo-600 text-indigo-600 font-bold rounded-lg px-4 py-2 text-xs border cursor-pointer'
-          : 'bg-[#e5e5ea] border-transparent text-[#48484a] hover:text-[#1c1c1e] hover:bg-[#d1d1d6] rounded-lg px-4 py-2 text-xs border cursor-pointer';
-      }
       return isActive
         ? 'bg-emerald-600/10 border-emerald-500 text-emerald-400 font-bold rounded-lg px-4 py-2 text-xs border cursor-pointer'
         : 'bg-slate-900/40 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/70 rounded-lg px-4 py-2 text-xs border cursor-pointer';
@@ -413,9 +399,7 @@ export default function OutsideCodeView({ theme, isLightMode = false }: OutsideC
                           initial={{ opacity: 0, scale: 0.98 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.98 }}
-                          className={`${
-                            isLightMode ? 'bg-white border-[#d2d2d7]' : 'bg-slate-950 border-slate-900'
-                          } border p-4 rounded-xl space-y-4`}
+                          className="bg-slate-950 border-slate-900 border p-4 rounded-xl space-y-4"
                           id="ergonomic-clean-preview"
                         >
                           {/* Aesthetic Title and subtitle */}

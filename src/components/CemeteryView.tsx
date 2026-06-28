@@ -53,6 +53,26 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
   // Interactive data for "Le Cimetière du Web"
   const relics: Relic[] = [
     {
+      id: 'hijackthis',
+      name: 'HijackThis',
+      icon: '🛡️',
+      birthYear: '2003',
+      deathYear: 'Encore utilisé par les experts',
+      epitaph: 'Ci-gît le diagnostic ultime des systèmes Windows infestés, dont les rapports textuels étaient scrutés par des milliers de mains expertes sur les forums d\'entraide.',
+      summary: 'HijackThis (développé par Merijn Bellekom) est un outil de diagnostic gratuit capable de scanner les zones de Windows fréquemment modifiées par les malwares (registres, processus, extensions navigateur).',
+      whyItRuled: 'À l\'ère où les malwares et les barres d\'outils intrusives (Adware) s\'installaient par dizaines, HijackThis fournissait un rapport textuel complet et cryptique. Ce rapport était la clé du salut : les utilisateurs le collaient sur des forums spécialisés (comme Zebulon, Malekal, ou les forums GeeksToGo), où des experts bénévoles, en un coup d\'œil, identifiaient la ligne malicieuse et guidaient l\'utilisateur pour la supprimer. C\'était l\'apogée de l\'entraide communautaire contre la cybercriminalité.',
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-300 leading-relaxed">
+        <p>Le rôle d'HijackThis a évolué avec la sécurisation native de Windows :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Sécurisation accrue de Windows :</strong> Avec Windows 7, 8, et surtout 10/11, les contrôles de compte d'utilisateur (UAC) et la protection native de Windows Defender ont drastiquement réduit la surface d'attaque classique des adwares.</li>
+          <li><strong class="text-indigo-400">Automatisation des outils de désinfection :</strong> Des outils comme Malwarebytes ou AdwCleaner ont automatisé la détection et la suppression, rendant inutile l'analyse manuelle par un expert humain sur un forum.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'Malwarebytes, AdwCleaner, Windows Defender, et les antivirus modernes automatisés.',
+      retroAnecdote: 'Le terme "poster son rapport HijackThis" était le passage obligé pour tout utilisateur qui voyait sa page d\'accueil de navigateur modifiée ou des pop-ups apparaître partout.',
+      specials: ['Entraide communautaire', 'Diagnostic manuel', 'Windows 9x/XP']
+    },
+    {
       id: 'flash',
       name: 'Macromedia / Adobe Flash',
       icon: '⚡',

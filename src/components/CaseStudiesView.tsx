@@ -21,7 +21,6 @@ import {
 
 interface CaseStudiesViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
-  isLightMode?: boolean;
 }
 
 interface CaseStudy {
@@ -198,7 +197,7 @@ return <h1>{data.title}</h1>;`,
   }
 ];
 
-export default function CaseStudiesView({ theme, isLightMode = false }: CaseStudiesViewProps) {
+export default function CaseStudiesView({ theme }: CaseStudiesViewProps) {
   const [activeStudy, setActiveStudy] = useState<CaseStudy>(CASE_STUDIES[0]);
 
   const getThemeClass = () => {
@@ -217,17 +216,11 @@ export default function CaseStudiesView({ theme, isLightMode = false }: CaseStud
           metaBox: 'bg-black border border-[#ffb000]/25 p-3 text-xs space-y-2',
           badgeActive: 'bg-[#ffb000] text-black px-2 py-0.5 text-[9px] uppercase font-bold'
         };
-      default: // Modern - Supports isLightMode
+      default: // Modern
         return {
-          card: isLightMode 
-            ? 'bg-[#f5f5f7] border border-[#d2d2d7] p-6 rounded-2xl shadow-sm text-[#1d1d1f]' 
-            : 'bg-[#111114] border border-[#2a2a2e] p-6 rounded-2xl shadow-xl text-slate-100',
-          title: isLightMode
-            ? 'text-[#1c1c1e] font-sans font-extrabold text-sm'
-            : 'text-white font-sans font-extrabold text-base bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent',
-          metaBox: isLightMode
-            ? 'bg-white border border-[#e5e5ea] rounded-xl p-4 text-xs space-y-2 text-[#3a3a3c]'
-            : 'bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 text-xs space-y-2 text-slate-350',
+          card: 'bg-[#111114] border border-[#2a2a2e] p-6 rounded-2xl shadow-xl text-slate-100',
+          title: 'text-white font-sans font-extrabold text-base bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent',
+          metaBox: 'bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 text-xs space-y-2 text-slate-350',
           badgeActive: 'bg-indigo-500/20 text-indigo-500 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-indigo-500/30'
         };
     }

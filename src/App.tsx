@@ -76,21 +76,6 @@ export default function App() {
     () => (localStorage.getItem('web_history_retro_sound') as any) || 'muted'
   );
   const [isEbookModalOpen, setIsEbookModalOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('web_history_light_mode') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
-  const toggleLightMode = () => {
-    const nextVal = !isLightMode;
-    setIsLightMode(nextVal);
-    try {
-      localStorage.setItem('web_history_light_mode', String(nextVal));
-    } catch (e) {}
-  };
 
   // Interaction-triggered starting sound effect
   useEffect(() => {
@@ -163,33 +148,15 @@ export default function App() {
         };
       default: // Modern - Geometric Balance Design Theme
         return {
-          wrapperClass: isLightMode 
-            ? 'bg-[#e5e7eb] text-[#111827] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between transition-all'
-            : 'bg-[#0a0a0c] text-[#e0e0e0] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between transition-all',
-          containerClass: isLightMode
-            ? 'bg-[#ffffff] border border-[#d1d5db] max-w-7xl mx-auto w-full rounded-2xl shadow-lg overflow-hidden flex-1 flex flex-col justify-between'
-            : 'bg-[#0c0c0e] border border-[#2a2a2e] max-w-7xl mx-auto w-full rounded-xl shadow-2xl overflow-hidden flex-1 flex flex-col justify-between',
-          headerClass: isLightMode
-            ? 'bg-[#f9fafb] px-6 py-4 border-b border-[#d1d5db] flex flex-col md:flex-row md:items-center justify-between gap-4'
-            : 'bg-[#111114] px-6 py-4 border-b border-[#2a2a2e] flex flex-col md:flex-row md:items-center justify-between gap-4',
-          sidebarClass: isLightMode
-            ? 'bg-[#f9fafb] border-r border-[#d1d5db] p-5 shrink-0'
-            : 'bg-[#111114] border-r border-[#2a2a2e] p-5 shrink-0',
-          activeTabClass: isLightMode
-            ? 'text-[#2563eb] font-bold border-transparent bg-[#dbeafe] shadow-sm'
-            : 'text-[#367bf0] font-bold border-transparent shadow-[#3b82f6]/5',
-          inactiveTabClass: isLightMode
-            ? 'text-[#4b5563] hover:text-[#111827] hover:bg-[#f3f4f6] border-transparent'
-            : 'text-[#8a8a93] hover:text-white hover:bg-[#1a1a1e] border-transparent',
-          cardClass: isLightMode
-            ? 'bg-[#ffffff] border border-[#d1d5db] p-6 rounded-2xl text-[#111827] shadow-sm'
-            : 'bg-[#111114] border border-[#2a2a2e] p-5 rounded-xl text-slate-100',
-          titleFont: isLightMode
-            ? 'font-sans text-xl font-bold tracking-tight text-[#111827]'
-            : 'font-sans text-xl font-light tracking-tight text-[#e0e0e0]',
-          logoClass: isLightMode
-            ? 'text-base font-bold text-[#111827] flex items-center gap-2'
-            : 'text-base font-bold text-white flex items-center gap-2'
+          wrapperClass: 'bg-[#0a0a0c] text-[#e0e0e0] font-sans min-h-screen p-4 md:p-6 flex flex-col justify-between transition-all',
+          containerClass: 'bg-[#0c0c0e] border border-[#2a2a2e] max-w-7xl mx-auto w-full rounded-xl shadow-2xl overflow-hidden flex-1 flex flex-col justify-between',
+          headerClass: 'bg-[#111114] px-6 py-4 border-b border-[#2a2a2e] flex flex-col md:flex-row md:items-center justify-between gap-4',
+          sidebarClass: 'bg-[#111114] border-r border-[#2a2a2e] p-5 shrink-0',
+          activeTabClass: 'text-[#367bf0] font-bold border-transparent shadow-[#3b82f6]/5',
+          inactiveTabClass: 'text-[#8a8a93] hover:text-white hover:bg-[#1a1a1e] border-transparent',
+          cardClass: 'bg-[#111114] border border-[#2a2a2e] p-5 rounded-xl text-slate-100',
+          titleFont: 'font-sans text-xl font-light tracking-tight text-[#e0e0e0]',
+          logoClass: 'text-base font-bold text-white flex items-center gap-2'
         };
     }
   };
@@ -258,20 +225,26 @@ export default function App() {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   return (
-    <div 
-      className={style.wrapperClass} 
-      id="app-wrapper"
-      style={{
-        filter: ((isLightMode && themeMode !== 'modern') ? 'invert(1) hue-rotate(180deg) contrast(1.05) ' : '') + (
-          readingFilter === 'sepia' 
-            ? 'sepia(0.62) contrast(0.96) saturate(0.85) brightness(0.95)' 
-            : readingFilter === 'dim' 
-            ? 'brightness(0.76) contrast(0.95) saturate(0.9)' 
-            : ''
-        ) || 'none',
-        transition: 'filter 0.35s ease'
-      }}
-    >
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={themeMode}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className={style.wrapperClass} 
+        id="app-wrapper"
+        style={{
+          filter: (
+            readingFilter === 'sepia' 
+              ? 'sepia(0.62) contrast(0.96) saturate(0.85) brightness(0.95)' 
+              : readingFilter === 'dim' 
+              ? 'brightness(0.76) contrast(0.95) saturate(0.9)' 
+              : ''
+          ) || 'none',
+          transition: 'filter 0.35s ease'
+        }}
+      >
       {/* Immersive CRT Grid Overlay pattern for amber terminal */}
       {themeMode === 'terminal' && (
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(255,176,0,0.06)_0%,transparent_80%)] z-50 mix-blend-screen" />
@@ -296,29 +269,6 @@ export default function App() {
           {/* Controls Bar Row */}
           <div className="flex flex-wrap items-center gap-3 self-start">
             
-            {/* Dedicated Light Mode Toggle Button */}
-            <button
-              onClick={toggleLightMode}
-              id="btn-toggle-lightmanagement"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono text-xs font-bold transition-all cursor-pointer ${
-                isLightMode 
-                  ? 'bg-amber-500/25 border-amber-500/80 text-amber-500' 
-                  : 'bg-slate-950/60 border-slate-750 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {isLightMode ? (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-amber-500 animate-spin-slow" />
-                  <span className="text-amber-500">Mode Clair : ON</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Mode Clair : OFF</span>
-                </>
-              )}
-            </button>
-
             {/* Reading Eye Comfort Filter Controller */}
             <div className="flex items-center gap-2 bg-slate-950/60 p-1.5 rounded-xl border border-slate-750 text-xs font-mono font-bold">
               <span className="text-[10px] uppercase font-bold text-slate-450 mr-1 flex items-center gap-1">
@@ -425,7 +375,9 @@ export default function App() {
                   const isGroupActive = group.items.includes(activeTab);
                   return (
                     <div className="relative" key={group.label}>
-                      <button
+                      <motion.button
+                        whileHover={{ x: 3, y: -1, scale: 1.02 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                         onClick={() => setOpenGroup(openGroup === group.label ? null : group.label)}
                         className={`px-4 py-2 border rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer shrink-0 z-0 text-left ${
                           isGroupActive ? style.activeTabClass : style.inactiveTabClass
@@ -434,7 +386,7 @@ export default function App() {
                         <Icon className="w-3.5 h-3.5 shrink-0" />
                         <span className="text-[11px] font-bold tracking-tight">{group.label}</span>
                         {openGroup === group.label ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                      </button>
+                      </motion.button>
 
                       {openGroup === group.label && (
                         <div className="absolute top-full left-0 mt-2 p-2 bg-slate-900 border border-slate-700 rounded-xl z-[100] shadow-2xl flex flex-col gap-1 min-w-[200px]">
@@ -442,13 +394,15 @@ export default function App() {
                              const item = navItems.find(i => i.id === itemId);
                              if (!item) return null;
                              return (
-                               <button 
+                               <motion.button 
+                                 whileHover={{ x: 3 }}
+                                 transition={{ type: 'spring', stiffness: 300 }}
                                  key={item.id}
                                  onClick={(e) => { e.stopPropagation(); setActiveTab(item.id); setOpenGroup(null); }}
                                  className={`px-3 py-2 text-xs text-left rounded-lg transition-colors ${activeTab === item.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800'}`}
                                >
                                  {item.label}
-                               </button>
+                               </motion.button>
                              );
                           })}
                         </div>
@@ -491,9 +445,9 @@ export default function App() {
                 {activeTab === 'easter_eggs' && <EasterEggsView theme={themeMode} />}
                 {activeTab === 'france_contributions' && <FranceContributionsView theme={themeMode} />}
                 {activeTab === 'web_philosophy' && <WebPhilosophyView theme={themeMode} />}
-                {activeTab === 'outside_code' && <OutsideCodeView theme={themeMode} isLightMode={isLightMode} />}
-                {activeTab === 'page_renderer' && <PageRendererSimulator theme={themeMode} isLightMode={isLightMode} />}
-                {activeTab === 'case_studies' && <CaseStudiesView theme={themeMode} isLightMode={isLightMode} />}
+                {activeTab === 'outside_code' && <OutsideCodeView theme={themeMode} />}
+                {activeTab === 'page_renderer' && <PageRendererSimulator theme={themeMode} />}
+                {activeTab === 'case_studies' && <CaseStudiesView theme={themeMode} />}
               </motion.div>
             </AnimatePresence>
           </main>
@@ -590,6 +544,7 @@ export default function App() {
           />
         )}
       </AnimatePresence>
-    </div>
-  );
-}
+      </motion.div>
+      </AnimatePresence>
+    );
+  }

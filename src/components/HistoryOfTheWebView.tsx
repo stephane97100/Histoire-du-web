@@ -13,25 +13,25 @@ interface HistoryViewProps {
 
 const historyNodes = [
   {
-    id: 'www',
-    title: 'Invention du World Wide Web (1989)',
+    id: 'origins',
+    title: 'Origines du Web (1989-1991)',
     icon: Globe,
-    desc: 'Tim Berners-Lee propose au CERN un système pour partager des documents via hyperliens.',
-    details: 'Le Web n\'est pas Internet. Internet est l\'infrastructure (les tuyaux), le Web est la couche applicative (les documents). L\'idée géniale fut d\'utiliser des adresses (URL) et un langage de liens (HTML) pour connecter des machines hétérogènes.'
+    desc: 'Tim Berners-Lee invente le WWW au CERN.',
+    details: 'Le Web a été conçu comme un espace documentaire partagé. L\'idée était d\'utiliser des adresses (URL) pour identifier des ressources et le langage HTML pour les structurer, le tout lié par des hyperliens.'
   },
   {
-    id: 'http_tcpip',
-    title: 'Protocoles HTTP & TCP/IP',
+    id: 'protocols',
+    title: 'Protocoles Fondamentaux',
     icon: Server,
-    desc: 'Les fondations invisibles qui font communiquer les machines à travers le globe.',
-    details: 'TCP/IP assure le transport fiable des paquets de données (le "colis"). HTTP est le langage (le protocole) que le navigateur et le serveur utilisent pour demander et envoyer les pages web.'
+    desc: 'TCP/IP, DNS, HTTP/HTTPS : Les piliers de la communication réseau.',
+    details: 'TCP/IP assure le transport fiable des données. DNS traduit les noms de domaine en adresses IP. HTTP est le langage de requête/réponse entre navigateur et serveur, et HTTPS ajoute une couche de chiffrement TLS pour sécuriser ces échanges.'
   },
   {
     id: 'browsers',
     title: 'Évolution des Navigateurs',
     icon: Monitor,
-    desc: 'De la prouesse technique Mosaic à l\'hégémonie moderne des moteurs basés sur Chromium.',
-    details: 'Mosaic a introduit les images (1993). Netscape a introduit le dynamisme (JS). Internet Explorer 6 a imposé un monopole étouffant. Firefox a restauré la concurrence. Chrome a imposé la performance.'
+    desc: 'Mosaic, Netscape, IE, Firefox, Chrome...',
+    details: 'Mosaic a apporté les images. Netscape a introduit le dynamisme (JS) et le SSL. IE6 a imposé un monopole. Firefox a défendu l\'open-source. Chrome a optimisé la performance et standardisé le Web moderne.'
   }
 ];
 
