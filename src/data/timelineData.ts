@@ -187,16 +187,6 @@ export const timelineEvents: TimelineEvent[] = [
     tags: ['Steve Jobs', 'iPhone v1', 'Mobile Safari', 'Responsive']
   },
   {
-    id: '2010-responsive-revolution',
-    year: 2010,
-    title: 'La Révolution du Responsive Design : L\'Avènement du Web Liquide',
-    category: 'css',
-    description: 'Ethan Marcotte théorise le "Responsive Web Design" : le web abandonne définitivement la rigidité du pixel fixe et ne pourra plus jamais être comme "avant".',
-    detailedContent: 'En mai 2010, Ethan Marcotte publie un article séminal dans "A List Apart" définissant le Responsive Web Design (RWD) basé sur trois piliers techniques : les grilles fluides, les images flexibles et les Media Queries de la spécification CSS3 naissante. Jusqu\'ici, concevoir un site web consistait à figer une mise en page rigide (typiquement d\'une largeur immuable de 1024x768 pixels) optimisée exclusivement pour les écrans d\'ordinateurs de bureau. Face à l\'explosion inarrêtable de terminaux de toutes tailles (smartphones, phablettes, téléviseurs connectés), tenter de multiplier les versions dédiées ou d\'entretenir des sous-domaines mobiles disjoints s\'avère intenable.\n\nLe web ne pourra plus jamais être comme "avant" : la révolution responsive renverse le paradigme du contrôle visuel absolu. Le concepteur n\'impose plus des dimensions exactes mais définit des règles proportionnelles tolérantes. Le site web n\'est plus un tableau statique imprimé, il devient "liquide", s\'écoulant dynamiquement comme de l\'eau pour épouser de façon transparente le contenant matériel qui l\'affiche.',
-    impact: 'critical',
-    tags: ['Ethan Marcotte', 'Media Queries', 'Web Liquide', 'Flexibilité', 'RWD']
-  },
-  {
     id: '2008-chrome',
     year: 2008,
     title: 'Lancement de Google Chrome et V8',
@@ -205,6 +195,16 @@ export const timelineEvents: TimelineEvent[] = [
     detailedContent: 'Le moteur V8 révolutionne les performances JavaScript. Chrome sépare chaque onglet dans un processus sandboxé, évitant le gel complet du navigateur. Les applications web riches et complexes deviennent viables et surclassent les plug-ins comme Flash.',
     impact: 'critical',
     tags: ['Chrome', 'Moteur V8', 'JIT', 'Google']
+  },
+  {
+    id: '2010-responsive-revolution',
+    year: 2010,
+    title: 'La Révolution du Responsive Design : L\'Avènement du Web Liquide',
+    category: 'css',
+    description: 'Ethan Marcotte théorise le "Responsive Web Design" : le web abandonne définitivement la rigidité du pixel fixe et ne pourra plus jamais être comme "avant".',
+    detailedContent: 'En mai 2010, Ethan Marcotte publie un article séminal dans "A List Apart" définissant le Responsive Web Design (RWD) basé sur trois piliers techniques : les grilles fluides, les images flexibles et les Media Queries de la spécification CSS3 naissante. Jusqu\'ici, concevoir un site web consistait à figer une mise en page rigide (typiquement d\'une largeur immuable de 1024x768 pixels) optimisée exclusivement pour les écrans d\'ordinateurs de bureau. Face à l\'explosion inarrêtable de terminaux de toutes tailles (smartphones, phablettes, téléviseurs connectés), tenter de multiplier les versions dédiées ou d\'entretenir des sous-domaines mobiles disjoints s\'avère intenable.\n\nLe web ne pourra plus jamais être comme "avant" : la révolution responsive renverse le paradigme du contrôle visuel absolu. Le concepteur n\'impose plus des dimensions exactes mais définit des règles proportionnelles tolérantes. Le site web n\'est plus un tableau statique imprimé, il devient "liquide", s\'écoulant dynamiquement comme de l\'eau pour épouser de façon transparente le contenant matériel qui l\'affiche.',
+    impact: 'critical',
+    tags: ['Ethan Marcotte', 'Media Queries', 'Web Liquide', 'Flexibilité', 'RWD']
   },
   {
     id: '2010-steve-jobs-flash',

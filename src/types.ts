@@ -31,6 +31,7 @@ export interface VersionSpec {
 // Glossary Tag Types
 export interface GlossaryTag {
   tag: string; // e.g. "table", "marquee"
+  isHtmlTag: boolean; // New field
   version: 'html1' | 'html2' | 'html3' | 'html4' | 'html5';
   category: 'structure' | 'text' | 'media' | 'forms' | 'deprecated' | 'script';
   description: string;

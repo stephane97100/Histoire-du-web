@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Globe, Server, Link2, Monitor, Code2, Cpu } from 'lucide-react';
+import GlossaryTooltip from './GlossaryTooltip';
 
 interface HistoryViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
@@ -17,21 +18,38 @@ const historyNodes = [
     title: 'Origines du Web (1989-1991)',
     icon: Globe,
     desc: 'Tim Berners-Lee invente le WWW au CERN.',
-    details: 'Le Web a été conçu comme un espace documentaire partagé. L\'idée était d\'utiliser des adresses (URL) pour identifier des ressources et le langage HTML pour les structurer, le tout lié par des hyperliens.'
+    details: (
+      <>
+        Le Web a été conçu comme un espace documentaire partagé. L'idée était d'utiliser des adresses (URL) pour identifier des ressources et le langage{' '}
+        <GlossaryTooltip term="HTML">HTML</GlossaryTooltip> pour les structurer, le tout lié par des hyperliens.
+      </>
+    )
   },
   {
     id: 'protocols',
     title: 'Protocoles Fondamentaux',
     icon: Server,
     desc: 'TCP/IP, DNS, HTTP/HTTPS : Les piliers de la communication réseau.',
-    details: 'TCP/IP assure le transport fiable des données. DNS traduit les noms de domaine en adresses IP. HTTP est le langage de requête/réponse entre navigateur et serveur, et HTTPS ajoute une couche de chiffrement TLS pour sécuriser ces échanges.'
+    details: (
+      <>
+        TCP/IP assure le transport fiable des données. DNS traduit les noms de domaine en adresses IP.{' '}
+        <GlossaryTooltip term="HTTP">HTTP</GlossaryTooltip> est le langage de requête/réponse entre navigateur et serveur, et{' '}
+        <GlossaryTooltip term="HTTPS">HTTPS</GlossaryTooltip> ajoute une couche de chiffrement TLS pour sécuriser ces échanges.
+      </>
+    )
   },
   {
-    id: 'browsers',
-    title: 'Évolution des Navigateurs',
-    icon: Monitor,
-    desc: 'Mosaic, Netscape, IE, Firefox, Chrome...',
-    details: 'Mosaic a apporté les images. Netscape a introduit le dynamisme (JS) et le SSL. IE6 a imposé un monopole. Firefox a défendu l\'open-source. Chrome a optimisé la performance et standardisé le Web moderne.'
+    id: 'frameworks',
+    title: 'Évolution des Frameworks JS',
+    icon: Cpu,
+    desc: 'React, Angular, Vue : De la manipulation DOM aux applications SPA.',
+    details: (
+      <>
+        Les frameworks JS ont transformé le Web en permettant de créer des applications complexes (SPA - Single Page Applications) plutôt que de simples documents. Angular a apporté la structure et le typage.{' '}
+        <GlossaryTooltip term="React">React</GlossaryTooltip> a révolutionné la gestion de l'interface avec le DOM virtuel et une architecture par composants.{' '}
+        <GlossaryTooltip term="Vue">Vue.js</GlossaryTooltip> a offert une approche équilibrée et accessible. Ils ont standardisé le développement moderne, rendant le code plus maintenable et performant.
+      </>
+    )
   }
 ];
 
@@ -50,10 +68,10 @@ export default function HistoryOfTheWebView({ theme }: HistoryViewProps) {
   return (
     <div className={`space-y-6 ${getStyle()}`}>
       <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-        <Link2 className="w-6 h-6" /> Histoire du Web : Fondations
+        <Link2 className="w-6 h-6" /> Histoire et Évolution du Web
       </h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {historyNodes.map(node => {
           const Icon = node.icon;
           const isActive = activeNode === node.id;

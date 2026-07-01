@@ -101,53 +101,37 @@ const PRESETS: PresetSnippet[] = [
 export default function PageRendererSimulator({ theme }: PageRendererSimulatorProps) {
   const [code, setCode] = useState<string>(PRESETS[0].code);
   const [selectedBrowser, setSelectedBrowser] = useState<'netscape' | 'ie6' | 'chrome'>('chrome');
+  const [htmlVersion, setHtmlVersion] = useState<'html4' | 'html5'>('html5');
+  const [cssVersion, setCssVersion] = useState<'css1' | 'css3'>('css3');
+  const [jsVersion, setJsVersion] = useState<'es3' | 'es6'>('es6');
   const [analysisReport, setAnalysisReport] = useState<string[]>([]);
 
   // Function to analyze user code for historical problems
-  const analyzeCodeForBugs = (htmlCode: string) => {
+  const analyzeCodeForBugs = () => {
     const alerts: string[] = [];
-    const lowerCode = htmlCode.toLowerCase();
+    const lowerCode = code.toLowerCase();
 
-    // Check layouts
-    if (lowerCode.includes('display: flex') || lowerCode.includes('display:flex')) {
-      alerts.push("Flexbox : Totalement ignoré par Netscape 4 et IE 6. Les éléments s'empileront à plat de haut en bas.");
+    // Check layouts and compatibility based on versions
+    if (htmlVersion === 'html4' && lowerCode.includes('<header')) {
+        alerts.push("HTML4 : La balise <header> n'existe pas. Utilisez <div id=\"header\">.");
     }
-    if (lowerCode.includes('display: grid') || lowerCode.includes('display:grid') || lowerCode.includes('grid-template')) {
-      alerts.push("CSS Grid : Inconnu des navigateurs d'époque. IE6 et Netscape 4 afficheront les éléments les uns en dessous des autres d'une manière désordonnée.");
+    if (cssVersion === 'css1' && (lowerCode.includes('display: flex') || lowerCode.includes('display: grid'))) {
+        alerts.push("CSS1 : Flexbox et Grid sont inconnus. Utilisez les floats.");
     }
-
-    // Check styling decoration
-    if (lowerCode.includes('border-radius')) {
-      alerts.push("Bords Arrondis (border-radius) : Coins parfaitement carrés sous Netscape 4 et IE6. Apparu seulement avec le standard CSS3 à la fin des années 2000.");
-    }
-    if (lowerCode.includes('box-shadow')) {
-      alerts.push("Ombres Portées (box-shadow) : Absentes ou gâchées sous IE6. Les surfaces de cartes flottent sans profondeur réaliste.");
-    }
-    if (lowerCode.includes('linear-gradient') || lowerCode.includes('radial-gradient')) {
-      alerts.push("Dégradés CSS (gradient) : Ignorés. Netscape 4 et IE6 s'arrêteront au fond de secours unicolor si spécifié, sinon afficheront un fond vide transparent ou blanc.");
-    }
-
-    // Check tags
-    if (lowerCode.includes('<blink')) {
-      alerts.push("Balise <blink> : Spécifique à Netscape Navigator. Elle fera clignoter le texte sous Netscape, restera statique sous Internet Explorer, et est proscrite par le W3C moderne.");
-    }
-    if (lowerCode.includes('<marquee')) {
-      alerts.push("Balise <marquee> : Créée à l'origine par Microsoft pour Internet Explorer. Le texte défilera sous IE6, mais restera statique ou absent sous des versions de Netscape non raccordées.");
-    }
-    if (lowerCode.includes('<center')) {
-      alerts.push("Balise <center> : Dépréciée dans les normes HTML5 modernes par souci de séparation fond/forme, mais incroyablement robuste et interprétée par tous les navigateurs retros !");
+    if (jsVersion === 'es3' && lowerCode.includes('const ')) {
+        alerts.push("ES3 : 'const' n'existe pas. Utilisez 'var'.");
     }
 
     if (alerts.length === 0) {
-      alerts.push("Aucun élément CSS sensible détecté. Votre code brut utilise des structures standardisées très simples.");
+      alerts.push("Aucune anomalie majeure de compatibilité détectée pour les versions sélectionnées.");
     }
 
     setAnalysisReport(alerts);
   };
 
   useEffect(() => {
-    analyzeCodeForBugs(code);
-  }, [code]);
+    analyzeCodeForBugs();
+  }, [code, selectedBrowser, htmlVersion, cssVersion, jsVersion]);
 
   // Apply browser simulations
   const getSimulatedStyles = () => {

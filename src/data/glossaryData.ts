@@ -8,6 +8,7 @@ import { GlossaryTag } from '../types';
 export const glossaryTags: GlossaryTag[] = [
   {
     tag: 'a',
+    isHtmlTag: true,
     version: 'html1',
     category: 'structure',
     description: 'Définit une ancre pour créer des hyperliens liant des pages entre elles. C\'est l\'essence même du Web Hypertexte.',
@@ -22,9 +23,10 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'img',
+    isHtmlTag: true,
     version: 'html2',
     category: 'media',
-    description: 'Insère une image autonome dans la page. Introduite par Mosaic dans le but d\'agrémenter l\'expérience graphique.',
+    description: 'Insère une image autonome dans la page. Introduite officieusement par Mosaic en 1993, standardisée dans HTML2.',
     codeSnippet: '<img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=300" alt="Code informatique sur un écran" border="1" />',
     hasClosingTag: false,
     attributes: [
@@ -33,10 +35,11 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'width / height', description: 'Dimensions forcées en pixels ou pourcentages.', isDeprecated: false },
       { name: 'border', description: 'Épaisseur de la bordure entourant l\'image (souvent bleue si c\'est un lien).', isDeprecated: true }
     ],
-    retroTip: 'Avant le haut débit, il était coutume d\'utiliser l\'attribut "lowsrc" pour charger une image pixelisée très légère avant de charger l\'image finale de haute qualité.'
+    retroTip: 'Avant le haut débit, on utilisait des "Spacer GIF" (images transparentes de 1x1 pixel) pour créer des espaces vides et forcer des largeurs de mise en page dans les tableaux.'
   },
   {
     tag: 'table',
+    isHtmlTag: true,
     version: 'html3',
     category: 'structure',
     description: 'Définit un tableau à deux dimensions. Détourné au forceps pendant 10 ans pour accomplir les mises en page multi-colonnes des sites.',
@@ -57,10 +60,11 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'cellspacing', description: 'Distance d\'espacement séparant les cellules.', isDeprecated: true },
       { name: 'width', description: 'Largeur du tableau (durcie en pixels ou pourcentages).', isDeprecated: true }
     ],
-    retroTip: 'Pour masquer l\'ossature, on écrivait <table border="0" cellpadding="0" cellspacing="0">. C\'était l\'unique moyen de fixer deux colonnes de texte l\'une à côté de l\'autre !'
+    retroTip: 'Pour masquer l\'ossature, on écrivait <table border="0" cellpadding="0" cellspacing="0">. Le "Spacer GIF" était souvent inséré dans une cellule de tableau pour maintenir un espacement précis.'
   },
   {
     tag: 'marquee',
+    isHtmlTag: true,
     version: 'html3',
     category: 'deprecated',
     description: 'Fait défiler du texte ou des images horizontalement ou verticalement de manière infinie. Balise propriétaire ajoutée par Internet Explorer.',
@@ -74,7 +78,23 @@ export const glossaryTags: GlossaryTag[] = [
     retroTip: 'Cette balise n\'a jamais fait partie des standards du W3C bien qu\'elle ait été implémentée par Firefox pour compatibilité historique. Elle fatigue grandement la lecture et nuit à l\'accessibilité.'
   },
   {
+    tag: 'font',
+    isHtmlTag: true,
+    version: 'html3',
+    category: 'deprecated',
+    description: 'Balise utilisée pour spécifier la police, la taille et la couleur du texte. Le "boss de fin" du HTML Transitional avant la généralisation de CSS.',
+    codeSnippet: '<font face="Arial" color="red" size="4">Texte stylisé manuellement</font>',
+    hasClosingTag: true,
+    attributes: [
+      { name: 'face', description: 'Nom de la famille de police.', isDeprecated: true },
+      { name: 'color', description: 'Couleur du texte.', isDeprecated: true },
+      { name: 'size', description: 'Taille du texte (1-7).', isDeprecated: true }
+    ],
+    retroTip: 'Répéter <font> à chaque paragraphe était l\'antithèse absolue de la sémantique et la raison d\'être de CSS : séparer le fond de la forme.'
+  },
+  {
     tag: 'blink',
+    isHtmlTag: true,
     version: 'html2',
     category: 'deprecated',
     description: 'Provoque le clignotement répétitif infini du texte qu\'elle renferme. Balise propriétaire emblématique inventée par Netscape.',
@@ -85,6 +105,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'form',
+    isHtmlTag: true,
     version: 'html2',
     category: 'forms',
     description: 'Définit une section interactive de saisie de données pour envoyer des renseignements au serveur.',
@@ -103,6 +124,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'canvas',
+    isHtmlTag: true,
     version: 'html5',
     category: 'media',
     description: 'Définit une zone de dessin dynamique et scriptable en pixel via JavaScript (utilisée pour des graphiques, animations interactives ou jeux).',
@@ -118,6 +140,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'video',
+    isHtmlTag: true,
     version: 'html5',
     category: 'media',
     description: 'Permet de diffuser et de contrôler nativement de la vidéo dans le document sans nécessiter l\'installation pénible de greffons tierce-partie.',
@@ -136,6 +159,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'iframe',
+    isHtmlTag: true,
     version: 'html4',
     category: 'structure',
     description: 'Incruste une seconde page web autonome entière au sein de la page courante.',
@@ -150,6 +174,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'script',
+    isHtmlTag: true,
     version: 'html2',
     category: 'script',
     description: 'Intègre ou référence des instructions logiques exécutables (JavaScript, historiquement VBScript/JScript).',
@@ -166,6 +191,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'API',
+    isHtmlTag: false,
     version: 'html5',
     category: 'script',
     description: 'Application Programming Interface : un intermédiaire qui permet à deux systèmes, logiciels ou applications de communiquer entre eux.',
@@ -176,6 +202,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'SaaS',
+    isHtmlTag: false,
     version: 'html5',
     category: 'structure',
     description: 'Software as a Service : modèle de distribution où le logiciel est hébergé dans le cloud et accessible via un navigateur web, évitant l\'installation locale.',
@@ -186,6 +213,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'JSON',
+    isHtmlTag: false,
     version: 'html5',
     category: 'text',
     description: 'JavaScript Object Notation : format léger d\'échange de données textuelles, devenu le standard universel pour les API.',
@@ -195,7 +223,8 @@ export const glossaryTags: GlossaryTag[] = [
     retroTip: 'JSON a supplanté le format XML, jugé trop verbeux et complexe à parser côté client pour des échanges rapides.'
   },
   {
-    tag: 'Fetch',
+    tag: 'Fetch API',
+    isHtmlTag: false,
     version: 'html5',
     category: 'script',
     description: 'API JavaScript moderne permettant d\'effectuer des requêtes réseau asynchrones de manière fluide.',
@@ -206,6 +235,7 @@ export const glossaryTags: GlossaryTag[] = [
   },
   {
     tag: 'Rate Limiting',
+    isHtmlTag: false,
     version: 'html5',
     category: 'structure',
     description: 'Technique utilisée par les serveurs pour limiter le nombre de requêtes qu\'un client peut effectuer sur une période donnée afin de prévenir les abus.',

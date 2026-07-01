@@ -164,7 +164,7 @@ export default function GlossaryView({ theme }: GlossaryViewProps) {
                   >
                     <div className="flex items-center gap-3">
                       <span className={`font-mono text-sm font-bold ${activeTag.tag === tag.tag ? 'text-indigo-400' : 'text-slate-200'}`}>
-                        &lt;{tag.tag}&gt;
+                        {tag.isHtmlTag ? <>&lt;{tag.tag}&gt;</> : tag.tag}
                       </span>
                       {tag.category === 'deprecated' && (
                         <span className="px-1.5 py-0.5 text-[8px] font-mono bg-red-900/20 text-red-400 border border-red-500/10 rounded uppercase">
@@ -198,7 +198,7 @@ export default function GlossaryView({ theme }: GlossaryViewProps) {
               <div>
                 <div className="flex items-center gap-3">
                   <h3 className="text-xl font-mono font-bold text-slate-100 italic">
-                    &lt;{activeTag.tag}&gt;
+                    {activeTag.isHtmlTag ? <>&lt;{activeTag.tag}&gt;</> : activeTag.tag}
                   </h3>
                   <span className="text-xs bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-mono font-bold">
                     Introduit en {activeTag.version.toUpperCase().replace('HTML', 'HTML ')}

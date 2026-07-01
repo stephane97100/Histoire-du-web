@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import TimelineView from './components/TimelineView';
 import HistoryOfTheWebView from './components/HistoryOfTheWebView';
 import HistoryProtocolsBrowsers from './components/HistoryProtocolsBrowsers';
-import VbscriptJsDuel from './components/VbscriptJsDuel';
+import LegacyCodeChallenge from './components/LegacyCodeChallenge';
 import GlossaryView from './components/GlossaryView';
 import QuizView from './components/QuizView';
 import RetroSimulator from './components/RetroSimulator';
@@ -18,6 +18,7 @@ import WebRevolutionsView from './components/WebRevolutionsView';
 import ChatHistoryView from './components/ChatHistoryView';
 import AdultFinancingHistoryView from './components/AdultFinancingHistoryView';
 import WebmasterEvolution from './components/WebmasterEvolution';
+import VbscriptJsDuel from './components/VbscriptJsDuel';
 import CleanCodeView from './components/CleanCodeView';
 import SoundCabinetView from './components/SoundCabinetView';
 import W3cVersioner from './components/W3cVersioner';
@@ -65,7 +66,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 
-type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies';
+type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies';
 type ThemeMode = 'modern' | 'ie6' | 'terminal';
 
 export default function App() {
@@ -165,9 +166,19 @@ export default function App() {
 
   const navGroups = [
     {
-      label: 'Fondamentaux & Histoire',
-      icon: History,
-      items: ['timeline', 'history_of_the_web', 'protocols', 'webmaster_evolution', 'web_philosophy', 'case_studies']
+      label: 'Frise Chronologique',
+      icon: Compass,
+      items: ['timeline', 'protocols', 'history_of_the_web', 'web_philosophy']
+    },
+    {
+      label: 'Simulateurs & Normes',
+      icon: Monitor,
+      items: ['page_renderer', 'w3c_versioner']
+    },
+    {
+      label: 'Comparateur de Code',
+      icon: ShieldAlert,
+      items: ['duel', 'case_studies', 'webmaster_evolution']
     },
     {
       label: 'Révolutions & Tech',
@@ -182,7 +193,7 @@ export default function App() {
     {
       label: 'Développement',
       icon: Code2,
-      items: ['duel', 'sandbox', 'page_renderer', 'glossary']
+      items: ['duel', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary']
     },
     {
       label: 'Communauté',
@@ -212,6 +223,7 @@ export default function App() {
     { id: 'pour_adultes', label: 'Section "Pour adultes"', description: 'Minitel rose, Audiotel, Dialers...', icon: PhoneCall },
     { id: 'webmaster_evolution', label: 'Le Webmaster (2000 - Présent)', description: 'Évolution et spécialisation du métier', icon: Users },
     { id: 'duel', label: 'Duel JScript VS VBScript', description: 'La guerre des scripts clients', icon: ShieldAlert },
+    { id: 'legacy_challenge', label: 'Défi Code Legacy', description: 'Testez vos compétences legacy', icon: Code2 },
     { id: 'sandbox', label: 'Création Landing Page', description: 'Éditeur rétro < 500 lignes', icon: PenTool },
     { id: 'quiz', label: 'Quiz d\'Histoire du Code', description: 'Testez vos connaissances', icon: BadgeHelp },
     { id: 'easter_eggs', label: 'Cabinet des Secrets', description: 'Easter Eggs & blagues d\'époque', icon: Gift },
@@ -440,6 +452,7 @@ export default function App() {
                 {activeTab === 'pour_adultes' && <AdultFinancingHistoryView theme={themeMode} />}
                 {activeTab === 'webmaster_evolution' && <WebmasterEvolution theme={themeMode} />}
                 {activeTab === 'duel' && <VbscriptJsDuel theme={themeMode} />}
+                {activeTab === 'legacy_challenge' && <LegacyCodeChallenge theme={themeMode} />}
                 {activeTab === 'sandbox' && <RetroSimulator theme={themeMode} />}
                 {activeTab === 'quiz' && <QuizView theme={themeMode} />}
                 {activeTab === 'easter_eggs' && <EasterEggsView theme={themeMode} />}
