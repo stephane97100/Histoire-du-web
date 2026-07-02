@@ -29,6 +29,11 @@ import WebPhilosophyView from './components/WebPhilosophyView';
 import OutsideCodeView from './components/OutsideCodeView';
 import PageRendererSimulator from './components/PageRendererSimulator';
 import CaseStudiesView from './components/CaseStudiesView';
+import WebResistorsView from './components/WebResistorsView';
+import FrameworkImpactsView from './components/FrameworkImpactsView';
+import GitImpactView from './components/GitImpactView';
+import AiWebDevView from './components/AiWebDevView';
+import PhpBBForumsView from './components/PhpBBForumsView';
 import { playWin95Startup, playModemDialup } from './lib/audioSynth';
 import OfflineEbookModal from './components/OfflineEbookModal';
 import { timelineEvents } from './data/timelineData';
@@ -63,10 +68,14 @@ import {
   Palette,
   Monitor,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Shield,
+  Cpu,
+  GitBranch,
+  Brain
 } from 'lucide-react';
 
-type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies';
+type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev';
 type ThemeMode = 'modern' | 'ie6' | 'terminal';
 
 export default function App() {
@@ -168,12 +177,7 @@ export default function App() {
     {
       label: 'Frise Chronologique',
       icon: Compass,
-      items: ['timeline', 'protocols', 'history_of_the_web', 'web_philosophy']
-    },
-    {
-      label: 'Simulateurs & Normes',
-      icon: Monitor,
-      items: ['page_renderer', 'w3c_versioner']
+      items: ['timeline', 'protocols', 'history_of_the_web', 'web_philosophy', 'web_resistors']
     },
     {
       label: 'Comparateur de Code',
@@ -183,7 +187,7 @@ export default function App() {
     {
       label: 'Révolutions & Tech',
       icon: Zap,
-      items: ['web_revolutions', 'modern_tech', 'clean_code', 'w3c_versioner']
+      items: ['web_revolutions', 'phpbb_forums', 'modern_tech', 'clean_code', 'w3c_versioner']
     },
     {
       label: 'Réseau & Outils',
@@ -193,7 +197,7 @@ export default function App() {
     {
       label: 'Développement',
       icon: Code2,
-      items: ['duel', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary']
+      items: ['duel', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary', 'framework_impacts', 'git_impact', 'ai_webdev']
     },
     {
       label: 'Communauté',
@@ -211,6 +215,7 @@ export default function App() {
     { id: 'timeline', label: 'Chronologie & Versions', description: 'Du HTML1 au CSS3', icon: Compass },
     { id: 'history_of_the_web', label: 'Histoire du Web', description: 'WWW, Protocoles, Navigateurs', icon: Globe },
     { id: 'web_revolutions', label: "Les Révolutions du Web", description: 'Flash, AJAX, CSS3, WebSockets...', icon: Zap },
+    { id: 'phpbb_forums', label: "Le monde des forums phpBB", description: "Nostalgie, survie et défis des forums", icon: MessageSquare },
     { id: 'torrent', label: 'Le Torrent & P2P', description: 'Histoire, Hadopi, sanctions...', icon: Download },
     { id: 'protocols', label: 'Histoire & Protocoles', description: 'DNS, HTTP & Navigateurs', icon: History },
     { id: 'w3c_versioner', label: 'Spécifications W3C', description: 'Évolution du code et rendu', icon: Layers },
@@ -232,6 +237,10 @@ export default function App() {
     { id: 'outside_code', label: "En dehors du code", description: "Design, Marketing, SEO & Rédacteur", icon: Palette },
     { id: 'page_renderer', label: 'Simulateur de Rendu', description: 'Simulez Netscape / IE6', icon: Monitor },
     { id: 'case_studies', label: 'Études de Cas : Code', description: 'Avant vs Après (HTML/CSS)', icon: Layers },
+    { id: 'web_resistors', label: 'Les Résistants du Web', description: 'Sites et communautés immuables', icon: Shield },
+    { id: 'framework_impacts', label: 'Impact des Frameworks', description: 'De jQuery aux composants modernes', icon: Cpu },
+    { id: 'git_impact', label: 'L\'Ère Git & GitLens', description: 'Du FTP au versioning moderne', icon: GitBranch },
+    { id: 'ai_webdev', label: 'WebDev & Intelligence Artificielle', description: 'L\'IA, copilotes et le web de demain', icon: Brain },
   ] as const;
 
   const [openGroup, setOpenGroup] = useState<string | null>(null);
@@ -440,6 +449,7 @@ export default function App() {
                 {activeTab === 'timeline' && <TimelineView theme={themeMode} />}
                 {activeTab === 'history_of_the_web' && <HistoryOfTheWebView theme={themeMode} />}
                 {activeTab === 'web_revolutions' && <WebRevolutionsView theme={themeMode} />}
+                {activeTab === 'phpbb_forums' && <PhpBBForumsView theme={themeMode} />}
                 {activeTab === 'torrent' && <TorrentHistoryView theme={themeMode} />}
                 {activeTab === 'protocols' && <HistoryProtocolsBrowsers theme={themeMode} />}
                 {activeTab === 'w3c_versioner' && <W3cVersioner theme={themeMode} />}
@@ -461,6 +471,10 @@ export default function App() {
                 {activeTab === 'outside_code' && <OutsideCodeView theme={themeMode} />}
                 {activeTab === 'page_renderer' && <PageRendererSimulator theme={themeMode} />}
                 {activeTab === 'case_studies' && <CaseStudiesView theme={themeMode} />}
+                {activeTab === 'web_resistors' && <WebResistorsView theme={themeMode} />}
+                {activeTab === 'framework_impacts' && <FrameworkImpactsView theme={themeMode} />}
+                {activeTab === 'git_impact' && <GitImpactView theme={themeMode} />}
+                {activeTab === 'ai_webdev' && <AiWebDevView theme={themeMode} />}
               </motion.div>
             </AnimatePresence>
           </main>

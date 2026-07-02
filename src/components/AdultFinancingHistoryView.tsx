@@ -38,6 +38,7 @@ interface FinancingMechanism {
 
 export default function AdultFinancingHistoryView({ theme }: AdultFinancingHistoryViewProps) {
   const [activeMechId, setActiveMechId] = useState<string>('audiotel');
+  const [hoveredMechId, setHoveredMechId] = useState<string | null>(null);
 
   const mechanisms: FinancingMechanism[] = [
     {
@@ -180,11 +181,20 @@ export default function AdultFinancingHistoryView({ theme }: AdultFinancingHisto
           <div className="flex flex-col gap-2">
             {mechanisms.map((mech) => {
               const isActive = mech.id === activeMechId;
+              const isHovered = mech.id === hoveredMechId;
+              
+              const isAnyHovered = hoveredMechId !== null;
+              const ghostEffectCss = isAnyHovered && !isHovered
+                ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
               return (
                 <button
                   key={mech.id}
                   onClick={() => setActiveMechId(mech.id)}
-                  className={isActive ? css.btnActive : css.btnInactive}
+                  onMouseEnter={() => setHoveredMechId(mech.id)}
+                  onMouseLeave={() => setHoveredMechId(null)}
+                  className={`${isActive ? css.btnActive : css.btnInactive} ${ghostEffectCss}`}
                   id={`btn-mech-${mech.id}`}
                 >
                   <div className="flex items-center gap-3 overflow-hidden">

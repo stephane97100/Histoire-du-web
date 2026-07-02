@@ -27,6 +27,7 @@ interface WebPhilosophyViewProps {
 
 export default function WebPhilosophyView({ theme }: WebPhilosophyViewProps) {
   const [activeSegment, setActiveSegment] = useState<'free_ideal' | 'shareware' | 'bankruptcies' | 'ecommerce'>('free_ideal');
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
 
   // Trigger synthesizer audio feedback matching the museum theme
   const playBeep = (freq: number, type: OscillatorType = 'sine', duration: number = 0.08) => {
@@ -121,73 +122,95 @@ export default function WebPhilosophyView({ theme }: WebPhilosophyViewProps) {
           </span>
 
           <div className="flex flex-col gap-2">
-            <button
-              onClick={() => {
-                setActiveSegment('free_ideal');
-                playBeep(400, 'sine');
-              }}
-              className={activeSegment === 'free_ideal' ? css.btnActive : css.btnInactive}
-              id="philosophie-tab-free"
-            >
-              <div className="flex items-start gap-2.5">
-                <span className="text-base">🎈</span>
-                <div>
-                  <b className="block text-[11.5px]">L'Idéal du Web Gratuit</b>
-                  <span className="text-[9px] opacity-70 block font-mono">Pourquoi le "tout-gratuit" a échoué</span>
-                </div>
-              </div>
-            </button>
+            {(() => {
+              const getGhostCss = (id: string) => {
+                const isHovered = hoveredSegment === id;
+                const isAnyHovered = hoveredSegment !== null;
+                return isAnyHovered && !isHovered
+                  ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                  : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+              };
+              
+              return (
+                <>
+                  <button
+                    onClick={() => {
+                      setActiveSegment('free_ideal');
+                      playBeep(400, 'sine');
+                    }}
+                    onMouseEnter={() => setHoveredSegment('free_ideal')}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    className={`${activeSegment === 'free_ideal' ? css.btnActive : css.btnInactive} ${getGhostCss('free_ideal')}`}
+                    id="philosophie-tab-free"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-base">🎈</span>
+                      <div>
+                        <b className="block text-[11.5px]">L'Idéal du Web Gratuit</b>
+                        <span className="text-[9px] opacity-70 block font-mono">Pourquoi le "tout-gratuit" a échoué</span>
+                      </div>
+                    </div>
+                  </button>
 
-            <button
-              onClick={() => {
-                setActiveSegment('shareware');
-                playBeep(450, 'sine');
-              }}
-              className={activeSegment === 'shareware' ? css.btnActive : css.btnInactive}
-              id="philosophie-tab-shareware"
-            >
-              <div className="flex items-start gap-2.5">
-                <span className="text-base">💾</span>
-                <div>
-                  <b className="block text-[11.5px]">Le Déclin des Sharewares</b>
-                  <span className="text-[9px] opacity-70 block font-mono">L'âge d'or du logiciel à l'essai</span>
-                </div>
-              </div>
-            </button>
+                  <button
+                    onClick={() => {
+                      setActiveSegment('shareware');
+                      playBeep(450, 'sine');
+                    }}
+                    onMouseEnter={() => setHoveredSegment('shareware')}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    className={`${activeSegment === 'shareware' ? css.btnActive : css.btnInactive} ${getGhostCss('shareware')}`}
+                    id="philosophie-tab-shareware"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-base">💾</span>
+                      <div>
+                        <b className="block text-[11.5px]">Le Déclin des Sharewares</b>
+                        <span className="text-[9px] opacity-70 block font-mono">L'âge d'or du logiciel à l'essai</span>
+                      </div>
+                    </div>
+                  </button>
 
-            <button
-              onClick={() => {
-                setActiveSegment('bankruptcies');
-                playBeep(500, 'sine');
-              }}
-              className={activeSegment === 'bankruptcies' ? css.btnActive : css.btnInactive}
-              id="philosophie-tab-bankruptcies"
-            >
-              <div className="flex items-start gap-2.5">
-                <span className="text-base">📉</span>
-                <div>
-                  <b className="block text-[11.5px]">La Faillite des Pionniers</b>
-                  <span className="text-[9px] opacity-70 block font-mono">Le cas mythique Mandriva et le naufrage</span>
-                </div>
-              </div>
-            </button>
+                  <button
+                    onClick={() => {
+                      setActiveSegment('bankruptcies');
+                      playBeep(500, 'sine');
+                    }}
+                    onMouseEnter={() => setHoveredSegment('bankruptcies')}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    className={`${activeSegment === 'bankruptcies' ? css.btnActive : css.btnInactive} ${getGhostCss('bankruptcies')}`}
+                    id="philosophie-tab-bankruptcies"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-base">📉</span>
+                      <div>
+                        <b className="block text-[11.5px]">La Faillite des Pionniers</b>
+                        <span className="text-[9px] opacity-70 block font-mono">Le cas mythique Mandriva et le naufrage</span>
+                      </div>
+                    </div>
+                  </button>
 
-            <button
-              onClick={() => {
-                setActiveSegment('ecommerce');
-                playBeep(550, 'sine');
-              }}
-              className={activeSegment === 'ecommerce' ? css.btnActive : css.btnInactive}
-              id="philosophie-tab-ecommerce"
-            >
-              <div className="flex items-start gap-2.5">
-                <span className="text-base">🛍️</span>
-                <div>
-                  <b className="block text-[11.5px]">Le Triomphe du "Web Boutique"</b>
-                  <span className="text-[9px] opacity-70 block font-mono">L'inéluctable hégémonie d'Amazon et Shein</span>
-                </div>
-              </div>
-            </button>
+                  <button
+                    onClick={() => {
+                      setActiveSegment('ecommerce');
+                      playBeep(550, 'sine');
+                    }}
+                    onMouseEnter={() => setHoveredSegment('ecommerce')}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    className={`${activeSegment === 'ecommerce' ? css.btnActive : css.btnInactive} ${getGhostCss('ecommerce')}`}
+                    id="philosophie-tab-ecommerce"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-base">🛍️</span>
+                      <div>
+                        <b className="block text-[11.5px]">Le Triomphe du "Web Boutique"</b>
+                        <span className="text-[9px] opacity-70 block font-mono">L'inéluctable hégémonie d'Amazon et Shein</span>
+                      </div>
+                    </div>
+                  </button>
+                </>
+              );
+            })()}
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-950/40 border border-slate-850 text-[10px] text-slate-400 leading-relaxed font-sans mt-4">

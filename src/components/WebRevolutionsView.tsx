@@ -47,6 +47,7 @@ interface RevolutionItem {
 
 export default function WebRevolutionsView({ theme }: WebRevolutionsViewProps) {
   const [activeRevId, setActiveRevId] = useState<string>('ajax');
+  const [hoveredRevId, setHoveredRevId] = useState<string | null>(null);
   
   // Interactive simulation states
   const [ajaxStatus, setAjaxStatus] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -256,6 +257,43 @@ const config = {
 };
 const game = new Phaser.Game(config);`,
       technicalKeywords: ['Ankama Dofus', 'Macromedia Flash', 'Phaser Engine', 'WebGL Render', 'ActionScript 2.0']
+    },
+    {
+      id: 'cms',
+      name: 'L\'Avènement des CMS & phpBB',
+      year: '2001+ - Content & Communities',
+      icon: '📂',
+      brief: 'L\'époque où éditer un site web n\'exigeait plus de modifier des fichiers HTML par FTP, mais se résumait à remplir des formulaires en ligne liés à une base de données MySQL.',
+      impactTitle: 'La démocratisation de la publication :',
+      beforeText: 'Chaque modification d\'une virgule ou d\'une actualité exigeait de modifier le code HTML brut en local, de le renvoyer via un client FTP (comme FileZilla) et de reconstruire laborieusement la structure des liens de navigation.',
+      revolutionPower: 'Les CMS (Systèmes de Gestion de Contenu) comme SPIP, Joomla, Drupal ou Mambo ont automatisé la génération des pages HTML en séparant le contenu (MySQL) de la présentation. N\'importe quel utilisateur sans connaissances en programmation pouvait publier des articles en direct depuis un panneau d\'administration web simple d\'utilisation.',
+      afterText: 'Une explosion de la Toile amateur et semi-professionnelle. Le webmaster n\'est plus un simple copieur/colleur de code HTML, mais un architecte d\'information administrant un écosystème dynamique.',
+      vintageCodeTitle: 'Génération dynamique classique d\'un article en PHP/MySQL (Vintage) :',
+      vintageCode: `<?php
+// Connexion vintage sans PDO ni requêtes préparées
+mysql_connect("localhost", "root", "password");
+mysql_select_db("mon_site");
+
+$id = intval($_GET['id']);
+$result = mysql_query("SELECT title, content FROM articles WHERE id = $id");
+$row = mysql_fetch_assoc($result);
+
+echo "<h1>" . htmlspecialchars($row['title']) . "</h1>";
+echo "<p>" . nl2br(htmlspecialchars($row['content'])) . "</p>";
+?>`,
+      modernCodeTitle: 'Architecture découplée moderne (Headless API + React) :',
+      modernCode: `// Utilisation d'un CMS moderne sans tête (Headless)
+import { createClient } from '@contentful/delivery';
+
+const client = createClient({ space: 'space_id', accessToken: 'token' });
+
+export async function getStaticProps() {
+  const res = await client.getEntry('article_id');
+  return {
+    props: { article: res.fields }
+  };
+}`,
+      technicalKeywords: ['CMS', 'MySQL', 'SPIP', 'phpBB', 'Dynamic Generation', 'Headless']
     },
     {
       id: 'ajax',
@@ -642,11 +680,20 @@ $log = new Monolog\Logger('name');`,
           <div className="flex flex-col gap-2">
             {revolutions.map((rev) => {
               const isActive = rev.id === activeRevId;
+              const isHovered = rev.id === hoveredRevId;
+              
+              const isAnyHovered = hoveredRevId !== null;
+              const ghostEffectCss = isAnyHovered && !isHovered
+                ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
               return (
                 <button
                   key={rev.id}
                   onClick={() => setActiveRevId(rev.id)}
-                  className={isActive ? css.btnActive : css.btnInactive}
+                  onMouseEnter={() => setHoveredRevId(rev.id)}
+                  onMouseLeave={() => setHoveredRevId(null)}
+                  className={`${isActive ? css.btnActive : css.btnInactive} ${ghostEffectCss}`}
                   id={`btn-rev-${rev.id}`}
                 >
                   <div className="flex items-center gap-3 overflow-hidden">
@@ -730,6 +777,129 @@ $log = new Monolog\Logger('name');`,
               </div>
 
               {/* Interactivity demo for ajax / websockets */}
+              {activeRevId === 'cms' && (
+                <div className="space-y-4">
+                  {/* Detailed CMS analysis card */}
+                  <div className={css.interactiveBox}>
+                    <strong className="block text-[10px] uppercase font-mono text-indigo-400 mb-1.5">📂 Pourquoi les CMS ont été créés & Leur Impact :</strong>
+                    <div className="text-xs text-slate-300 space-y-3.5 leading-relaxed text-left">
+                      <p>
+                        <strong>La genèse :</strong> Avant l'avènement des CMS, chaque page web était un fichier statique individuel. Pour modifier une simple phrase ou ajouter une actualité, le webmaster devait ouvrir son éditeur de texte en local, éditer la structure HTML complexe, sauvegarder, et téléverser à nouveau le fichier via un client FTP (comme FileZilla) tout en s'assurant de ne casser aucun lien hypertexte. Les CMS sont nés d'une idée révolutionnaire : <strong>séparer enfin le contenu brut (stocké de façon structurée dans une base de données relationnelle comme MySQL) de sa présentation graphique (les thèmes de templates en PHP/HTML)</strong>.
+                      </p>
+                      <p>
+                        <strong>Le raz-de-marée du web personnel et semi-professionnel :</strong> En fournissant un panneau d'administration web accessible d'un simple identifiant et mot de passe, l'écriture sur Internet est devenue démocratique. Des millions d'associations, de clubs sportifs, d'universitaires, d'artistes et d'entrepreneurs ont pu lancer des magazines en ligne, des fanzines, des portfolios et des boutiques virtuelles en quelques clics sans posséder aucune compétence technique de programmation.
+                      </p>
+                      <p>
+                        <strong>Pourquoi certains existent-ils encore de nos jours ?</strong> Malgré l'émergence des technologies Jamstack, des générateurs de sites statiques et de l'IA, de nombreux CMS d'époque (comme Joomla!, Drupal, SPIP) continuent de motoriser des pans entiers du web public et institutionnel. Leur longévité s'explique par leur gestion ultra-granulaire des rôles et des permissions, leur robustesse éprouvée face aux charges de trafic, et d'immenses écosystèmes open-source d'extensions et d'intégration de données métiers qui garantissent la souveraineté numérique des organisations.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Special phpBB Card! */}
+                  <div className="p-5 rounded-2xl bg-[#0d1527] border-2 border-blue-500/35 shadow-xl shadow-blue-950/40 text-left space-y-4 relative overflow-hidden">
+                    {/* Glowing background circles for visual depth */}
+                    <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    {/* Header bar mimicking typical phpBB header or brand */}
+                    <div className="flex items-center gap-3 border-b border-blue-900/30 pb-3.5 relative z-10">
+                      <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20 font-serif text-sm tracking-tighter">
+                        phpBB
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-blue-100 tracking-tight flex items-center gap-1.5">
+                          ✨ La Révolution phpBB & Les Communautés du Web
+                        </h4>
+                        <p className="text-[10px] text-blue-400 font-mono uppercase tracking-wider">
+                          Le pionnier absolu des forums de discussion open-source (2000)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-slate-200 leading-relaxed space-y-3 relative z-10">
+                      <p>
+                        Bien avant l'apparition des algorithmes de flux de réseaux sociaux centralisés (Facebook, Reddit, Discord) qui isolent et captent l'attention, <strong>phpBB</strong> a été le moteur autonome qui a structuré la sociabilisation mondiale en ligne. Gratuit, léger et simple à installer sur n'importe quel hébergement mutualisé PHP/MySQL d'époque, il a provoqué un véritable raz-de-marée communautaire :
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                        <div className="bg-blue-950/20 border border-blue-900/30 p-3.5 rounded-xl space-y-1.5 hover:border-blue-500/20 transition-all">
+                          <h5 className="font-bold text-blue-300 text-[11px] flex items-center gap-1.5">
+                            🌐 Forums de Niches Ultra-Spécialisées
+                          </h5>
+                          <p className="text-[10.5px] leading-relaxed text-slate-350">
+                            De la mécanique de voitures rétro à l'entraide universitaire, phpBB a permis aux passionnés de se regrouper par thématiques précises, créant des bases de connaissances immenses, indexées par Google.
+                          </p>
+                        </div>
+
+                        <div className="bg-blue-950/20 border border-blue-900/30 p-3.5 rounded-xl space-y-1.5 hover:border-blue-500/20 transition-all">
+                          <h5 className="font-bold text-blue-300 text-[11px] flex items-center gap-1.5">
+                            🤝 Solidarité, Modération & Auto-Gestion
+                          </h5>
+                          <p className="text-[10.5px] leading-relaxed text-slate-350">
+                            Grâce aux rôles de modérateurs, d'administrateurs et d'un système robuste d'autorisations et de signatures CSS personnalisées, phpBB a éduqué toute une génération d'internautes à l'auto-gestion respectueuse.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="p-3 bg-blue-950/30 border border-blue-500/10 rounded-lg text-center font-mono text-[10px] text-blue-200 italic">
+                        "phpBB a donné un pouvoir d'expression horizontal infini aux internautes, transformant le Web de la lecture passive en un espace solidaire et bienveillant."
+                      </div>
+                    </div>
+
+                    {/* Fun Interactive phpBB Board Mockup */}
+                    <div className="bg-[#0b0f19] rounded-xl border border-blue-950 overflow-hidden font-sans text-xs shadow-inner">
+                      {/* Sub-forum Title bar in classic phpBB soft blue */}
+                      <div className="bg-[#e4ebf2] dark:bg-[#1a2536] border-b border-blue-950/40 p-2 text-[10px] text-slate-800 dark:text-slate-200 flex justify-between font-bold">
+                        <span className="flex items-center gap-1">🏠 Index du forum ‹ Entraide Webmasters ‹ PHP / MySQL</span>
+                        <span className="text-blue-600 dark:text-blue-400 font-mono">[ Connexion ] [ S'enregistrer ]</span>
+                      </div>
+
+                      {/* phpBB posts listing simulation */}
+                      <div className="divide-y divide-blue-950/30">
+                        <div className="p-3 hover:bg-blue-950/15 flex justify-between items-center gap-3 transition-colors text-left">
+                          <div>
+                            <span className="text-blue-400 font-bold hover:underline cursor-pointer block text-[11.5px]">
+                              Topic: "Erreur fatale : Call to undefined function mysql_connect()"
+                            </span>
+                            <span className="text-[9.5px] text-slate-500">Par RetroGeek • Lun 12 Juil 2004, 14:32</span>
+                          </div>
+                          <div className="text-right text-[10px] text-slate-400 shrink-0 font-mono">
+                            <div>💬 142 réponses</div>
+                            <span className="text-[9px] text-slate-500">Dernier par Admin_Nico</span>
+                          </div>
+                        </div>
+
+                        <div className="p-3 hover:bg-blue-950/15 flex justify-between items-center gap-3 transition-colors text-left">
+                          <div>
+                            <span className="text-blue-400 font-bold hover:underline cursor-pointer block text-[11.5px]">
+                              Topic: "Projet de communauté universitaire : Comment structurer les droits d'accès ?"
+                            </span>
+                            <span className="text-[9.5px] text-slate-500">Par Prof_Dumont • Dim 11 Juil 2004, 09:15</span>
+                          </div>
+                          <div className="text-right text-[10px] text-slate-400 shrink-0 font-mono">
+                            <div>💬 57 réponses</div>
+                            <span className="text-[9px] text-slate-500">Dernier par StudentDev</span>
+                          </div>
+                        </div>
+
+                        <div className="p-3 hover:bg-blue-950/15 flex justify-between items-center gap-3 transition-colors text-left">
+                          <div>
+                            <span className="text-blue-400 font-bold hover:underline cursor-pointer block text-[11.5px]">
+                              Topic: "Soutien et Solidarité : Forum dédié à l'entraide de notre quartier"
+                            </span>
+                            <span className="text-[9.5px] text-slate-500">Par CitoyenDuWeb • Sam 10 Juil 2004, 18:24</span>
+                          </div>
+                          <div className="text-right text-[10px] text-slate-400 shrink-0 font-mono">
+                            <div>💬 310 réponses</div>
+                            <span className="text-[9px] text-slate-500">Dernier par Solidarite2004</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {activeRevId === 'ajax' && (
                 <div className={css.interactiveBox}>
                   <strong className="block text-[10px] uppercase font-mono text-emerald-400 mb-1">🎮 Module Bac à sable AJAX (Simulateur) :</strong>

@@ -19,6 +19,7 @@ export default function GlossaryView({ theme }: GlossaryViewProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedVersion, setSelectedVersion] = useState<string>('all');
   const [activeTag, setActiveTag] = useState<GlossaryTag>(glossaryTags[0]);
+  const [hoveredTag, setHoveredTag] = useState<string | null>(null);
   
   // High quality mutable state of current sandbox code snippets
   const [snippets, setSnippets] = useState<Record<string, string>>(
@@ -151,35 +152,47 @@ export default function GlossaryView({ theme }: GlossaryViewProps) {
           <div className="bg-slate-800/80 rounded-xl p-4 border border-slate-700/80 shadow-md flex-1 max-h-[460px] overflow-y-auto scrollbar-thin">
             <div className="space-y-1.5">
               {filteredTags.length > 0 ? (
-                filteredTags.map((tag) => (
-                  <button
-                    key={tag.tag}
-                    id={`btn-tag-${tag.tag}`}
-                    onClick={() => setActiveTag(tag)}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-lg flex items-center justify-between border transition-all cursor-pointer ${
-                      activeTag.tag === tag.tag
-                        ? 'bg-slate-900 border-slate-700 shadow-inner'
-                        : 'bg-transparent border-transparent hover:bg-slate-900/35 hover:border-slate-800'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`font-mono text-sm font-bold ${activeTag.tag === tag.tag ? 'text-indigo-400' : 'text-slate-200'}`}>
-                        {tag.isHtmlTag ? <>&lt;{tag.tag}&gt;</> : tag.tag}
-                      </span>
-                      {tag.category === 'deprecated' && (
-                        <span className="px-1.5 py-0.5 text-[8px] font-mono bg-red-900/20 text-red-400 border border-red-500/10 rounded uppercase">
-                          Obsolète
+                filteredTags.map((tag) => {
+                  const isSelected = activeTag.tag === tag.tag;
+                  const isHovered = tag.tag === hoveredTag;
+                  
+                  const isAnyHovered = hoveredTag !== null;
+                  const ghostEffectCss = isAnyHovered && !isHovered
+                    ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                    : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
+                  return (
+                    <button
+                      key={tag.tag}
+                      id={`btn-tag-${tag.tag}`}
+                      onClick={() => setActiveTag(tag)}
+                      onMouseEnter={() => setHoveredTag(tag.tag)}
+                      onMouseLeave={() => setHoveredTag(null)}
+                      className={`w-full text-left px-3.5 py-2.5 rounded-lg flex items-center justify-between border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-slate-900 border-slate-700 shadow-inner'
+                          : 'bg-transparent border-transparent hover:bg-slate-900/35 hover:border-slate-800'
+                      } ${ghostEffectCss}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`font-mono text-sm font-bold ${isSelected ? 'text-indigo-400' : 'text-slate-200'}`}>
+                          {tag.isHtmlTag ? <>&lt;{tag.tag}&gt;</> : tag.tag}
                         </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-slate-450 uppercase">{tag.category}</span>
-                      <span className="text-[10px] font-mono text-slate-400 bg-slate-900 border border-slate-800 px-1 py-0.5 rounded font-semibold lowercase">
-                        {tag.version.replace('html', 'html ')}
-                      </span>
-                    </div>
-                  </button>
-                ))
+                        {tag.category === 'deprecated' && (
+                          <span className="px-1.5 py-0.5 text-[8px] font-mono bg-red-900/20 text-red-400 border border-red-500/10 rounded uppercase">
+                            Obsolète
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-slate-450 uppercase">{tag.category}</span>
+                        <span className="text-[10px] font-mono text-slate-400 bg-slate-900 border border-slate-800 px-1 py-0.5 rounded font-semibold lowercase">
+                          {tag.version.replace('html', 'html ')}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })
               ) : (
                 <div className="p-8 text-center text-slate-500 text-xs">
                   Aucun élément ne correspond à votre recherche.

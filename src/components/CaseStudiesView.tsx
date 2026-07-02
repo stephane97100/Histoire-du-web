@@ -199,6 +199,7 @@ return <h1>{data.title}</h1>;`,
 
 export default function CaseStudiesView({ theme }: CaseStudiesViewProps) {
   const [activeStudy, setActiveStudy] = useState<CaseStudy>(CASE_STUDIES[0]);
+  const [hoveredStudyId, setHoveredStudyId] = useState<string | null>(null);
 
   const getThemeClass = () => {
     switch (theme) {
@@ -261,15 +262,24 @@ export default function CaseStudiesView({ theme }: CaseStudiesViewProps) {
             <div className="space-y-2">
               {CASE_STUDIES.map((study) => {
                 const isSelected = study.id === activeStudy.id;
+                const isHovered = study.id === hoveredStudyId;
+                
+                const isAnyHovered = hoveredStudyId !== null;
+                const ghostEffectCss = isAnyHovered && !isHovered
+                  ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                  : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
                 return (
                   <button
                     key={study.id}
                     onClick={() => setActiveStudy(study)}
+                    onMouseEnter={() => setHoveredStudyId(study.id)}
+                    onMouseLeave={() => setHoveredStudyId(null)}
                     className={`w-full p-3 rounded-xl text-left border flex items-center justify-between transition cursor-pointer select-none ${
                       isSelected
                         ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400 font-bold'
                         : 'border-transparent hover:bg-slate-900/40 text-slate-400 hover:text-slate-200'
-                    }`}
+                    } ${ghostEffectCss}`}
                     id={`btn-case-study-${study.id}`}
                   >
                     <div className="flex items-center gap-3">

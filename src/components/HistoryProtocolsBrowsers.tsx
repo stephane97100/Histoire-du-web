@@ -317,6 +317,7 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
   const [dnsStatus, setDnsStatus] = useState<'idle' | 'dns-request' | 'dns-resolved' | 'http-request' | 'render-success'>('idle');
   const [selectedTopic, setSelectedTopic] = useState<'history' | 'protocols' | 'browsers'>('history');
   const [selectedEpochIdx, setSelectedEpochIdx] = useState<number>(0);
+  const [hoveredEpochIdx, setHoveredEpochIdx] = useState<number | null>(null);
   const [selectedRealtimePhase, setSelectedRealtimePhase] = useState<'polling' | 'websockets' | 'sse' | 'mercure'>('mercure');
 
   const selectedEpoch = EPOCHS[selectedEpochIdx];
@@ -446,17 +447,26 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                 <div className="lg:col-span-4 flex flex-col gap-2.5">
                   {EPOCHS.map((epoch, idx) => {
                     const isActive = selectedEpochIdx === idx;
+                    const isHovered = idx === hoveredEpochIdx;
+                    
+                    const isAnyHovered = hoveredEpochIdx !== null;
+                    const ghostEffectCss = isAnyHovered && !isHovered
+                      ? "opacity-35 blur-[1.2px] scale-[0.98] transition-all duration-500"
+                      : "opacity-100 blur-none transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg";
+
                     return (
                       <button
                         key={epoch.id}
                         onClick={() => setSelectedEpochIdx(idx)}
+                        onMouseEnter={() => setHoveredEpochIdx(idx)}
+                        onMouseLeave={() => setHoveredEpochIdx(null)}
                         className={`text-left p-3.5 transition flex flex-col gap-1 cursor-pointer hover:border-amber-500/40 ${
                           theme === 'ie6'
                             ? `border-2 border-solid ${isActive ? 'bg-[#000080] text-white border-white' : 'bg-[#c0c0c0] text-black border-[#808080]'}`
                             : theme === 'terminal'
                             ? `border ${isActive ? 'bg-[#ffb000]/15 text-[#ffb000] border-[#ffb000]' : 'bg-black text-[#ffb000]/65 border-[#ffb000]/25'}`
                             : `rounded-xl border transition-all ${isActive ? 'bg-indigo-600/10 border-indigo-500/60 text-white shadow-lg' : 'bg-[#111114]/90 border-slate-800/80 text-slate-400'}`
-                        }`}
+                        } ${ghostEffectCss}`}
                       >
                         <div className="flex justify-between items-center w-full">
                           <span className={`text-[9.5px] font-bold ${isActive && theme === 'ie6' ? 'text-yellow-300' : 'text-slate-450'}`}>
