@@ -9,13 +9,24 @@ import { ShieldCheck, HelpCircle, AlertTriangle, Code2, Play, Terminal, ArrowRig
 
 interface VbscriptJsDuelProps {
   theme: 'modern' | 'ie6' | 'terminal';
+  mode?: 'client' | 'server';
 }
 
-export default function VbscriptJsDuel({ theme }: VbscriptJsDuelProps) {
-  const [duelMode, setDuelMode] = useState<'client' | 'server'>('client');
-  const [activeConsole, setActiveConsole] = useState<'js' | 'vbs' | 'asp' | 'php'>('js');
+export default function VbscriptJsDuel({ theme, mode }: VbscriptJsDuelProps) {
+  const [duelMode, setDuelMode] = useState<'client' | 'server'>(mode || 'client');
+  const [activeConsole, setActiveConsole] = useState<'js' | 'vbs' | 'asp' | 'php'>(
+    mode === 'server' ? 'php' : 'js'
+  );
   const [stdout, setStdout] = useState<string[]>(['Prêt à simuler l\'exécution...']);
   const [popups, setPopups] = useState<{ id: string; text: string }[]>([]);
+
+  React.useEffect(() => {
+    if (mode) {
+      setDuelMode(mode);
+      setActiveConsole(mode === 'server' ? 'php' : 'js');
+      setStdout(['Prêt à simuler l\'exécution...']);
+    }
+  }, [mode]);
 
   const runSample = (lang: 'js' | 'vbs' | 'asp' | 'php') => {
     setActiveConsole(lang);
@@ -68,24 +79,26 @@ export default function VbscriptJsDuel({ theme }: VbscriptJsDuelProps) {
     <div className="space-y-6" id="vbscript-js-duel-root">
       
       {/* Selector between client & server duels */}
-      <div className="flex border border-slate-750/70 p-1 bg-slate-900 rounded-xl max-w-md select-none" id="duel-mode-selector">
-        <button
-          onClick={() => { setDuelMode('client'); setActiveConsole('js'); setStdout(['Prêt à simuler...']); }}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition transition-all cursor-pointer ${
-            duelMode === 'client' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          🖥️ Duel Client (JScript vs VBScript)
-        </button>
-        <button
-          onClick={() => { setDuelMode('server'); setActiveConsole('php'); setStdout(['Prêt à simuler...']); }}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition transition-all cursor-pointer ${
-            duelMode === 'server' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          🎛️ Duel Serveur (ASP Classic vs PHP)
-        </button>
-      </div>
+      {!mode && (
+        <div className="flex border border-slate-750/70 p-1 bg-slate-900 rounded-xl max-w-md select-none" id="duel-mode-selector">
+          <button
+            onClick={() => { setDuelMode('client'); setActiveConsole('js'); setStdout(['Prêt à simuler...']); }}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition transition-all cursor-pointer ${
+              duelMode === 'client' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            🖥️ Duel Client (JScript vs VBScript)
+          </button>
+          <button
+            onClick={() => { setDuelMode('server'); setActiveConsole('php'); setStdout(['Prêt à simuler...']); }}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition transition-all cursor-pointer ${
+              duelMode === 'server' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            🎛️ Duel Serveur (ASP Classic vs PHP)
+          </button>
+        </div>
+      )}
 
       {/* Introduction Block */}
       <div className="bg-slate-800/80 rounded-xl p-6 border border-slate-700/80 shadow-md space-y-4 text-left">

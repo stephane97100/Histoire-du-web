@@ -19,6 +19,7 @@ import ChatHistoryView from './components/ChatHistoryView';
 import AdultFinancingHistoryView from './components/AdultFinancingHistoryView';
 import WebmasterEvolution from './components/WebmasterEvolution';
 import VbscriptJsDuel from './components/VbscriptJsDuel';
+import WebWarsView from './components/WebWarsView';
 import CleanCodeView from './components/CleanCodeView';
 import SoundCabinetView from './components/SoundCabinetView';
 import W3cVersioner from './components/W3cVersioner';
@@ -46,6 +47,8 @@ import {
   Compass, 
   Settings, 
   Code2,
+  Code,
+  Layout,
   Terminal as TermIcon, 
   Sparkles,
   Layers,
@@ -75,7 +78,7 @@ import {
   Brain
 } from 'lucide-react';
 
-type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev';
+type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel_client' | 'duel_server' | 'integration_war' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev';
 type ThemeMode = 'modern' | 'ie6' | 'terminal';
 
 export default function App() {
@@ -182,7 +185,7 @@ export default function App() {
     {
       label: 'Comparateur de Code',
       icon: ShieldAlert,
-      items: ['duel', 'case_studies', 'webmaster_evolution']
+      items: ['duel_client', 'duel_server', 'integration_war', 'xhtml_vs_html5', 'flash_vs_html5', 'angular_vs_react', 'tool_war', 'case_studies', 'webmaster_evolution']
     },
     {
       label: 'Révolutions & Tech',
@@ -197,7 +200,7 @@ export default function App() {
     {
       label: 'Développement',
       icon: Code2,
-      items: ['duel', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary', 'framework_impacts', 'git_impact', 'ai_webdev']
+      items: ['duel_client', 'duel_server', 'integration_war', 'xhtml_vs_html5', 'flash_vs_html5', 'angular_vs_react', 'tool_war', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary', 'framework_impacts', 'git_impact', 'ai_webdev']
     },
     {
       label: 'Communauté',
@@ -227,7 +230,13 @@ export default function App() {
     { id: 'tchat_with_me', label: "T'chat with me", description: 'MSN, Skype, Caramail, ICQ...', icon: MessageSquare },
     { id: 'pour_adultes', label: 'Section "Pour adultes"', description: 'Minitel rose, Audiotel, Dialers...', icon: PhoneCall },
     { id: 'webmaster_evolution', label: 'Le Webmaster (2000 - Présent)', description: 'Évolution et spécialisation du métier', icon: Users },
-    { id: 'duel', label: 'Duel JScript VS VBScript', description: 'La guerre des scripts clients', icon: ShieldAlert },
+    { id: 'duel_client', label: 'Duel client (Jscript vs VBScript)', description: 'La guerre des scripts clients', icon: ShieldAlert },
+    { id: 'duel_server', label: 'Duel serveur (ASP Classic vs PHP)', description: 'L\'origine du web dynamique serveur', icon: ShieldAlert },
+    { id: 'integration_war', label: 'Tables vs CSS', description: 'Guerre de l\'intégration web', icon: Layout },
+    { id: 'xhtml_vs_html5', label: 'XHTML vs HTML5', description: 'La sécession des standards', icon: Layers },
+    { id: 'flash_vs_html5', label: 'Flash vs HTML5/JS', description: 'Guerre de l\'interactivité', icon: Sparkles },
+    { id: 'angular_vs_react', label: 'Angular vs React', description: 'Guerre des paradigmes Front-End', icon: Zap },
+    { id: 'tool_war', label: 'Grunt vs Gulp vs Webpack', description: 'Micro-guerre des outils', icon: Code },
     { id: 'legacy_challenge', label: 'Défi Code Legacy', description: 'Testez vos compétences legacy', icon: Code2 },
     { id: 'sandbox', label: 'Création Landing Page', description: 'Éditeur rétro < 500 lignes', icon: PenTool },
     { id: 'quiz', label: 'Quiz d\'Histoire du Code', description: 'Testez vos connaissances', icon: BadgeHelp },
@@ -461,7 +470,13 @@ export default function App() {
                 {activeTab === 'tchat_with_me' && <ChatHistoryView theme={themeMode} />}
                 {activeTab === 'pour_adultes' && <AdultFinancingHistoryView theme={themeMode} />}
                 {activeTab === 'webmaster_evolution' && <WebmasterEvolution theme={themeMode} />}
-                {activeTab === 'duel' && <VbscriptJsDuel theme={themeMode} />}
+                {activeTab === 'duel_client' && <VbscriptJsDuel theme={themeMode} mode="client" />}
+                {activeTab === 'duel_server' && <VbscriptJsDuel theme={themeMode} mode="server" />}
+                {activeTab === 'integration_war' && <WebWarsView theme={themeMode} warId="integration" />}
+                {activeTab === 'xhtml_vs_html5' && <WebWarsView theme={themeMode} warId="xhtml_vs_html5" />}
+                {activeTab === 'flash_vs_html5' && <WebWarsView theme={themeMode} warId="flash_vs_html5" />}
+                {activeTab === 'angular_vs_react' && <WebWarsView theme={themeMode} warId="angular_vs_react" />}
+                {activeTab === 'tool_war' && <WebWarsView theme={themeMode} warId="tool_war" />}
                 {activeTab === 'legacy_challenge' && <LegacyCodeChallenge theme={themeMode} />}
                 {activeTab === 'sandbox' && <RetroSimulator theme={themeMode} />}
                 {activeTab === 'quiz' && <QuizView theme={themeMode} />}
