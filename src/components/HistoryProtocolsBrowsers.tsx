@@ -786,18 +786,18 @@ export default function HistoryProtocolsBrowsers({ theme }: HistoryProtocolsBrow
                   </div>
 
                   <div className={style.innerCard}>
-                    <span className="text-amber-400 font-mono text-xs font-bold block">3. Transport & Sécurité (TCP/IP & SSL)</span>
-                    <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>Les Canaux Empilés</h5>
+                    <span className="text-amber-400 font-mono text-xs font-bold block">3. FTP (File Transfer Protocol)</span>
+                    <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>Le Transfert de Fichiers</h5>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      TCP vérifie que chaque octet d'HTML arrive intact dans l'ordre de d'envoi. TLS/SSL chiffre les messages sensibles constituant ainsi le protocole HTTPS sécurisé.
+                      Créé en 1971, il gère le téléversement (upload) et le téléchargement des fichiers (HTML, images) sur les serveurs, constituant la base absolue de la publication web avant l'ère du cloud moderne.
                     </p>
                   </div>
 
                   <div className={style.innerCard}>
-                    <span className="text-rose-400 font-mono text-xs font-bold block">4. Mercure (Push & Flux SSE-based)</span>
-                    <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>L'Asynchronisme Natif</h5>
+                    <span className="text-rose-400 font-mono text-xs font-bold block">4. Transport & Sécurité (TCP/IP & SSL)</span>
+                    <h5 className={`text-sm font-semibold ${theme === 'ie6' ? 'text-[#000080]' : 'text-slate-200'}`}>Les Canaux Sécurisés</h5>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      Protocole de push en temps réel bâti sur HTTP/2+ et les Server-Sent Events, coupant les requêtes en boucle pour actualiser les interfaces d'un claquement de doigts.
+                      TCP découpe et vérifie que chaque paquet arrive intact dans l'ordre (HTTP/FTP). TLS/SSL assure le chiffrement des données de bout en bout pour garantir la sécurité.
                     </p>
                   </div>
                 </div>

@@ -42,12 +42,67 @@ interface Relic {
   modernSuccessor: string;
   retroAnecdote: string;
   specials: string[]; // tags like 'Microsoft', 'OpenSource Duel', etc.
-  category?: 'network' | 'editors';
+  category?: string;
 }
 
+const categoryMapping: Record<string, 'portals' | 'communities' | 'technologies' | 'tools' | 'farwest'> = {
+  netscape: 'portals',
+  aol: 'portals',
+  yahoo: 'portals',
+  lycos_standalone: 'portals',
+  altavista: 'portals',
+  voila_portal: 'portals',
+  icq: 'communities',
+  caramail: 'communities',
+  myspace: 'communities',
+  skyblog: 'communities',
+  geocities: 'communities',
+  multimania_standalone: 'communities',
+  perso_hosts: 'communities',
+  yahoo_answers: 'communities',
+  flash: 'technologies',
+  applets: 'technologies',
+  activex: 'technologies',
+  cgi: 'technologies',
+  dhtml: 'technologies',
+  asp: 'technologies',
+  coldfusion: 'technologies',
+  xml: 'technologies',
+  frontpage: 'tools',
+  golive: 'tools',
+  dreamweaver: 'tools',
+  easyphp: 'tools',
+  siteduzero: 'tools',
+  allhtml: 'tools',
+  hijackthis: 'tools',
+  napster: 'farwest',
+  megaupload: 'farwest',
+  telecharger: 'farwest',
+  jeuxflash: 'farwest',
+  koreus: 'farwest',
+  habbo: 'farwest',
+  ibazar: 'farwest'
+};
+
+const orderedIds = [
+  'netscape', 'aol', 'yahoo', 'lycos_standalone', 'altavista', 'voila_portal',
+  'icq', 'caramail', 'myspace', 'skyblog', 'geocities', 'multimania_standalone', 'perso_hosts', 'yahoo_answers',
+  'flash', 'applets', 'activex', 'cgi', 'dhtml', 'asp', 'coldfusion', 'xml',
+  'frontpage', 'golive', 'dreamweaver', 'easyphp', 'siteduzero', 'allhtml', 'hijackthis',
+  'napster', 'megaupload', 'telecharger', 'jeuxflash', 'koreus', 'habbo', 'ibazar'
+];
+
+const categoriesList = [
+  { id: 'portals', label: "Portails & Navs", icon: "🌐" },
+  { id: 'communities', label: "Communautés", icon: "💬" },
+  { id: 'technologies', label: "Technologies", icon: "⚙️" },
+  { id: 'tools', label: "Outils & Tutos", icon: "🛠️" },
+  { id: 'farwest', label: "Far West", icon: "🤠" }
+] as const;
+
 export default function CemeteryView({ theme }: CemeteryViewProps) {
-  const [activeRelicId, setActiveRelicId] = useState<string>('flash');
-  const [activeSubMenu, setActiveSubMenu] = useState<'network' | 'editors'>('network');
+  const [activeRelicId, setActiveRelicId] = useState<string>('netscape');
+  const [activeSubMenu, setActiveSubMenu] = useState<'portals' | 'communities' | 'technologies' | 'tools' | 'farwest'>('portals');
   const [hoveredRelicId, setHoveredRelicId] = useState<string | null>(null);
 
   // Interactive data for "Le Cimetière du Web"
@@ -193,7 +248,8 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       name: 'Netscape Navigator',
       icon: '🕸️',
       birthYear: '1994',
-      deathYear: '2008',
+      deathYear: '2008 (Racheté par AOL)',
+      category: 'acquired',
       epitaph: 'Ci-gît le navigateur roi ayant fait découvrir la Toile au grand public, noyé par le raz-de-marée monopolistique d\'Internet Explorer.',
       summary: 'Fondé par Marc Andreessen (co-auteur de Mosaic), Netscape Navigator a codifié le Web en y inventant le protocole SSL (HTTPS), les cookies de session et le langage JavaScript.',
       whyItRuled: 'En 1995, Netscape Navigator détenait plus de 80% des parts de marché mondiales. Il était le fer de lance de la "Dot-Com" Mania, le symbole de l\'accès à l\'Internet mondial. C\'est Netscape qui commande l\'invention express de JavaScript en 10 jours en 1995 par Brendan Eich pour dynamiser les formulaires, et c\'est également lui qui crée les balises propriétaires extravagantes d\'interactivité enrichie.',
@@ -365,11 +421,34 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       specials: ['WAMP Pioneers', 'The WAMP Era', 'La Prise Électrique', 'Trahison Payante']
     },
     {
+      id: 'ibazar',
+      name: 'iBazar.fr',
+      icon: '🛍️',
+      birthYear: '1999',
+      deathYear: '2001 (Racheté par eBay)',
+      category: 'acquired',
+      epitaph: "Ci-gît le roi pionnier des enchères en ligne en France, racheté au prix fort par le géant eBay avant d'être totalement fondu sous sa bannière.",
+      summary: "Lancé en 1999 par Pierre-François Grimaldi, iBazar a été le premier site d'enchères en ligne gratuit en France, une véritable révolution e-commerce pré-eBay dans l'Hexagone.",
+      whyItRuled: "iBazar offrait un concept addictif et convivial : acheter et vendre des objets d'occasion aux enchères de manière entièrement gratuite (sans commissions de vente au départ). Grâce à une campagne publicitaire télévisée mythique ('iBazar point fr !') mettant en scène des objets insolites ou du quotidien, le site est rapidement devenu le premier vide-grenier virtuel de France, réunissant une communauté de millions de membres passionnés qui s'envoyaient des chèques par la poste.",
+      whyItDiedHtml: `<div class="space-y-3 font-sans text-xs text-slate-350 leading-relaxed">
+        <p>La fin d'iBazar est un cas d'école de consolidation et d'acquisition stratégique de la bulle Internet :</p>
+        <ul class="list-disc pl-4 space-y-2">
+          <li><strong class="text-indigo-400">Le rachat spectaculaire par eBay (2001) :</strong> En février 2001, alors que la bulle Internet commence à éclater, le géant américain eBay, qui peine à s'imposer sur le marché français face à iBazar, décide de racheter son concurrent pour une somme colossale d'environ 112 millions de dollars en actions. Une transaction historique pour le web français.</li>
+          <li><strong class="text-indigo-400">L'introduction des commissions obligatoires :</strong> Après l'acquisition, eBay a progressivement unifié les plateformes et, surtout, a mis fin au modèle 100% gratuit d'iBazar en introduisant des frais d'insertion et des commissions sur les ventes, ce qui a provoqué la colère et la dispersion d'une partie des fidèles d'époque.</li>
+          <li><strong class="text-indigo-400">La disparition progressive de la marque :</strong> Courant 2002, la marque iBazar est définitivement abandonnée et les comptes des utilisateurs sont migrés de force sur eBay.fr, effaçant le nom mythique du paysage numérique.</li>
+        </ul>
+      </div>`,
+      modernSuccessor: 'eBay.fr, Vinted, Leboncoin (le véritable héritier des petites annonces et transactions locales gratuites en France).',
+      retroAnecdote: "Le slogan publicitaire chanté 'iBazar point fr !' avec son petit jingle entêtant à la télévision à la fin des années 1990 est resté gravé comme l'un des plus grands symboles sonores du début du web grand public en France.",
+      specials: ['Pionnier Enchères', 'eBay Acquisition', 'iBazar Point Fr !', 'Bulle Internet 2000']
+    },
+    {
       id: 'caramail',
       name: 'Caramail',
       icon: '💬',
       birthYear: '1997',
-      deathYear: '2009',
+      deathYear: '2009 (Racheté par Lycos)',
+      category: 'acquired',
       epitaph: 'Ci-gît le point de ralliement légendaire de la jeunesse francophone, pionnier du courrier gratuit et de ses salons de tchat animés par applets Java, emporté par MSN Messenger et l\'avènement des réseaux sociaux intégrés.',
       summary: 'Lancé en 1997 par Orianne Garcia, Alexandre Roos et Christophe Schaming, Caramail a été le portail web communautaire et le service de courriers électroniques gratuits le plus populaire de l\'Internet francophone de la fin des années 1990.',
       whyItRuled: 'Pour des millions de francophones découvrant le Web à l\'ère des connexions modem 56k, Caramail était le cœur battant de leur vie numérique. Son atout majeur était son célèbre salon de discussion ("Tchat") basé sur de dynamiques applets Java. Il permettait d\'entrer instantanément en relation textuelle dans des dizaines d\'espaces thématiques sans installer de logiciel externe. Le webmail gratuit intégrait quant à lui des services inédits comme des smileys géants animés, des cartes virtuelles de vœux, et des outils ludiques qui ont initié toute une génération aux usages collaboratifs du réseau.',
@@ -411,7 +490,8 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       name: 'Yahoo! GeoCities',
       icon: '🏙️',
       birthYear: '1994',
-      deathYear: '2009',
+      deathYear: '2009 (Racheté par Yahoo!)',
+      category: 'acquired',
       epitaph: 'Ci-gît le premier incubateur mondial d\'expression personnelle en ligne, fondé sur une sémantique de quartiers virtuels thématiques avant que l\'Internet n\'uniformise ses profils numériques.',
       summary: 'Créé en 1994 par David Bohnett et John Rezner sous le nom originel de Beverly Hills Internet (BHI), GeoCities offrait aux internautes la liberté d\'héberger et de composer gratuitement leurs pages web personnelles à l\'intérieur de quartiers thématiques.',
       whyItRuled: 'GeoCities a été le berceau absolu du HTML amateur de l\'ère Web 1.0. Le service reposait sur une métaphore brillante de quartiers virtuels thématiques calqués sur de vraies ou d\'imaginaires cités : \'Hollywood\' unissait les sites de critiques de cinéma, \'SiliconValley\' les fanatiques d\'ordinateurs, \'Area51\' les théories du complot extrascolaire et \'EnchantedForest\' les récits intimes et familiaux. Les internautes utiliaient des éditeurs WYSIWYG rudimentaires pour inonder leurs pages de GIF animés tape-à-l\'œil (dont les cultissimes petits ouvriers "Under Construction"), d\'effets de textes clignotants et d\'ambiance musicale au format brut MIDI.',
@@ -453,7 +533,8 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       name: 'ICQ (I Seek You)',
       icon: '🌸',
       birthYear: '1996',
-      deathYear: '2024',
+      deathYear: '2024 (Racheté par AOL / VK)',
+      category: 'acquired',
       epitaph: 'Ci-gît le parrain fondateur mythique de la messagerie instantanée mondiale, dont la marguerite bicolore et le "Uh-Oh !" emblématique ont pavé la voie des communications directes actuelles.',
       summary: 'Lancé en novembre 1996 par la jeune start-up israélienne Mirabilis, ICQ (homophone phonétique de "I Seek You" ou "Je te cherche") a été la première messagerie instantanée mondiale à réunir des dizaines de millions d\'humains en direct sur leur écran.',
       whyItRuled: 'À l\'époque des connexions modem bas débit, ICQ a bouleversé l\'économie du temps réel. Auparavant, le web était discret et asynchrone (e-mails, requêtes web statiques) ou purement public (IRC). Avec l\'apparition d\'ICQ, un miracle se produit : un panneau vertical discret affiche la liste de vos contacts préalablement saisis par leur UIN (numéro d\'identification unique séquentiel). En un coup d\'œil, vous découvrez s\'ils sont en ligne (marguerite verte), absents (marguerite rouge), et pouvez ouvrir une fenêtre de tchat privée directe. Primes de sons d\'alertes inoubliables (notamment le cri d\'oiseau ou le fameux "Uh-Oh !"), transfert de fichiers de disque dur à disque dur et jeux de compagnie intégrés ont converti plus de 100 millions d\'adeptes au sommet de son hégémonie culturelle.',
@@ -590,8 +671,8 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
       name: 'Multimania',
       icon: '🏰',
       birthYear: '1995',
-      deathYear: 'Racheté par Lycos puis arrêté',
-      category: 'network',
+      deathYear: '2000 (Racheté par Lycos)',
+      category: 'acquired',
       epitaph: 'Ci-gît la cité pionnière à l\'origine de l\'hébergement web francophone, victime de sa riposte tardive face à l\'offre d\'espace illimité.',
       summary: 'Fondé en 1995 par Michel Meyer et Olivier de Baillenx, Multimania a été le premier hébergeur grand public gratuit francophone, offrant à chacun de quoi fonder sa parcelle numérique en échange d\'un bandeau de pub.',
       whyItRuled: 'À une époque où héberger un site exigeait des abonnements onéreux, Multimania offrait 10 Mo (puis 50 Mo), un accès FTP et des outils d\'administration web simples. C\'était magique : n\'importe quel passionné pouvait publier son code HTML de fansite Star Wars ou d\'émulation console. Multimania a vu grandir les prémices du web francophone, hébergeant d\'immenses communautés de créateurs.',
@@ -866,25 +947,27 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
     }
   ];
 
-  const selectSubMenu = (menu: 'network' | 'editors') => {
+  // Enrich and sort the relics list based on the requested categories and orders
+  const mappedRelics: Relic[] = orderedIds.map(id => {
+    const found = relics.find(r => r.id === id);
+    if (!found) return null;
+    return {
+      ...found,
+      category: categoryMapping[id]
+    } as Relic;
+  }).filter((r): r is Relic => r !== null);
+
+  const selectSubMenu = (menu: 'portals' | 'communities' | 'technologies' | 'tools' | 'farwest') => {
     setActiveSubMenu(menu);
-    const firstOfCat = relics.find(r => {
-      if (menu === 'editors') return r.category === 'editors';
-      return !r.category || r.category === 'network';
-    });
+    const firstOfCat = mappedRelics.find(r => r.category === menu);
     if (firstOfCat) {
       setActiveRelicId(firstOfCat.id);
     }
   };
 
-  const filteredRelics = relics.filter(r => {
-    if (activeSubMenu === 'editors') {
-      return r.category === 'editors';
-    }
-    return !r.category || r.category === 'network';
-  });
+  const filteredRelics = mappedRelics.filter(r => r.category === activeSubMenu);
 
-  const activeRelic = relics.find(r => r.id === activeRelicId) || filteredRelics[0] || relics[0];
+  const activeRelic = mappedRelics.find(r => r.id === activeRelicId) || filteredRelics[0] || mappedRelics[0];
 
   // Theme styling mapping helper
   const getThemeCSS = () => {
@@ -920,7 +1003,7 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
           listItem: (active: boolean) => active 
             ? "bg-[#16161c] border-indigo-500/50 text-indigo-400 font-semibold p-4 rounded-xl flex items-center justify-between text-xs transition duration-200 border" 
             : "bg-[#0c0c0e] hover:bg-[#111115] border-slate-850 hover:border-slate-700 text-slate-300 p-4 rounded-xl flex items-center justify-between text-xs transition duration-200 cursor-pointer border",
-          detailsBox: "bg-[#111114]/90 border border-slate-750/70 p-5 rounded-xl text-xs text-slate-350 space-y-4 shadow-inner",
+          detailsBox: "bg-[#111114]/90 border border-slate-750/70 p-5 rounded-xl text-xs text-slate-355 space-y-4 shadow-inner",
           cardTitle: "text-base font-bold text-slate-100 font-sans flex items-center gap-2",
           badge: "bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-md font-mono",
           funFact: "bg-[#17171e] border-l-4 border-amber-500 p-4 text-slate-300 rounded-r-xl text-xs leading-relaxed"
@@ -934,77 +1017,59 @@ export default function CemeteryView({ theme }: CemeteryViewProps) {
     switch (theme) {
       case 'ie6':
         return (
-          <div className="flex border-b border-[#808080] mb-3" id="cemetery-submenu-ie6">
-            <button
-              onClick={() => selectSubMenu('network')}
-              className={`px-3 py-1.5 text-[10px] font-sans select-none cursor-pointer border-t border-l border-r border-[#808080] ${
-                activeSubMenu === 'network'
-                  ? 'bg-[#d4d0c8] font-bold border-t-white border-l-white border-r-[#808080] -mb-[1px] z-10'
-                  : 'bg-[#c0c0c0] text-slate-700 hover:bg-[#d4d0c8]'
-              }`}
-            >
-              🌐 Reliques
-            </button>
-            <button
-              onClick={() => selectSubMenu('editors')}
-              className={`px-3 py-1.5 text-[10px] font-sans select-none cursor-pointer border-t border-l border-r border-[#808080] ${
-                activeSubMenu === 'editors'
-                  ? 'bg-[#d4d0c8] font-bold border-t-white border-l-white border-r-[#808080] -mb-[1px] z-10'
-                  : 'bg-[#c0c0c0] text-slate-700 hover:bg-[#d4d0c8]'
-              }`}
-            >
-              💾 Anciens Éditeurs
-            </button>
+          <div className="flex flex-wrap gap-y-1 border-b border-[#808080] mb-3" id="cemetery-submenu-ie6">
+            {categoriesList.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => selectSubMenu(cat.id)}
+                className={`px-2 py-1.5 text-[9px] font-sans select-none cursor-pointer border-t border-l border-r border-[#808080] ${
+                  activeSubMenu === cat.id
+                    ? 'bg-[#d4d0c8] font-bold border-t-white border-l-white border-r-[#808080] -mb-[1px] z-10'
+                    : 'bg-[#c0c0c0] text-slate-700 hover:bg-[#d4d0c8]'
+                }`}
+              >
+                {cat.icon} {cat.label}
+              </button>
+            ))}
           </div>
         );
       case 'terminal':
         return (
-          <div className="flex gap-3 border-b border-[#ffb000]/25 pb-2 mb-3 text-xs font-mono" id="cemetery-submenu-terminal">
-            <button
-              onClick={() => selectSubMenu('network')}
-              className={`hover:text-[#ffb000] cursor-pointer transition ${
-                activeSubMenu === 'network'
-                  ? 'text-[#ffb000] font-extrabold'
-                  : 'text-[#ffb000]/40'
-              }`}
-            >
-              {activeSubMenu === 'network' ? '[ * RESEAU ]' : '[   RESEAU ]'}
-            </button>
-            <button
-              onClick={() => selectSubMenu('editors')}
-              className={`hover:text-[#ffb000] cursor-pointer transition ${
-                activeSubMenu === 'editors'
-                  ? 'text-[#ffb000] font-extrabold'
-                  : 'text-[#ffb000]/40'
-              }`}
-            >
-              {activeSubMenu === 'editors' ? '[ * EDITEURS ]' : '[   EDITEURS ]'}
-            </button>
+          <div className="flex flex-wrap gap-2 border-b border-[#ffb000]/25 pb-2 mb-3 text-[9px] font-mono" id="cemetery-submenu-terminal">
+            {categoriesList.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => selectSubMenu(cat.id)}
+                className={`hover:text-[#ffb000] cursor-pointer transition uppercase ${
+                  activeSubMenu === cat.id
+                    ? 'text-[#ffb000] font-extrabold'
+                    : 'text-[#ffb000]/40'
+                }`}
+              >
+                {activeSubMenu === cat.id ? `[*${cat.id.toUpperCase()}]` : `[${cat.id.toUpperCase()}]`}
+              </button>
+            ))}
           </div>
         );
       default:
         return (
-          <div className="grid grid-cols-2 gap-1 p-1 bg-[#09090b]/85 rounded-xl border border-slate-800/80 mb-3" id="cemetery-submenu-modern">
-            <button
-              onClick={() => selectSubMenu('network')}
-              className={`py-1.5 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
-                activeSubMenu === 'network'
-                  ? 'bg-[#1e1e24] text-indigo-400 border border-indigo-500/20 shadow-md'
-                  : 'text-slate-400 hover:text-slate-200 border border-transparent'
-              }`}
-            >
-              🌐 Reliques Réseau
-            </button>
-            <button
-              onClick={() => selectSubMenu('editors')}
-              className={`py-1.5 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
-                activeSubMenu === 'editors'
-                  ? 'bg-[#1e1e24] text-indigo-400 border border-indigo-500/20 shadow-md'
-                  : 'text-slate-400 hover:text-slate-200 border border-transparent'
-              }`}
-            >
-              💾 Anciens Éditeurs
-            </button>
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1 p-1 bg-[#09090b]/85 rounded-xl border border-slate-800/80 mb-3" id="cemetery-submenu-modern">
+            {categoriesList.map((cat, idx) => (
+              <button
+                key={cat.id}
+                onClick={() => selectSubMenu(cat.id)}
+                className={`py-1.5 px-1 text-[9px] font-bold rounded-lg transition-all cursor-pointer text-center flex items-center justify-center gap-1 ${
+                  idx === 4 ? 'col-span-2 sm:col-span-1' : ''
+                } ${
+                  activeSubMenu === cat.id
+                    ? 'bg-[#1e1e24] text-indigo-400 border border-indigo-500/20 shadow-md'
+                    : 'text-slate-400 hover:text-slate-200 border border-transparent'
+                }`}
+              >
+                <span>{cat.icon}</span>
+                <span>{cat.label}</span>
+              </button>
+            ))}
           </div>
         );
     }

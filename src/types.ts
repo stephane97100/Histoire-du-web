@@ -43,6 +43,13 @@ export interface GlossaryTag {
     isDeprecated: boolean;
   }[];
   retroTip?: string; // e.g. "Comment l'utiliser pour faire des mises en page avant CSS"
+  compatibility?: {
+    chrome: string;
+    firefox: string;
+    safari: string;
+    ie: string;
+    netscape: string;
+  };
 }
 
 // Quiz Types

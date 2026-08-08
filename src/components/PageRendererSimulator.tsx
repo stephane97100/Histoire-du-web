@@ -3,419 +3,560 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Monitor, 
   Terminal, 
   Settings, 
   Sparkles, 
-  HelpCircle, 
   AlertTriangle, 
   Info,
   CheckCircle2,
   FileCode,
-  Layers,
   RotateCcw,
-  BookOpen
+  BookOpen,
+  Code2,
+  Cpu,
+  Layers,
+  XCircle,
+  HelpCircle,
+  Play
 } from 'lucide-react';
 
 interface PageRendererSimulatorProps {
   theme: 'modern' | 'ie6' | 'terminal';
 }
 
+type TargetBrowser = 'mosaic1' | 'netscape4' | 'ie6' | 'safari1' | 'chrome';
+
 interface PresetSnippet {
   id: string;
   name: string;
   description: string;
-  code: string;
+  html: string;
+  css: string;
+  js: string;
 }
 
 const PRESETS: PresetSnippet[] = [
   {
     id: 'modern_card',
-    name: 'Card de Produit Moderne (Flexbox/Gradients)',
-    description: 'Une carte moderne avec bords arrondis, ombres portées, dégradés de couleur et mise en page Flexbox.',
-    code: `<div style="background: linear-gradient(135deg, #1e1e2f, #3b3b5c); color: white; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); max-width: 320px; font-family: sans-serif; transition: transform 0.2s;">
-  <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #10b981; font-weight: bold; margin-bottom: 8px;">Nouveauté</div>
-  <h3 style="margin: 0 0 10px 0; font-size: 20px;">iMac G3 Graphite</h3>
-  <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 20px;">Le design rétro-futuriste transparent qui a sauvé Apple. Connectique USB intégrée par défaut.</p>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <span style="font-size: 18px; font-weight: bold; color: #3b82f6;">1 299 €</span>
-    <button style="background-color: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer;">Acheter en ligne</button>
+    name: '1. Card Produit Moderne (Flexbox, CSS Gradients & JS ES6)',
+    description: 'Utilise Flexbox, dégradés CSS3, ombres portées et JS ES6. Incompatible avec Mosaic 1.0, Netscape 4 et IE6.',
+    html: `<div class="card">
+  <span class="tag">Édition Collector</span>
+  <h3>iMac G3 Tangerine</h3>
+  <p>L'ordinateur tout-en-un qui a révolutionné le design informatique en 1998.</p>
+  <div class="footer">
+    <span class="price">1 299 €</span>
+    <button id="buy-btn" onclick="handleClick()">Acheter</button>
   </div>
-</div>`
+</div>`,
+    css: `.card {
+  background: linear-gradient(135deg, #1e1e2f, #3b3b5c);
+  color: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  max-width: 320px;
+  font-family: system-ui, sans-serif;
+}
+.tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #10b981;
+  font-weight: bold;
+}
+h3 { margin: 8px 0; font-size: 18px; }
+p { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+.price { font-size: 18px; font-weight: bold; color: #3b82f6; }
+button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}`,
+    js: `const handleClick = () => {
+  const btn = document.getElementById('buy-btn');
+  btn.innerText = 'Ajouté !';
+  console.log('Article ajouté avec succès (ES6 Arrow Function).');
+};`
   },
   {
     id: 'retro_newsletter',
-    name: 'Encart avec Blinks & Marquees (Années 1999)',
-    description: 'Une mise en page typique de la fin des années 90 avec texte défilant et clignotements.',
-    code: `<center>
-  <table border="3" cellpadding="10" cellspacing="5" bgcolor="#c0c0c0" bordercolor="#000080" width="400">
+    name: '2. Encart 1999 (Table, Marquee, Blink & document.layers)',
+    description: 'Page typique de la guerre Netscape vs IE avec balises d\'époque et API JS obsolète.',
+    html: `<center>
+  <table border="3" cellpadding="10" cellspacing="5" bgcolor="#c0c0c0" bordercolor="#000080" width="380">
     <tr>
       <td align="center" bgcolor="#000080">
-        <font color="#ffffff" size="4" face="Courier New"><b>SURFEZ SUR L'AN 2000 !</b></font>
+        <font color="#ffffff" size="3" face="Courier New"><b>SURFEZ SUR L'AN 2000 !</b></font>
       </td>
     </tr>
     <tr>
       <td bgcolor="#ffffff">
-        <marquee scrollamount="3" direction="left"><font color="#ff0000"><b>★★★ GRAND CONCOURS DE L'ÉTÉ POUR GAGNER UN MODEM 56K !!! ★★★</b></font></marquee>
+        <marquee scrollamount="4" direction="left"><font color="#ff0000"><b>★★★ GRAND CONCOURS DE L'ÉTÉ - GAGNEZ UN MODEM 56K !!! ★★★</b></font></marquee>
         <p align="center">
           <font face="Times New Roman" size="3" color="#000000">
-            Inscrivez-vous dès maintenant à notre club d'internautes privilégiés.
+            Inscrivez-vous à notre cyber-newsletter !
             <br><br>
-            <blink><b>Saisissez votre email rapidement !</b></blink>
+            <blink><b>Faites vite !</b></blink>
           </font>
         </p>
         <center>
-          <input type="text" size="25" value="visiteur@caramail.com">
+          <input type="text" id="email" size="20" value="visiteur@caramail.com">
           <br><br>
-          <input type="submit" value="REJOINDRE LE CYBER-RÉSEAU">
+          <input type="button" value="S'INSCRIRE" onclick="registerUser()">
         </center>
       </td>
     </tr>
   </table>
-</center>`
+</center>`,
+    css: `/* Style minimaliste d'époque */
+body { background-color: #008080; }
+font { font-family: 'Times New Roman', serif; }`,
+    js: `function registerUser() {
+  if (document.layers) {
+    // Netscape 4 API
+    alert('Bienvenue cher utilisateur de Netscape Navigator !');
+  } else if (document.all) {
+    // Internet Explorer 4/5 API
+    alert('Bienvenue cher utilisateur d\'Internet Explorer !');
+  } else {
+    // Standard W3C DOM
+    var mail = document.getElementById('email').value;
+    alert('Inscrit : ' + mail);
+  }
+}`
   },
   {
-    id: 'nav_column',
-    name: 'Menu de Navigation en Grille responsive',
-    description: 'Une grille de navigation utilisant CSS Grid et des transitions au hover.',
-    code: `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 450px; font-family: sans-serif;">
-  <a href="#" style="background-color: #1e293b; color: white; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; border: 1px solid #334155;">
-    <div style="font-size: 18px;">🏠</div>
-    <div style="font-size: 11px; font-weight: bold; margin-top: 4px;">Accueil</div>
-  </a>
-  <a href="#" style="background-color: #1e293b; color: white; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; border: 1px solid #334155;">
-    <div style="font-size: 18px;">🛒</div>
-    <div style="font-size: 11px; font-weight: bold; margin-top: 4px;">Boutique</div>
-  </a>
-  <a href="#" style="background-color: #1e293b; color: white; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; border: 1px solid #334155;">
-    <div style="font-size: 18px;">📧</div>
-    <div style="font-size: 11px; font-weight: bold; margin-top: 4px;">Contact</div>
-  </a>
-</div>`
+    id: 'ie_box_model',
+    name: '3. Test du Bug du Modèle de Boîte d\'IE6 (Quirks Mode)',
+    description: 'Démontre la différence de largeur calculée entre Internet Explorer 5.5/6.0 Quirks Mode et les standards W3C.',
+    html: `<div className="box-container">
+  <div class="test-box">
+    <b>Boîte de Test (Width: 200px, Padding: 20px, Border: 10px)</b>
+    <p>En mode W3C, la largeur totale vaut 260px. En mode IE6 Quirks, elle vaut exactement 200px (le padding et les bordures étouffent le contenu) !</p>
+  </div>
+</div>`,
+    css: `.test-box {
+  width: 200px;
+  padding: 20px;
+  border: 10px solid #ff0000;
+  background-color: #ffffcc;
+  color: #000000;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  /* Hack spécifique IE6 filter opacity */
+  filter: alpha(opacity=90);
+}`,
+    js: `var box = document.all ? document.all['test-box'] : document.getElementById('test-box');
+console.log('Test du modèle de boîte chargé.');`
   }
 ];
 
 export default function PageRendererSimulator({ theme }: PageRendererSimulatorProps) {
-  const [code, setCode] = useState<string>(PRESETS[0].code);
-  const [selectedBrowser, setSelectedBrowser] = useState<'netscape' | 'ie6' | 'chrome'>('chrome');
-  const [htmlVersion, setHtmlVersion] = useState<'html4' | 'html5'>('html5');
-  const [cssVersion, setCssVersion] = useState<'css1' | 'css3'>('css3');
-  const [jsVersion, setJsVersion] = useState<'es3' | 'es6'>('es6');
-  const [analysisReport, setAnalysisReport] = useState<string[]>([]);
+  const [selectedPreset, setSelectedPreset] = useState<string>(PRESETS[0].id);
+  const [htmlCode, setHtmlCode] = useState<string>(PRESETS[0].html);
+  const [cssCode, setCssCode] = useState<string>(PRESETS[0].css);
+  const [jsCode, setJsCode] = useState<string>(PRESETS[0].js);
+  const [activeTab, setActiveTab] = useState<'html' | 'css' | 'js'>('html');
+  const [selectedBrowser, setSelectedBrowser] = useState<TargetBrowser>('netscape4');
 
-  // Function to analyze user code for historical problems
-  const analyzeCodeForBugs = () => {
-    const alerts: string[] = [];
-    const lowerCode = code.toLowerCase();
+  // Diagnostics & Compatibility Report
+  const [criticalErrors, setCriticalErrors] = useState<string[]>([]);
+  const [warnings, setWarnings] = useState<string[]>([]);
+  const [historicalHacks, setHistoricalHacks] = useState<string[]>([]);
 
-    // Check layouts and compatibility based on versions
-    if (htmlVersion === 'html4' && lowerCode.includes('<header')) {
-        alerts.push("HTML4 : La balise <header> n'existe pas. Utilisez <div id=\"header\">.");
+  // Load preset on selection
+  const handleSelectPreset = (presetId: string) => {
+    const found = PRESETS.find(p => p.id === presetId);
+    if (found) {
+      setSelectedPreset(presetId);
+      setHtmlCode(found.html);
+      setCssCode(found.css);
+      setJsCode(found.js);
     }
-    if (cssVersion === 'css1' && (lowerCode.includes('display: flex') || lowerCode.includes('display: grid'))) {
-        alerts.push("CSS1 : Flexbox et Grid sont inconnus. Utilisez les floats.");
-    }
-    if (jsVersion === 'es3' && lowerCode.includes('const ')) {
-        alerts.push("ES3 : 'const' n'existe pas. Utilisez 'var'.");
-    }
-
-    if (alerts.length === 0) {
-      alerts.push("Aucune anomalie majeure de compatibilité détectée pour les versions sélectionnées.");
-    }
-
-    setAnalysisReport(alerts);
   };
 
+  // Comprehensive Code Analysis Engine based on Selected Browser
   useEffect(() => {
-    analyzeCodeForBugs();
-  }, [code, selectedBrowser, htmlVersion, cssVersion, jsVersion]);
+    const errs: string[] = [];
+    const warns: string[] = [];
+    const hacks: string[] = [];
 
-  // Apply browser simulations
-  const getSimulatedStyles = () => {
-    if (selectedBrowser === 'netscape') {
-      return `
-        font-family: 'Times New Roman', Times, serif !important;
-        background-color: #c0c0c0 !important;
-        color: #000000 !important;
-        line-height: normal !important;
-        font-size: 14px !important;
-        text-align: left !important;
-      `;
-    }
-    if (selectedBrowser === 'ie6') {
-      return `
-        font-family: 'MS Sans Serif', 'Arial', sans-serif !important;
-        background-color: #3a6ea5 !important;
-        color: #000000 !important;
-        line-height: normal !important;
-        font-size: 12px !important;
-      `;
-    }
-    return ''; // Chrome: Raw modern CSS unmodified
-  };
+    const fullCode = (htmlCode + ' ' + cssCode + ' ' + jsCode).toLowerCase();
 
-  const getCleanPreviewHTML = () => {
-    // If Netscape 4 simulation: we inject overrides to simulate failure of modern CSS properties.
-    if (selectedBrowser === 'netscape') {
-      let filtered = code
-        // Replace gradients
-        .replace(/background:\s*linear-gradient\([^)]+\)/gi, 'background-color: #c0c0c0')
-        .replace(/background:\s*radial-gradient\([^)]+\)/gi, 'background-color: #c0c0c0')
-        // Remove modern display patterns
+    // 1. MOSAIC 1.0 (1993)
+    if (selectedBrowser === 'mosaic1') {
+      if (cssCode.trim().length > 0) {
+        errs.push("NCSA Mosaic 1.0 n'a aucun support du CSS (inventé en 1994). Vos règles CSS seront totalement ignorées.");
+      }
+      if (jsCode.trim().length > 0) {
+        errs.push("NCSA Mosaic 1.0 ne supporte pas JavaScript (créé en 1995 par Brendan Eich). Vos scripts ne s'exécuteront pas.");
+      }
+      if (fullCode.includes('<table')) {
+        warns.push("Les tableaux HTML (<table) n'existaient pas encore dans Mosaic 1.0. Le texte sera affiché au kilomètre.");
+      }
+      if (fullCode.includes('<img')) {
+        warns.push("Mosaic 1.0 a été le premier navigateur à afficher des images inline, mais uniquement en format GIF ou XBM.");
+      }
+      hacks.push("Contournement d'époque (1993) : Formater la mise en page à l'aide de la balise de texte préformaté <PRE>.");
+    }
+
+    // 2. NETSCAPE NAVIGATOR 4.0 (1997)
+    else if (selectedBrowser === 'netscape4') {
+      if (fullCode.includes('display: flex') || fullCode.includes('display:grid') || fullCode.includes('display: flex')) {
+        errs.push("Netscape 4 ne supporte ni Flexbox ni CSS Grid. La mise en page s'effondrera sous forme de bloc vertical.");
+      }
+      if (fullCode.includes('border-radius') || fullCode.includes('box-shadow') || fullCode.includes('linear-gradient')) {
+        errs.push("Propriétés CSS3 (border-radius, box-shadow, linear-gradient) inconnues dans Netscape 4.");
+      }
+      if (fullCode.includes('const ') || fullCode.includes('let ') || fullCode.includes('=>')) {
+        errs.push("Syntaxe JavaScript ES6 (const/let/fonctions fléchées) non gérée par le moteur JS de Netscape 4 (ES1/ES3).");
+      }
+      if (fullCode.includes('document.getelementbyid')) {
+        warns.push("document.getElementById() n'était pas encore standardisé dans Netscape 4. Il fallait utiliser document.layers['monLayer'].");
+      }
+      if (fullCode.includes('<marquee>') || fullCode.includes('<blink>')) {
+        warns.push("Netscape 4 gère la balise <blink> (sa création propre), mais la balise <marquee> est une extension concurrent d'Internet Explorer.");
+      }
+      hacks.push("Contournement d'époque (1997) : Réaliser les mises en page multi-colonnes en imbriquant des tableaux HTML <table border=0>.");
+    }
+
+    // 3. INTERNET EXPLORER 5.5 / 6.0 (2001)
+    else if (selectedBrowser === 'ie6') {
+      if (fullCode.includes('display: flex') || fullCode.includes('display: grid')) {
+        errs.push("Internet Explorer 6 (Trident) ne supporte pas Flexbox ni CSS Grid.");
+      }
+      if (fullCode.includes('border-radius') || fullCode.includes('box-shadow')) {
+        errs.push("Aucun support des coins arrondis (border-radius) ni des ombres CSS3 dans IE6.");
+      }
+      if (cssCode.includes('padding:') && cssCode.includes('width:')) {
+        warns.push("⚠️ BUG DU MODÈLE DE BOÎTE IE6 (Quirks Mode) : La largeur 'width' englobe le padding et la border, rétrécissant le contenu visuel par rapport aux standards W3C.");
+      }
+      if (fullCode.includes('document.all')) {
+        warns.push("Utilisation de l'API propriétaire IE document.all[id].");
+      }
+      if (fullCode.includes('opacity:')) {
+        warns.push("IE6 n'accepte pas CSS opacity. Il faut utiliser la propriété propriétaire filter: alpha(opacity=XX).");
+      }
+      hacks.push("Hacks d'époque IE6 : Utiliser les commentaires conditionnels <!--[if IE 6]> pour charger des feuilles de style correctives ou le hack * html .box.");
+    }
+
+    // 4. SAFARI 1.0 (2003)
+    else if (selectedBrowser === 'safari1') {
+      if (fullCode.includes('display: flex') || fullCode.includes('display: grid')) {
+        errs.push("Safari 1.0 (basé sur KHTML) ne supportait pas encore Flexbox ni CSS Grid (introduits plus tard dans WebKit).");
+      }
+      if (fullCode.includes('const ') || fullCode.includes('let ')) {
+        warns.push("Syntaxe ES6 détectée. Safari 1.0 utilise ECMAScript 3 (requiert 'var').");
+      }
+      if (fullCode.includes('document.getelementbyid')) {
+        warns.push("Safari 1.0 supporte parfaitement le W3C DOM Level 1 (document.getElementById).");
+      }
+      hacks.push("Soutien précurseur de WebKit : Safari 1.0 fut l'un des premiers navigateurs à valider rigoureusement le test Acid2 du W3C.");
+    }
+
+    // 5. MODERN CHROME (2026)
+    else {
+      if (fullCode.includes('<blink>') || fullCode.includes('<layer>')) {
+        warns.push("Les balises historiques <blink> et <layer> sont dépréciées et désactivées sur les navigateurs modernes.");
+      }
+      if (fullCode.includes('document.all') || fullCode.includes('document.layers')) {
+        warns.push("Les objets propriétaires anciens (document.all, document.layers) sont obsolètes.");
+      }
+      if (errs.length === 0) {
+        warns.push("Code 100% compatible avec les normes du Web moderne (HTML5 / CSS3 / ES6+).");
+      }
+    }
+
+    setCriticalErrors(errs);
+    setWarnings(warns);
+    setHistoricalHacks(hacks);
+
+  }, [htmlCode, cssCode, jsCode, selectedBrowser]);
+
+  // Construct simulated html preview with browser-specific styles
+  const getSimulatedHTML = () => {
+    let modifiedCSS = cssCode;
+    let modifiedHTML = htmlCode;
+
+    // Simulate Netscape 4 rendering limitations
+    if (selectedBrowser === 'netscape4') {
+      modifiedCSS = modifiedCSS
+        .replace(/linear-gradient\([^)]+\)/gi, '#c0c0c0')
         .replace(/display:\s*flex/gi, 'display: block')
         .replace(/display:\s*grid/gi, 'display: block')
-        .replace(/justify-content:[^;]+/gi, '')
-        .replace(/align-items:[^;]+/gi, '')
-        // Remove corner decorations & shadows
         .replace(/border-radius:[^;]+/gi, 'border-radius: 0px')
-        .replace(/box-shadow:[^;]+/gi, 'box-shadow: none')
-        .replace(/transition:[^;]+/gi, '')
-        // Replace colors to basic ones
-        .replace(/color:\s*#cbd5e1/gi, 'color: #000000')
-        .replace(/color:\s*#10b981/gi, 'color: #008000')
-        .replace(/color:\s*#3b82f6/gi, 'color: #0000ff');
-
-      // Netscape had grey light-grey background defaults
-      return `
-        <div style="font-family: 'Times New Roman', Times, serif; color: black; background-color: #c0c0c0; padding: 15px; min-height: 250px; text-align: left;">
-          ${filtered}
-        </div>
-      `;
+        .replace(/box-shadow:[^;]+/gi, 'box-shadow: none');
     }
 
-    // If IE6 simulation: we inject box shadow and flex/grid cancellation
+    // Simulate IE6 Box Model and rendering quirks
     if (selectedBrowser === 'ie6') {
-      let filtered = code
-        // Replace gradients with opaque solid background
-        .replace(/background:\s*linear-gradient\([^)]+\)/gi, 'background-color: #1e1e2f')
-        .replace(/background:\s*radial-gradient\([^)]+\)/gi, 'background-color: #1e1e2f')
-        // Cancel layouts
+      modifiedCSS = modifiedCSS
+        .replace(/linear-gradient\([^)]+\)/gi, '#2b303c')
         .replace(/display:\s*flex/gi, 'display: block')
         .replace(/display:\s*grid/gi, 'display: block')
-        .replace(/justify-content:[^;]+/gi, '')
-        .replace(/align-items:[^;]+/gi, '')
-        // Cancel rounded edges & shadows
         .replace(/border-radius:[^;]+/gi, 'border-radius: 0px')
-        .replace(/box-shadow:[^;]+/gi, 'border: 2px solid #808080')
-        // Box model bug simulation (padding and border subtracts height and width unexpectedly to shrink element)
-        .replace(/max-width:\s*320px/gi, 'max-width: 240px; border: 3px solid #808080; box-sizing: border-box;');
-
-      return `
-        <div style="font-family: 'MS Sans Serif', Arial, sans-serif; color: black; background-color: #3a6ea5; padding: 25px; min-height: 250px; display: flex; align-items: center; justify-content: center;">
-          <div style="background-color: #ffffff; padding: 10px; border: 2px solid white; display: inline-block;">
-            ${filtered}
-          </div>
-        </div>
-      `;
+        .replace(/box-shadow:[^;]+/gi, 'border: 2px solid #808080');
     }
 
-    // Modern Chrome: Render snippet cleanly
+    // Simulate Mosaic 1.0 (no styles)
+    if (selectedBrowser === 'mosaic1') {
+      modifiedCSS = 'body { font-family: "Times New Roman", serif; background-color: #c0c0c0; color: #000000; } a { color: #0000ff; text-decoration: underline; }';
+    }
+
     return `
-      <div style="padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 250px;">
-        ${code}
-      </div>
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            ${selectedBrowser === 'mosaic1' ? `
+              body { font-family: 'Times New Roman', serif !important; background-color: #c0c0c0 !important; color: #000000 !important; padding: 15px; }
+              a { color: #0000ff !important; text-decoration: underline !important; }
+            ` : ''}
+            ${selectedBrowser === 'netscape4' ? `
+              body { font-family: 'Times New Roman', serif; background-color: #c0c0c0; color: #000000; padding: 15px; }
+              ${modifiedCSS}
+            ` : ''}
+            ${selectedBrowser === 'ie6' ? `
+              body { font-family: 'MS Sans Serif', Arial, sans-serif; background-color: #3a6ea5; color: #000000; padding: 15px; }
+              ${modifiedCSS}
+            ` : ''}
+            ${selectedBrowser === 'safari1' ? `
+              body { font-family: 'Lucida Grande', Arial, sans-serif; background-color: #e8e8e8; color: #000000; padding: 15px; }
+              ${modifiedCSS}
+            ` : ''}
+            ${selectedBrowser === 'chrome' ? `
+              body { font-family: system-ui, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px; }
+              ${modifiedCSS}
+            ` : ''}
+          </style>
+        </head>
+        <body>
+          ${modifiedHTML}
+          <script>
+            try {
+              ${jsCode}
+            } catch(e) {
+              console.error("Erreur de script exécuté dans le simulateur :", e.message);
+            }
+          </script>
+        </body>
+      </html>
     `;
   };
 
   return (
-    <div className="space-y-6 text-left" id="page-renderer-simulator-root">
+    <div className="space-y-6 text-left" id="browser-compatibility-simulator-root">
       
-      {/* Simulation Banner Info */}
+      {/* Simulation Banner Header */}
       <div className={`p-5 rounded-2xl border ${
-        theme === 'ie6' ? 'bg-[#c0c0c0] border-white text-black' :
+        theme === 'ie6' ? 'bg-[#c0c0c0] border-white text-black shadow-[2px_2px_0px_white_inset]' :
         theme === 'terminal' ? 'bg-[#ffb000]/10 border-[#ffb000]/40 text-[#ffb000]' : 'bg-[#111114] border-[#2a2a2e] text-slate-100'
       }`}>
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
-            <Monitor className="w-5 h-5 animate-pulse" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+              <Monitor className="w-6 h-6 animate-pulse text-sky-400" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono font-bold tracking-wider text-sky-400 uppercase block">Simulateur Rétro-Technologique</span>
+              <h2 className="text-base md:text-lg font-extrabold flex items-center gap-2 mt-0.5">
+                Browser Compatibility Simulator (Simulateur de Compatibilité Navigateurs)
+              </h2>
+            </div>
           </div>
-          <div>
-            <span className="text-[9px] font-mono font-bold tracking-wider text-blue-4e0 uppercase block">Simulateur Rétro-Technologique</span>
-            <h2 className="text-sm font-extrabold flex items-center gap-2 mt-0.5">
-              Simulateur de Rendu de Moteur de Navigateurs
-            </h2>
+          <div className="flex items-center gap-2 text-xs font-mono opacity-80">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Mosaic, Netscape 4, IE 6, Safari 1 & Chrome</span>
           </div>
         </div>
-        <p className="text-xs opacity-80 mt-2.5 leading-relaxed">
-          Écrivez ou importez n'importe quel code HTML/CSS brut. Sélectionnez ensuite la version du moteur de navigation pour voir comment les anomalies de rendering d'époque (comme la non-coordination des flexbox ou le bug du modèle de boîte d'IE) détruiraient ou altéreraient votre design.
+        <p className="text-xs opacity-80 mt-3 leading-relaxed">
+          Testez le comportement de vos snippets d'HTML, CSS et JavaScript face aux moteurs de rendu historiques. Obtenez un aperçu visuel en direct ainsi qu'un rapport détaillé des anomalies, des erreurs de syntaxe non gérées d'époque et des hacks de compatibilité.
         </p>
       </div>
 
+      {/* Preset Quick Loader Buttons */}
+      <div className={`p-4 rounded-xl border ${
+        theme === 'ie6' ? 'bg-[#d4d0c8] border-[#808080]' : 'bg-[#141417] border-[#2a2a2e]'
+      }`}>
+        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 block mb-2">
+          ⚡ Charger un Modèle de Test Pré-configuré :
+        </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          {PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              onClick={() => handleSelectPreset(preset.id)}
+              className={`p-3 rounded-lg text-left text-xs transition border cursor-pointer ${
+                selectedPreset === preset.id
+                  ? 'bg-indigo-650/20 border-indigo-500 text-indigo-300 font-bold shadow-md'
+                  : 'bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              }`}
+            >
+              <span className="font-bold block text-[11px] font-sans">{preset.name}</span>
+              <span className="text-[10px] opacity-70 block font-normal leading-tight mt-1">{preset.description}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Workspace: Left Column Code Input Tabs / Right Column Browser Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left Column: Code input & presets selector (span 5) */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Left Column: Code Snippet Textarea Editor (span 6) */}
+        <div className="lg:col-span-6 space-y-3 flex flex-col justify-between">
           
-          {/* Preset Buttons */}
-          <div className={`p-4 rounded-xl border ${
-            theme === 'ie6' ? 'bg-[#d4d0c8]' : 'bg-[#141417]'
-          }`}>
-            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 block mb-2">
-              📂 Charger un modèle prédéfini :
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400">
+              📝 Saisie des Extraits de Code (Snippet) :
             </span>
-            <div className="flex flex-col gap-2">
-              {PRESETS.map((preset) => (
+            <div className="flex gap-1">
+              {(['html', 'css', 'js'] as const).map((tab) => (
                 <button
-                  key={preset.id}
-                  onClick={() => {
-                    setCode(preset.code);
-                  }}
-                  className={`p-2 rounded-lg text-left text-xs transition border cursor-pointer ${
-                    code === preset.code
-                      ? 'bg-indigo-650/15 border-indigo-500/40 text-indigo-400 font-bold'
-                      : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:bg-slate-900/60 hover:text-slate-200'
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 py-1 text-xs font-mono font-bold rounded-t-lg transition border-t border-x cursor-pointer uppercase ${
+                    activeTab === tab
+                      ? 'bg-black text-emerald-400 border-slate-700 font-black'
+                      : 'bg-slate-900 text-slate-400 border-transparent hover:text-white'
                   }`}
                 >
-                  <span className="font-bold block text-[11px] font-sans">{preset.name}</span>
-                  <span className="text-[10px] opacity-70 block font-normal leading-tight mt-0.5">{preset.description}</span>
+                  {tab}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Code Textarea Editor */}
-          <div className={`rounded-xl border overflow-hidden flex flex-col ${
-            theme === 'ie6' ? 'border-[#808080]' : 'border-slate-800'
-          }`}>
-            <div className={`px-4 py-2 border-b flex justify-between items-center text-xs ${
-              theme === 'ie6' ? 'bg-[#d4d0c8]' : 'bg-[#18181c]'
-            }`}>
-              <span className="font-mono text-slate-400 flex items-center gap-1.5">
-                <FileCode className="w-3.5 h-3.5" /> Saisissez votre snippet HTML/CSS :
+          <div className="border border-slate-800 rounded-xl overflow-hidden bg-black flex flex-col flex-1 min-h-[360px]">
+            <div className="px-4 py-2 bg-[#18181c] border-b border-slate-800 flex justify-between items-center text-xs font-mono text-slate-400">
+              <span className="flex items-center gap-1.5 uppercase font-bold text-emerald-400">
+                <Code2 className="w-3.5 h-3.5" /> Éditeur {activeTab.toUpperCase()}
               </span>
               <button
-                onClick={() => setCode('')}
-                className="text-[10px] font-mono text-red-400 hover:text-red-300 transition cursor-pointer"
+                onClick={() => {
+                  if (activeTab === 'html') setHtmlCode('');
+                  if (activeTab === 'css') setCssCode('');
+                  if (activeTab === 'js') setJsCode('');
+                }}
+                className="text-[10px] text-red-400 hover:text-red-300 transition cursor-pointer"
               >
-                Vider
+                Vider {activeTab.toUpperCase()}
               </button>
             </div>
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Saisissez ou collez votre code brut ici (Inline styles autorisés)..."
-              className="w-full h-80 max-h-96 min-h-[180px] p-4 font-mono text-[11px] bg-black text-emerald-400 focus:outline-none resize-none scrollbar-thin outline-none leading-relaxed"
-            />
+
+            {activeTab === 'html' && (
+              <textarea
+                value={htmlCode}
+                onChange={(e) => setHtmlCode(e.target.value)}
+                placeholder="Entrez votre code HTML..."
+                className="w-full flex-1 min-h-[320px] p-4 font-mono text-[11px] bg-black text-emerald-400 focus:outline-none resize-none scrollbar-thin outline-none leading-relaxed"
+              />
+            )}
+            {activeTab === 'css' && (
+              <textarea
+                value={cssCode}
+                onChange={(e) => setCssCode(e.target.value)}
+                placeholder="Entrez vos règles CSS..."
+                className="w-full flex-1 min-h-[320px] p-4 font-mono text-[11px] bg-black text-sky-300 focus:outline-none resize-none scrollbar-thin outline-none leading-relaxed"
+              />
+            )}
+            {activeTab === 'js' && (
+              <textarea
+                value={jsCode}
+                onChange={(e) => setJsCode(e.target.value)}
+                placeholder="Entrez votre script JavaScript..."
+                className="w-full flex-1 min-h-[320px] p-4 font-mono text-[11px] bg-black text-yellow-300 focus:outline-none resize-none scrollbar-thin outline-none leading-relaxed"
+              />
+            )}
           </div>
 
         </div>
 
-        {/* Right Column: Rendering Preview & Browser simulation (span 7) */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Right Column: Historical Browser Engine Selector & Frame Preview (span 6) */}
+        <div className="lg:col-span-6 space-y-3 flex flex-col justify-between">
           
-          {/* Browser Selector Toolbar */}
-          <div className="p-2 bg-slate-950/80 border border-slate-900 rounded-xl flex items-center justify-between flex-wrap gap-2 text-xs">
-            <span className="font-bold text-slate-400 ml-2 font-mono flex items-center gap-1 text-[11px]">
-              <Settings className="w-3.5 h-3.5 text-indigo-400" /> Choisir le Navigateur Cible :
+          {/* Target Browser Selector Toolbar */}
+          <div className="space-y-1">
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 block">
+              🌐 Sélectionner le Navigateur Cible :
             </span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => setSelectedBrowser('netscape')}
-                className={`px-3 py-1 text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
-                  selectedBrowser === 'netscape'
-                    ? 'bg-orange-500/20 text-orange-400 border border-orange-500/35 font-bold'
-                    : 'text-slate-500 hover:text-slate-350 border border-transparent'
-                }`}
-              >
-                Netscape 4 (1997)
-              </button>
-              <button
-                onClick={() => setSelectedBrowser('ie6')}
-                className={`px-3 py-1 text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
-                  selectedBrowser === 'ie6'
-                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/35 font-bold'
-                    : 'text-slate-500 hover:text-slate-350 border border-transparent'
-                }`}
-              >
-                IE 6 Quirks (2001)
-              </button>
-              <button
-                onClick={() => setSelectedBrowser('chrome')}
-                className={`px-3 py-1 text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
-                  selectedBrowser === 'chrome'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold'
-                    : 'text-slate-500 hover:text-slate-350 border border-transparent'
-                }`}
-              >
-                Modern Chrome (2026)
-              </button>
+            <div className="flex flex-wrap gap-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+              {[
+                { id: 'mosaic1', label: 'Mosaic 1.0 (1993)' },
+                { id: 'netscape4', label: 'Netscape 4 (1997)' },
+                { id: 'ie6', label: 'IE 6 Quirks (2001)' },
+                { id: 'safari1', label: 'Safari 1.0 (2003)' },
+                { id: 'chrome', label: 'Chrome (2026)' },
+              ].map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => setSelectedBrowser(b.id as TargetBrowser)}
+                  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg transition cursor-pointer shrink-0 ${
+                    selectedBrowser === b.id
+                      ? 'bg-indigo-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Browser Container Frame Display */}
-          <div className="border border-slate-800 bg-[#0c0c0e] rounded-xl overflow-hidden shadow-2xl flex flex-col min-h-[340px]">
+          {/* Simulated Browser Frame */}
+          <div className="border border-slate-800 bg-[#0c0c0e] rounded-xl overflow-hidden shadow-2xl flex flex-col flex-1 min-h-[340px]">
             
-            {/* Simulated Desktop Window Frame */}
+            {/* Retro Window Header */}
             <div className="bg-[#1b1b22] px-4 py-2 border-b border-slate-850 flex items-center justify-between text-xs select-none">
-              
-              {/* Window Controls */}
               <div className="flex items-center gap-2">
                 <div className="flex gap-1.5">
-                  <span className="w-3 height h-3 rounded-full bg-red-500 block" />
-                  <span className="w-3 height h-3 rounded-full bg-yellow-500 block" />
-                  <span className="w-3 height h-3 rounded-full bg-emerald-500 block" />
+                  <span className="w-3 h-3 rounded-full bg-red-500 block" />
+                  <span className="w-3 h-3 rounded-full bg-yellow-500 block" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500 block" />
                 </div>
-                <span className="text-[10px] font-mono text-slate-400 ml-2">
-                  {selectedBrowser === 'netscape' ? 'Netscape Communicator 4.7' : 
-                   selectedBrowser === 'ie6' ? 'Internet Explorer 6.0 - Windows XP Edition' : 
-                   'Google Chrome - Stable Build 2026'}
+                <span className="text-[10px] font-mono text-slate-300 font-bold ml-2">
+                  {selectedBrowser === 'mosaic1' ? 'NCSA Mosaic v1.0 - [X11 Window]' :
+                   selectedBrowser === 'netscape4' ? 'Netscape Communicator v4.7' :
+                   selectedBrowser === 'ie6' ? 'Internet Explorer 6.0 - Windows XP Edition' :
+                   selectedBrowser === 'safari1' ? 'Safari v1.0 (v85) - Mac OS X Panther' :
+                   'Google Chrome - Engine 2026'}
                 </span>
-              </div>
-
-              {/* Status Lamp */}
-              <div className="flex items-center gap-1.5 text-[9px] font-mono text-slate-500">
-                <span className={`w-2 h-2 rounded-full ${
-                  selectedBrowser === 'netscape' ? 'bg-orange-500 animate-pulse' :
-                  selectedBrowser === 'ie6' ? 'bg-blue-500' : 'bg-emerald-500'
-                }`} />
-                <span>Simul_Mod_ENG</span>
               </div>
             </div>
 
             {/* Address Bar */}
-            <div className="bg-[#141416] p-2 border-b border-slate-900 flex items-center gap-2">
-              <span className="text-[10px] font-mono text-slate-500 select-none">Adresse :</span>
+            <div className="bg-[#141416] px-3 py-1.5 border-b border-slate-900 flex items-center gap-2">
+              <span className="text-[10px] font-mono text-slate-500 select-none">URL :</span>
               <div className="flex-1 bg-slate-950 px-3 py-1 rounded border border-slate-850 text-[10px] text-slate-400 font-mono">
-                {selectedBrowser === 'netscape' ? 'http://internetsite.com/welcome.htm' :
-                 selectedBrowser === 'ie6' ? 'c:\\windows\\temp\\index.html' :
-                 'https://museum.w3c.org/sandbox'}
+                {selectedBrowser === 'mosaic1' ? 'http://info.cern.ch/hypertext/test.html' :
+                 selectedBrowser === 'netscape4' ? 'http://home.netscape.com/preview.htm' :
+                 selectedBrowser === 'ie6' ? 'res://mshtml.dll/index.html' :
+                 selectedBrowser === 'safari1' ? 'http://www.apple.com/safari/test.html' :
+                 'https://localhost:3000/browser-simulator'}
               </div>
             </div>
 
-            {/* Interactive Simulated Render Frame Output */}
-            <div className="flex-1 bg-[#1c1c22] p-0 overflow-auto min-h-[300px] flex flex-col justify-stretch">
+            {/* Interactive iFrame Render Area */}
+            <div className="flex-1 bg-white overflow-auto min-h-[280px]">
               <iframe
-                title="Browser Simulation Frame"
-                srcDoc={`
-                  <!DOCTYPE html>
-                  <html>
-                    <head>
-                      <style>
-                        body { margin: 0; padding: 0; }
-                        ${selectedBrowser === 'netscape' ? `
-                          body, p, h1, h2, h3, h4, td, div, button {
-                            font-family: 'Times New Roman', Times, serif !important;
-                            color: #000000 !important;
-                          }
-                          a { color: #0000ff !important; text-decoration: underline !important; }
-                        ` : ''}
-                        ${selectedBrowser === 'ie6' ? `
-                          body, p, h1, h2, h3, h4, td, div, button {
-                            font-family: 'MS Sans Serif', 'Arial', sans-serif !important;
-                            color: #000000 !important;
-                          }
-                        ` : ''}
-                      </style>
-                    </head>
-                    <body>
-                      ${getCleanPreviewHTML()}
-                    </body>
-                  </html>
-                `}
-                className="w-full flex-1 border-none min-h-[300px] bg-white text-black"
+                title="Browser Compatibility Frame"
+                srcDoc={getSimulatedHTML()}
+                className="w-full h-full min-h-[280px] border-none"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
@@ -423,24 +564,72 @@ export default function PageRendererSimulator({ theme }: PageRendererSimulatorPr
 
           </div>
 
-          {/* Differential Analysis Report */}
-          <div className="bg-[#111114] border border-[#2a2a2e] rounded-xl p-4 space-y-3">
-            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#3b82f6] flex items-center gap-1 pb-1 border-b border-[#2a2a2e]">
-              <AlertTriangle className="w-3.5 h-3.5 text-blue-400" />
-              Rapport d'Analyse Chronologique et de Rendu :
+        </div>
+
+      </div>
+
+      {/* Comprehensive Compatibility & Diagnostic Report Cards */}
+      <div className="space-y-3 pt-2">
+        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 block">
+          🔍 Diagnostic Détaillé de Compatibilité pour {selectedBrowser.toUpperCase()} :
+        </span>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          {/* Critical Incompatibilities */}
+          <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 space-y-2">
+            <span className="text-[11px] font-mono font-bold uppercase text-red-400 flex items-center gap-1.5">
+              <XCircle className="w-4 h-4" /> Erreurs / Propriétés Incompatibles ({criticalErrors.length}) :
             </span>
-            <div className="space-y-2 text-xs">
-              {analysisReport.map((rep, index) => (
-                <div key={index} className="flex gap-2 items-start text-slate-400 font-sans leading-relaxed">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-1.5" />
-                  <p>{rep}</p>
-                </div>
+            {criticalErrors.length === 0 ? (
+              <p className="text-xs text-slate-400 italic">Aucune incompatibilité critique détectée.</p>
+            ) : (
+              <ul className="space-y-1.5 text-xs text-red-200 font-sans">
+                {criticalErrors.map((err, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <span className="text-red-400 font-bold">•</span>
+                    <span>{err}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Quirks & Warnings */}
+          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 space-y-2">
+            <span className="text-[11px] font-mono font-bold uppercase text-amber-400 flex items-center gap-1.5">
+              <AlertTriangle className="w-4 h-4" /> Quirks & Particularités de Rendu ({warnings.length}) :
+            </span>
+            {warnings.length === 0 ? (
+              <p className="text-xs text-slate-400 italic">Aucune particularité notable.</p>
+            ) : (
+              <ul className="space-y-1.5 text-xs text-amber-200 font-sans">
+                {warnings.map((warn, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <span className="text-amber-400 font-bold">•</span>
+                    <span>{warn}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Historical Hacks & Advice */}
+          <div className="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/30 space-y-2">
+            <span className="text-[11px] font-mono font-bold uppercase text-indigo-400 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4" /> Hacks & Conseils Historiques ({historicalHacks.length}) :
+            </span>
+            <ul className="space-y-1.5 text-xs text-indigo-200 font-sans">
+              {historicalHacks.map((hack, i) => (
+                <li key={i} className="flex items-start gap-1.5">
+                  <span className="text-indigo-400 font-bold">•</span>
+                  <span>{hack}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
         </div>
-
       </div>
 
     </div>

@@ -35,6 +35,9 @@ import FrameworkImpactsView from './components/FrameworkImpactsView';
 import GitImpactView from './components/GitImpactView';
 import AiWebDevView from './components/AiWebDevView';
 import PhpBBForumsView from './components/PhpBBForumsView';
+import GoatsView from './components/GoatsView';
+import DomainHistoryView from './components/DomainHistoryView';
+import InspiringProjectsView from './components/InspiringProjectsView';
 import { playWin95Startup, playModemDialup } from './lib/audioSynth';
 import OfflineEbookModal from './components/OfflineEbookModal';
 import { timelineEvents } from './data/timelineData';
@@ -75,10 +78,15 @@ import {
   Shield,
   Cpu,
   GitBranch,
-  Brain
+  Brain,
+  Award,
+  Gamepad2,
+  WifiOff,
+  Wifi,
+  X
 } from 'lucide-react';
 
-type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel_client' | 'duel_server' | 'integration_war' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev';
+type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel_client' | 'duel_server' | 'integration_war' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war' | 'apache_vs_nginx' | 'js_engines' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev' | 'goats' | 'domain_names' | 'inspiring_projects';
 type ThemeMode = 'modern' | 'ie6' | 'terminal';
 
 export default function App() {
@@ -89,6 +97,29 @@ export default function App() {
     () => (localStorage.getItem('web_history_retro_sound') as any) || 'muted'
   );
   const [isEbookModalOpen, setIsEbookModalOpen] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [showOfflineToast, setShowOfflineToast] = useState(false);
+
+  // Connection offline/online state synchronized with SW in main.tsx
+  useEffect(() => {
+    const handleOffline = () => {
+      setIsOffline(true);
+      setShowOfflineToast(true);
+    };
+
+    const handleOnline = () => {
+      setIsOffline(false);
+      setShowOfflineToast(false);
+    };
+
+    window.addEventListener('app-offline-event', handleOffline);
+    window.addEventListener('app-online-event', handleOnline);
+
+    return () => {
+      window.removeEventListener('app-offline-event', handleOffline);
+      window.removeEventListener('app-online-event', handleOnline);
+    };
+  }, []);
 
   // Interaction-triggered starting sound effect
   useEffect(() => {
@@ -180,12 +211,17 @@ export default function App() {
     {
       label: 'Frise Chronologique',
       icon: Compass,
-      items: ['timeline', 'protocols', 'history_of_the_web', 'web_philosophy', 'web_resistors']
+      items: ['timeline', 'protocols', 'history_of_the_web', 'inspiring_projects', 'web_philosophy', 'web_resistors']
+    },
+    {
+      label: 'Les GOAT du Web 🐐',
+      icon: Award,
+      items: ['goats', 'inspiring_projects']
     },
     {
       label: 'Comparateur de Code',
       icon: ShieldAlert,
-      items: ['duel_client', 'duel_server', 'integration_war', 'xhtml_vs_html5', 'flash_vs_html5', 'angular_vs_react', 'tool_war', 'case_studies', 'webmaster_evolution']
+      items: ['duel_client', 'duel_server', 'integration_war', 'flash_vs_html5', 'angular_vs_react', 'xhtml_vs_html5', 'apache_vs_nginx', 'js_engines', 'tool_war', 'case_studies', 'webmaster_evolution']
     },
     {
       label: 'Révolutions & Tech',
@@ -200,7 +236,7 @@ export default function App() {
     {
       label: 'Développement',
       icon: Code2,
-      items: ['duel_client', 'duel_server', 'integration_war', 'xhtml_vs_html5', 'flash_vs_html5', 'angular_vs_react', 'tool_war', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary', 'framework_impacts', 'git_impact', 'ai_webdev']
+      items: ['duel_client', 'duel_server', 'integration_war', 'flash_vs_html5', 'angular_vs_react', 'xhtml_vs_html5', 'apache_vs_nginx', 'js_engines', 'tool_war', 'legacy_challenge', 'sandbox', 'page_renderer', 'glossary', 'framework_impacts', 'git_impact', 'ai_webdev']
     },
     {
       label: 'Communauté',
@@ -210,11 +246,13 @@ export default function App() {
     {
       label: 'Divers',
       icon: Settings,
-      items: ['pour_adultes', 'france_contributions']
+      items: ['domain_names', 'pour_adultes', 'france_contributions']
     }
   ];
 
   const navItems = [
+    { id: 'inspiring_projects', label: 'Inspiring Projects', description: 'Sites web historiques & chefs-d\'œuvre du web', icon: Globe },
+    { id: 'goats', label: 'Les GOAT du Web', description: 'Les applis & jeux légendaires', icon: Award },
     { id: 'timeline', label: 'Chronologie & Versions', description: 'Du HTML1 au CSS3', icon: Compass },
     { id: 'history_of_the_web', label: 'Histoire du Web', description: 'WWW, Protocoles, Navigateurs', icon: Globe },
     { id: 'web_revolutions', label: "Les Révolutions du Web", description: 'Flash, AJAX, CSS3, WebSockets...', icon: Zap },
@@ -229,13 +267,16 @@ export default function App() {
     { id: 'modern_tech', label: "Technologies d'Aujourd'hui", description: 'PHP/Symfony, React, TS, Python...', icon: Sparkles },
     { id: 'tchat_with_me', label: "T'chat with me", description: 'MSN, Skype, Caramail, ICQ...', icon: MessageSquare },
     { id: 'pour_adultes', label: 'Section "Pour adultes"', description: 'Minitel rose, Audiotel, Dialers...', icon: PhoneCall },
+    { id: 'domain_names', label: 'Achat & Revente de Noms de Domaine', description: 'Far West numérique, UDRP & l\'affaire Nissan.com', icon: Globe },
     { id: 'webmaster_evolution', label: 'Le Webmaster (2000 - Présent)', description: 'Évolution et spécialisation du métier', icon: Users },
     { id: 'duel_client', label: 'Duel client (Jscript vs VBScript)', description: 'La guerre des scripts clients', icon: ShieldAlert },
     { id: 'duel_server', label: 'Duel serveur (ASP Classic vs PHP)', description: 'L\'origine du web dynamique serveur', icon: ShieldAlert },
     { id: 'integration_war', label: 'Tables vs CSS', description: 'Guerre de l\'intégration web', icon: Layout },
-    { id: 'xhtml_vs_html5', label: 'XHTML vs HTML5', description: 'La sécession des standards', icon: Layers },
-    { id: 'flash_vs_html5', label: 'Flash vs HTML5/JS', description: 'Guerre de l\'interactivité', icon: Sparkles },
-    { id: 'angular_vs_react', label: 'Angular vs React', description: 'Guerre des paradigmes Front-End', icon: Zap },
+    { id: 'xhtml_vs_html5', label: 'La rébellion des standards : W3C (XHTML) vs. WHATWG (HTML5)', description: 'Le combat pour la rétrocompatibilité et le pragmatisme', icon: Layers },
+    { id: 'flash_vs_html5', label: 'La guerre du multimédia : Adobe Flash vs. HTML5', description: 'La guerre pour l\'interactivité riche et animée', icon: Sparkles },
+    { id: 'angular_vs_react', label: 'La guerre des frameworks Front-End : Angular vs. React vs. Vue', description: 'La structuration des applications web complexes', icon: Zap },
+    { id: 'apache_vs_nginx', label: 'La guerre des serveurs web : Apache vs. Nginx', description: 'Gérer le trafic massif et asynchrone', icon: ShieldAlert },
+    { id: 'js_engines', label: 'La guerre des moteurs de JavaScript (Course de performance)', description: 'La course à la performance (V8, SpiderMonkey, etc.)', icon: Zap },
     { id: 'tool_war', label: 'Grunt vs Gulp vs Webpack', description: 'Micro-guerre des outils', icon: Code },
     { id: 'legacy_challenge', label: 'Défi Code Legacy', description: 'Testez vos compétences legacy', icon: Code2 },
     { id: 'sandbox', label: 'Création Landing Page', description: 'Éditeur rétro < 500 lignes', icon: PenTool },
@@ -244,7 +285,7 @@ export default function App() {
     { id: 'france_contributions', label: "L'apport de la France au Web", description: 'CYCLADES, Minitel, Freebox, Docker...', icon: Globe },
     { id: 'web_philosophy', label: 'Philosophie du Web 2000', description: 'Idéal du gratuit, faillites, e-commerce...', icon: BookOpen },
     { id: 'outside_code', label: "En dehors du code", description: "Design, Marketing, SEO & Rédacteur", icon: Palette },
-    { id: 'page_renderer', label: 'Simulateur de Rendu', description: 'Simulez Netscape / IE6', icon: Monitor },
+    { id: 'page_renderer', label: 'Browser Compatibility Simulator', description: 'Testez la compatibilité Mosaic, Netscape 4, IE6, Safari...', icon: Monitor },
     { id: 'case_studies', label: 'Études de Cas : Code', description: 'Avant vs Après (HTML/CSS)', icon: Layers },
     { id: 'web_resistors', label: 'Les Résistants du Web', description: 'Sites et communautés immuables', icon: Shield },
     { id: 'framework_impacts', label: 'Impact des Frameworks', description: 'De jQuery aux composants modernes', icon: Cpu },
@@ -456,6 +497,7 @@ export default function App() {
                 className="flex-1 flex flex-col justify-between"
               >
                 {activeTab === 'timeline' && <TimelineView theme={themeMode} />}
+                {activeTab === 'goats' && <GoatsView theme={themeMode} />}
                 {activeTab === 'history_of_the_web' && <HistoryOfTheWebView theme={themeMode} />}
                 {activeTab === 'web_revolutions' && <WebRevolutionsView theme={themeMode} />}
                 {activeTab === 'phpbb_forums' && <PhpBBForumsView theme={themeMode} />}
@@ -469,6 +511,7 @@ export default function App() {
                 {activeTab === 'modern_tech' && <ModernTechView theme={themeMode} />}
                 {activeTab === 'tchat_with_me' && <ChatHistoryView theme={themeMode} />}
                 {activeTab === 'pour_adultes' && <AdultFinancingHistoryView theme={themeMode} />}
+                {activeTab === 'domain_names' && <DomainHistoryView theme={themeMode} />}
                 {activeTab === 'webmaster_evolution' && <WebmasterEvolution theme={themeMode} />}
                 {activeTab === 'duel_client' && <VbscriptJsDuel theme={themeMode} mode="client" />}
                 {activeTab === 'duel_server' && <VbscriptJsDuel theme={themeMode} mode="server" />}
@@ -476,6 +519,8 @@ export default function App() {
                 {activeTab === 'xhtml_vs_html5' && <WebWarsView theme={themeMode} warId="xhtml_vs_html5" />}
                 {activeTab === 'flash_vs_html5' && <WebWarsView theme={themeMode} warId="flash_vs_html5" />}
                 {activeTab === 'angular_vs_react' && <WebWarsView theme={themeMode} warId="angular_vs_react" />}
+                {activeTab === 'apache_vs_nginx' && <WebWarsView theme={themeMode} warId="apache_vs_nginx" />}
+                {activeTab === 'js_engines' && <WebWarsView theme={themeMode} warId="js_engines" />}
                 {activeTab === 'tool_war' && <WebWarsView theme={themeMode} warId="tool_war" />}
                 {activeTab === 'legacy_challenge' && <LegacyCodeChallenge theme={themeMode} />}
                 {activeTab === 'sandbox' && <RetroSimulator theme={themeMode} />}
@@ -484,6 +529,7 @@ export default function App() {
                 {activeTab === 'france_contributions' && <FranceContributionsView theme={themeMode} />}
                 {activeTab === 'web_philosophy' && <WebPhilosophyView theme={themeMode} />}
                 {activeTab === 'outside_code' && <OutsideCodeView theme={themeMode} />}
+                {activeTab === 'inspiring_projects' && <InspiringProjectsView theme={themeMode} />}
                 {activeTab === 'page_renderer' && <PageRendererSimulator theme={themeMode} />}
                 {activeTab === 'case_studies' && <CaseStudiesView theme={themeMode} />}
                 {activeTab === 'web_resistors' && <WebResistorsView theme={themeMode} />}
@@ -584,6 +630,97 @@ export default function App() {
             isOpen={isEbookModalOpen}
             onClose={() => setIsEbookModalOpen(false)}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Offline Toast Notification Alert */}
+      <AnimatePresence>
+        {showOfflineToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-6 right-6 z-[100]"
+            id="offline-toast-notification"
+          >
+            {themeMode === 'ie6' && (
+              <div className="bg-[#d4d0c8] text-black border-2 border-white shadow-[2px_2px_15px_rgba(0,0,0,0.5)] p-4 w-96 font-sans">
+                <div className="bg-[#000080] text-white px-2 py-1 font-bold text-xs flex justify-between items-center mb-2">
+                  <span className="flex items-center gap-1">⚠️ Erreur de Connexion</span>
+                  <button onClick={() => setShowOfflineToast(false)} className="bg-[#d4d0c8] text-black border border-white px-1 text-[9px] leading-none cursor-pointer">X</button>
+                </div>
+                <div className="flex gap-3">
+                  <div className="shrink-0 text-amber-500 font-bold text-xl">⚠️</div>
+                  <div className="space-y-2 text-xs text-left">
+                    <p className="font-bold text-black">Vous êtes actuellement en Mode Hors-ligne !</p>
+                    <p className="text-[11px] text-slate-800">Le Service Worker a pris le relais pour vous servir les pages mises en cache.</p>
+                    <div className="flex gap-2 justify-end pt-1">
+                      <button onClick={() => { setIsEbookModalOpen(true); }} className="bg-[#d4d0c8] hover:bg-[#c0c0c0] border-2 border-outset border-white px-2 py-1 text-[11px] font-bold active:border-inset cursor-pointer text-black">
+                        Compiler Guide (.html)
+                      </button>
+                      <button onClick={() => setShowOfflineToast(false)} className="bg-[#d4d0c8] hover:bg-[#c0c0c0] border-2 border-outset border-white px-2 py-1 text-[11px] font-bold active:border-inset cursor-pointer text-black">
+                        Ignorer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {themeMode === 'terminal' && (
+              <div className="bg-black border border-[#ffb000] text-[#ffb000] p-4 w-96 font-mono shadow-[0_0_15px_rgba(255,176,0,0.4)] relative overflow-hidden scanlines">
+                <div className="flex justify-between items-center border-b border-[#ffb000]/40 pb-1.5 mb-2">
+                  <span className="text-xs font-bold tracking-widest uppercase flex items-center gap-1 text-[#ffb000]">
+                    <span className="animate-pulse">●</span> [WARNING: OFFLINE]
+                  </span>
+                  <button onClick={() => setShowOfflineToast(false)} className="text-[#ffb000] hover:text-white cursor-pointer text-xs">[_X_]</button>
+                </div>
+                <div className="space-y-2 text-[11px] text-left">
+                  <p className="font-bold text-[#ffb000]">CONNEXION RÉSEAU ROMPUE !</p>
+                  <p className="text-[#ffb000]/70">Le Service Worker gère l'acheminement local de vos requêtes éducatives.</p>
+                  <div className="flex gap-2 justify-end pt-1">
+                    <button onClick={() => { setIsEbookModalOpen(true); }} className="border border-[#ffb000] bg-[#ffb000]/10 hover:bg-[#ffb000]/25 text-[#ffb000] px-2 py-1 text-[10px] font-bold uppercase cursor-pointer">
+                      GENERATE_OFFLINE_BOOK.EXE
+                    </button>
+                    <button onClick={() => setShowOfflineToast(false)} className="border border-[#ffb000]/30 hover:border-[#ffb000]/60 text-[#ffb000]/60 hover:text-[#ffb000] px-2 py-1 text-[10px] uppercase cursor-pointer">
+                      DISMISS
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {themeMode === 'modern' && (
+              <div className="bg-[#0c0c0e]/95 backdrop-blur-md border border-[#2a2a2e] text-[#e0e0e0] p-4 rounded-xl w-96 shadow-2xl flex flex-col gap-2.5 font-sans">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+                      <WifiOff className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-100">Mode Hors-ligne Activé</h4>
+                      <span className="text-[10px] text-red-400 font-mono">Service Worker opérationnel</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setShowOfflineToast(false)} className="text-slate-500 hover:text-slate-350 transition cursor-pointer">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-xs text-slate-400 leading-normal text-left">
+                  Votre connexion a été interrompue. Pour continuer à étudier sans interruption, générez et téléchargez votre guide d'études complet.
+                </p>
+                <div className="flex gap-2 justify-end pt-1">
+                  <button onClick={() => { setIsEbookModalOpen(true); }} className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+                    Télécharger le guide
+                  </button>
+                  <button onClick={() => setShowOfflineToast(false)} className="bg-[#18181b] border border-slate-850 text-slate-350 hover:text-white hover:bg-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition">
+                    Ignorer
+                  </button>
+                </div>
+              </div>
+            )}
+          </motion.div>
         )}
       </AnimatePresence>
       </motion.div>

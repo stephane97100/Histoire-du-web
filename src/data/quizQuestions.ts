@@ -133,5 +133,50 @@ export const quizQuestions: QuizQuestion[] = [
     explanation: 'Sorti en 2013, React a popularisé le DOM virtuel (Virtual DOM) et le flux unidirectionnel de données, permettant des interfaces réactives fluides en écrivant du JSX déclaratif sans manipuler directement le DOM du navigateur de manière coûteuse.',
     category: 'servers_frameworks',
     difficulty: 'medium'
+  },
+  {
+    id: 'q13',
+    question: 'Quel protocole réseau fondamental, normalisé en 1985 (RFC 959), a été le moyen privilégié par les webmasters pendant plus de deux décennies pour publier leurs fichiers HTML/CSS sur un serveur d\'hébergement distant ?',
+    options: ['HTTP', 'FTP (File Transfer Protocol)', 'SMTP', 'SSH'],
+    correctAnswerIndex: 1,
+    explanation: 'Le protocole FTP (File Transfer Protocol) permettait de transférer les fichiers HTML, les images et les scripts CGI depuis la machine locale du développeur vers le serveur d\'hébergement (par exemple via des logiciels comme FileZilla). Il a été remplacé plus tard par SFTP, puis par les déploiements Git / CI-CD modernes.',
+    category: 'protocols',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q14',
+    question: 'Quel navigateur internet, développé par Marc Andreessen et Eric Bina au NCSA en 1993, est considéré comme le premier navigateur grand public à avoir popularisé le Web en intégrant les images directement au texte ?',
+    options: ['WorldWideWeb', 'NCSA Mosaic', 'Netscape Navigator', 'Internet Explorer 1.0'],
+    correctAnswerIndex: 1,
+    explanation: 'NCSA Mosaic, sorti en 1993, a révolutionné le Web en permettant l\'affichage d\'images de manière imbriquée ("inline") avec le texte grâce au support de la balise <img>, rendant le Web attractif et accessible pour le grand public.',
+    category: 'browsers',
+    difficulty: 'medium'
+  },
+  {
+    id: 'q15',
+    question: 'Rasmus Lerdorf a créé PHP en 1995. Quelle était la signification initiale de l\'acronyme PHP lors de sa première version publique ?',
+    options: ['PHP: Hypertext Preprocessor', 'Personal Home Page', 'Programming Hypertext Protocol', 'Private Hosting Platform'],
+    correctAnswerIndex: 1,
+    explanation: 'À l\'origine en 1995, PHP signifiait "Personal Home Page Tools", car Rasmus Lerdorf l\'avait codé sous forme d\'une suite d\'outils écrits en C pour analyser les visites sur sa page personnelle. L\'acronyme est devenu récursif ("PHP: Hypertext Preprocessor") plus tard avec PHP 3.',
+    category: 'servers_frameworks',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q16',
+    question: 'Dans les années 1990 et 2500, Python a été largement utilisé pour le développement web côté serveur. Quelle interface standardisée (PEP 333), créée en 2003, a unifié la communication entre les serveurs web et les applications web écrites en Python ?',
+    options: ['CGI', 'WSGI (Web Server Gateway Interface)', 'ASGI', 'FastCGI'],
+    correctAnswerIndex: 1,
+    explanation: 'WSGI (Web Server Gateway Interface) a fourni un standard universel pour connecter des frameworks Python (comme Django, Flask ou Zope) à divers serveurs web (comme Apache ou Nginx), favorisant la portabilité des applications web Python.',
+    category: 'servers_frameworks',
+    difficulty: 'hard'
+  },
+  {
+    id: 'q17',
+    question: 'Quel site communautaire historique lancé par Dave Shea en 2003 a magistralement prouvé au monde entier la puissance de séparation du CSS2 en appliquant des centaines de designs radicalement différents au même fichier HTML brut ?',
+    options: ['W3Schools', 'CSS Zen Garden', 'A List Apart', 'Slashdot'],
+    correctAnswerIndex: 1,
+    explanation: 'CSS Zen Garden est une démonstration académique légendaire. Dave Shea a invité les développeurs du monde entier à soumettre des feuilles de style CSS uniques s\'appliquant sur un seul et unique fichier HTML immuable, prouvant que le design visuel peut être totalement dissocié de la structure du contenu.',
+    category: 'css',
+    difficulty: 'medium'
   }
 ];

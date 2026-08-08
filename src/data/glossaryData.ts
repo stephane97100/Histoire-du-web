@@ -19,7 +19,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'target', description: 'Indique où ouvrir le lien (_blank pour nouvel onglet).', isDeprecated: false },
       { name: 'rel', description: 'Relation sémantique du lien (ex: nofollow, noreferrer).', isDeprecated: false }
     ],
-    retroTip: 'Dans les années 1990, sans feuilles de style CSS, l\'attribut color (via la balise <body link="...">) gérait globalement la couleur de tous les liens.'
+    retroTip: 'Dans les années 1990, sans feuilles de style CSS, l\'attribut color (via la balise <body link="...">) gérait globalement la couleur de tous les liens.',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v1.0+)',
+      netscape: 'Oui (v1.0+)'
+    }
   },
   {
     tag: 'img',
@@ -35,7 +42,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'width / height', description: 'Dimensions forcées en pixels ou pourcentages.', isDeprecated: false },
       { name: 'border', description: 'Épaisseur de la bordure entourant l\'image (souvent bleue si c\'est un lien).', isDeprecated: true }
     ],
-    retroTip: 'Avant le haut débit, on utilisait des "Spacer GIF" (images transparentes de 1x1 pixel) pour créer des espaces vides et forcer des largeurs de mise en page dans les tableaux.'
+    retroTip: 'Avant le haut débit, on utilisait des "Spacer GIF" (images transparentes de 1x1 pixel) pour créer des espaces vides et forcer des largeurs de mise en page dans les tableaux.',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v1.0+)',
+      netscape: 'Oui (v1.0+)'
+    }
   },
   {
     tag: 'table',
@@ -60,7 +74,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'cellspacing', description: 'Distance d\'espacement séparant les cellules.', isDeprecated: true },
       { name: 'width', description: 'Largeur du tableau (durcie en pixels ou pourcentages).', isDeprecated: true }
     ],
-    retroTip: 'Pour masquer l\'ossature, on écrivait <table border="0" cellpadding="0" cellspacing="0">. Le "Spacer GIF" était souvent inséré dans une cellule de tableau pour maintenir un espacement précis.'
+    retroTip: 'Pour masquer l\'ossature, on écrivait <table border="0" cellpadding="0" cellspacing="0">. Le "Spacer GIF" était souvent inséré dans une cellule de tableau pour maintenir un espacement précis.',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v1.5+)',
+      netscape: 'Oui (v1.1+)'
+    }
   },
   {
     tag: 'marquee',
@@ -75,7 +96,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'scrollamount', description: 'Vitesse de défilement (pixels par saut).', isDeprecated: true },
       { name: 'behavior', description: 'Type de mouvement : scroll (infini), slide (s\'arrête à la fin), alternate.', isDeprecated: true }
     ],
-    retroTip: 'Cette balise n\'a jamais fait partie des standards du W3C bien qu\'elle ait été implémentée par Firefox pour compatibilité historique. Elle fatigue grandement la lecture et nuit à l\'accessibilité.'
+    retroTip: 'Cette balise n\'a jamais fait partie des standards du W3C bien qu\'elle ait été implémentée par Firefox pour compatibilité historique. Elle fatigue grandement la lecture et nuit à l\'accessibilité.',
+    compatibility: {
+      chrome: 'Oui (Obsolète)',
+      firefox: 'Oui (Obsolète)',
+      safari: 'Oui (Obsolète)',
+      ie: 'Origine (v2.0+)',
+      netscape: 'Non supporté à l\'époque'
+    }
   },
   {
     tag: 'font',
@@ -90,7 +118,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'color', description: 'Couleur du texte.', isDeprecated: true },
       { name: 'size', description: 'Taille du texte (1-7).', isDeprecated: true }
     ],
-    retroTip: 'Répéter <font> à chaque paragraphe était l\'antithèse absolue de la sémantique et la raison d\'être de CSS : séparer le fond de la forme.'
+    retroTip: 'Répéter <font> à chaque paragraphe était l\'antithèse absolue de la sémantique et la raison d\'être de CSS : séparer le fond de la forme.',
+    compatibility: {
+      chrome: 'Obsolète',
+      firefox: 'Obsolète',
+      safari: 'Obsolète',
+      ie: 'Oui (v1.0+)',
+      netscape: 'Oui (v1.0+)'
+    }
   },
   {
     tag: 'blink',
@@ -101,7 +136,14 @@ export const glossaryTags: GlossaryTag[] = [
     codeSnippet: '<blink><span style="color: red; font-weight: bold;">🔥 ATTENTION - BUG DE L\'AN 2000 PROCHE ! 🔥</span></blink>',
     hasClosingTag: true,
     attributes: [],
-    retroTip: 'Nostalgie pure et bête noire des ergonomes ! Elle fut désactivée progressivement par tous les navigateurs modernes au milieu des années 2010.'
+    retroTip: 'Nostalgie pure et bête noire des ergonomes ! Elle fut désactivée progressivement par tous les navigateurs modernes au milieu des années 2010.',
+    compatibility: {
+      chrome: 'Non supporté',
+      firefox: 'Retiré (v23+)',
+      safari: 'Non supporté',
+      ie: 'Non supporté',
+      netscape: 'Origine (v1.0+)'
+    }
   },
   {
     tag: 'form',
@@ -120,7 +162,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'method', description: 'Méthode HTTP d\'envoi (GET transmet dans l\'URL, POST masque les données).', isDeprecated: false },
       { name: 'enctype', description: 'Type d\'encodage, indispensable pour uploader des fichiers (multipart/form-data).', isDeprecated: false }
     ],
-    retroTip: 'Avant le JavaScript asynchrone (AJAX), la soumission d\'un formulaire rechargeait obligatoirement la page entière. On validait son formulaire et on "attendait" le rechargement...'
+    retroTip: 'Avant le JavaScript asynchrone (AJAX), la soumission d\'un formulaire rechargeait obligatoirement la page entière. On validait son formulaire et on "attendait" le rechargement...',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v1.0+)',
+      netscape: 'Oui (v1.0+)'
+    }
   },
   {
     tag: 'canvas',
@@ -136,7 +185,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'width', description: 'Largeur intrinsèque de la surface.', isDeprecated: false },
       { name: 'height', description: 'Hauteur intrinsèque de la surface.', isDeprecated: false }
     ],
-    retroTip: 'L\'introduction de <canvas> a permis d\'enterrer les jeux Shockwave Flash en permettant un rendu 2D/3D dynamique haute fidélité natif, contrôlé par code JS.'
+    retroTip: 'L\'introduction de <canvas> a permis d\'enterrer les jeux Shockwave Flash en permettant un rendu 2D/3D dynamique haute fidélité natif, contrôlé par code JS.',
+    compatibility: {
+      chrome: 'Oui (v4.0+)',
+      firefox: 'Oui (v1.5+)',
+      safari: 'Oui (v2.0+)',
+      ie: 'Oui (v9.0+)',
+      netscape: 'Non supporté'
+    }
   },
   {
     tag: 'video',
@@ -155,7 +211,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'muted', description: 'Coupe le son d\'usine (requis pour l\'autoplay dans la plupart des navigateurs modernes).', isDeprecated: false },
       { name: 'poster', description: 'Image placeholder affichée avant le clic de lecture.', isDeprecated: false }
     ],
-    retroTip: 'Avant HTML5, regarder des vidéos nécessitait d\'installer Adobe Flash Player ou RealPlayer, qui plantaient souvent Windows et accumulaient les failles de sécurité.'
+    retroTip: 'Avant HTML5, regarder des vidéos nécessitait d\'installer Adobe Flash Player ou RealPlayer, qui plantaient souvent Windows et accumulaient les failles de sécurité.',
+    compatibility: {
+      chrome: 'Oui (v4.0+)',
+      firefox: 'Oui (v3.5+)',
+      safari: 'Oui (v4.0+)',
+      ie: 'Oui (v9.0+)',
+      netscape: 'Non supporté'
+    }
   },
   {
     tag: 'iframe',
@@ -170,7 +233,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'frameborder', description: 'Active ou non la bordure biseautée par défaut autour de la boîte.', isDeprecated: true },
       { name: 'sandbox', description: 'Restreint les scripts et les formulaires de l\'iframe pour renforcer la sécurité.', isDeprecated: false }
     ],
-    retroTip: 'Les "framesets" et "iframes" étaient très utilisés au tournant de l\'an 2000 pour conserver fixe la barre de lecture audio MP3 d\'un site tandis que les pages de contenu s\'actualisaient à côté.'
+    retroTip: 'Les "framesets" et "iframes" étaient très utilisés au tournant de l\'an 2000 pour conserver fixe la barre de lecture audio MP3 d\'un site tandis que les pages de contenu s\'actualisaient à côté.',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v3.0+)',
+      netscape: 'Oui (v6.0+)'
+    }
   },
   {
     tag: 'script',
@@ -187,7 +257,14 @@ export const glossaryTags: GlossaryTag[] = [
       { name: 'type', description: 'Indique le langage (ex: text/javascript, module, ou historiquement text/vbscript).', isDeprecated: false },
       { name: 'async / defer', description: 'Charge et exécute de manière non bloquante vis-à-vis du parseur HTML.', isDeprecated: false }
     ],
-    retroTip: 'Pour masquer le code JavaScript aux très vieux navigateurs incapables de le lire (qui l\'affichaient directement au milieu de la mise en page), on encapsulait le code à l\'intérieur de commentaires HTML : <!-- code... // -->'
+    retroTip: 'Pour masquer le code JavaScript aux très vieux navigateurs incapables de le lire (qui l\'affichaient directement au milieu de la mise en page), on encapsulait le code à l\'intérieur de commentaires HTML : <!-- code... // -->',
+    compatibility: {
+      chrome: 'Oui (v1.0+)',
+      firefox: 'Oui (v1.0+)',
+      safari: 'Oui (v1.0+)',
+      ie: 'Oui (v3.0+)',
+      netscape: 'Oui (v2.0+)'
+    }
   },
   {
     tag: 'API',
@@ -198,7 +275,14 @@ export const glossaryTags: GlossaryTag[] = [
     codeSnippet: 'fetch("https://api.example.com/data", { headers: { "Authorization": "Bearer KEY" } })',
     hasClosingTag: false,
     attributes: [],
-    retroTip: 'Avant la généralisation des API modernes, l\'intégration de services tiers nécessitait des méthodes propriétaires complexes, souvent basées sur SOAP ou des fichiers plats échangés par FTP.'
+    retroTip: 'Avant la généralisation des API modernes, l\'intégration de services tiers nécessitait des méthodes propriétaires complexes, souvent basées sur SOAP ou des fichiers plats échangés par FTP.',
+    compatibility: {
+      chrome: 'Oui',
+      firefox: 'Oui',
+      safari: 'Oui',
+      ie: 'Oui (v5.0+ via ActiveX)',
+      netscape: 'Oui (v6.0+)'
+    }
   },
   {
     tag: 'SaaS',
@@ -209,18 +293,32 @@ export const glossaryTags: GlossaryTag[] = [
     codeSnippet: '// Exemple de vérification d\'abonnement SaaS\nif (user.subscription.active) { ... }',
     hasClosingTag: false,
     attributes: [],
-    retroTip: 'Le SaaS a signé la fin des boîtes logicielles vendues en magasin avec des disquettes ou des CD-ROM de licences physiques.'
+    retroTip: 'Le SaaS a signé la fin des boîtes logicielles vendues en magasin avec des disquettes ou des CD-ROM de licences physiques.',
+    compatibility: {
+      chrome: 'Oui',
+      firefox: 'Oui',
+      safari: 'Oui',
+      ie: 'Oui (v6.0+)',
+      netscape: 'Oui (v6.0+)'
+    }
   },
   {
     tag: 'JSON',
     isHtmlTag: false,
     version: 'html5',
-    category: 'text',
+    category: 'script',
     description: 'JavaScript Object Notation : format léger d\'échange de données textuelles, devenu le standard universel pour les API.',
     codeSnippet: '{ "id": 1, "nom": "API", "type": "JSON" }',
     hasClosingTag: false,
     attributes: [],
-    retroTip: 'JSON a supplanté le format XML, jugé trop verbeux et complexe à parser côté client pour des échanges rapides.'
+    retroTip: 'JSON a supplanté le format XML, jugé trop verbeux et complexe à parser côté client pour des échanges rapides.',
+    compatibility: {
+      chrome: 'Oui (v3.0+)',
+      firefox: 'Oui (v3.5+)',
+      safari: 'Oui (v4.0+)',
+      ie: 'Oui (v8.0+)',
+      netscape: 'Non supporté'
+    }
   },
   {
     tag: 'Fetch API',
@@ -231,7 +329,14 @@ export const glossaryTags: GlossaryTag[] = [
     codeSnippet: 'fetch(url).then(res => res.json()).then(data => console.log(data));',
     hasClosingTag: false,
     attributes: [],
-    retroTip: 'Fetch a remplacé le vieillissant XMLHttpRequest, offrant une syntaxe plus lisible basée sur les Promesses.'
+    retroTip: 'Fetch a remplacé le vieillissant XMLHttpRequest, offrant une syntaxe plus lisible basée sur les Promesses.',
+    compatibility: {
+      chrome: 'Oui (v42+)',
+      firefox: 'Oui (v39+)',
+      safari: 'Oui (v10.1+)',
+      ie: 'Non (Polyfill requis)',
+      netscape: 'Non'
+    }
   },
   {
     tag: 'Rate Limiting',
@@ -242,6 +347,13 @@ export const glossaryTags: GlossaryTag[] = [
     codeSnippet: '// Exemple de réponse en cas d\'abus\n{ "error": "Too Many Requests", "retry_after": 60 }',
     hasClosingTag: false,
     attributes: [],
-    retroTip: 'Le Rate Limiting est indispensable pour protéger les ressources des API et assurer une qualité de service équitable à tous les utilisateurs.'
+    retroTip: 'Le Rate Limiting est indispensable pour protéger les ressources des API et assurer une qualité de service équitable à tous les utilisateurs.',
+    compatibility: {
+      chrome: 'Oui (Côté serveur/API proxy)',
+      firefox: 'Oui (Côté serveur/API proxy)',
+      safari: 'Oui (Côté serveur/API proxy)',
+      ie: 'Oui (Côté serveur/API proxy)',
+      netscape: 'Oui (Côté serveur/API proxy)'
+    }
   }
 ];

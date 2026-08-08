@@ -1078,9 +1078,9 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
   }
   palette.image = resolvedImg;
 
-  const title = "Atelier de Design Concis";
-  const desc = "Apprenez les origines du World Wide Web. Réduisez le gaspillage de paquets numériques en optimisant vos balises sémantiques primitives. Moins de 500 lignes de code, c'est un temps de réponse instantané et une économie d'énergie pour la planète.";
-  const cta = "COMMENCER L'INTÉGRATION";
+  const title = "Musée de l'Histoire du Web";
+  const desc = "Cette application interactive vous plonge dans l'histoire passionnante du développement web et de ses révolutions technologiques. Explorez l'évolution des langages fondateurs (HTML, CSS, JavaScript) et des technologies oubliées comme VBScript, tout en découvrant l'épopée des navigateurs mythiques.<br><br><b>Aperçu des sections disponibles :</b><br>• 📅 <b>Frise Chronologique :</b> Retracez l'évolution pas à pas du HTML1 au HTML5, et du CSS1 au CSS3.<br>• 📖 <b>Glossaire & Bac à sable :</b> Un dictionnaire interactif complet des balises historiques.<br>• 🏆 <b>Quiz d'Histoire :</b> Testez vos connaissances sur les protocoles, les guerres des navigateurs et relevez le défi d'identifier des scripts en JavaScript vs VBScript !";
+  const cta = "COMMENCER L'EXPLORATION";
 
   // HTML 1.0 logic
   if (html === 'html1') {
@@ -1110,10 +1110,10 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
 
 <p>
   Accéder à la formation en direct :<br>
-  <a href="#action"><b>==> ${cta} <==</b></a>
+  <a href="#action" onclick="alert('Bonjour de la part de Netscape Navigator 2.0 ! JavaScript a été inventé cette année en 1995 par Brendan Eich en seulement 10 jours sous le nom de LiveScript.'); return false;"><b>==> ${cta} <==</b></a>
 </p>
 
-<!-- EXPLICATION PEDAGOGIQUE : HTML 2.0 (RFC 1866) ajoute les formulaires et le support officiel du tag d'images IMG. Mais l'alignement et la couleur de fond sont encore impossibles sans attributs du corps. -->`;
+<!-- EXPLICATION PEDAGOGIQUE : HTML 2.0 (RFC 1866) ajoute les formulaires et le support officiel du tag d'images IMG. JavaScript fait son apparition pour la première fois cette même année (1995) dans Netscape Navigator 2.0 ! -->`;
   }
 
   // HTML 3.2 logic (tables, font attributes, center, background color)
@@ -1136,7 +1136,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
       <font face="Arial, sans-serif" size="3">
         <p>${desc}</p>
         <p>
-          <a href="#start"><b><font color="${palette.primary}">[ ${cta} ]</font></b></a>
+          <a href="#start" onclick="return demarrerDemo();"><b><font color="${palette.primary}">[ ${cta} ]</font></b></a>
         </p>
       </font>
     </td>
@@ -1147,6 +1147,13 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     </td>
   </tr>
 </table>
+
+<script type="text/javascript">
+  function demarrerDemo() {
+    alert("Interaction HTML 3.2 (1997) ! À cette époque, nous utilisions des fonctions de script simples pour animer le texte de la barre de statut ou créer de petites alertes modales.");
+    return false;
+  }
+</script>
 
 </body>`;
       }
@@ -1173,8 +1180,15 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
   </table>
 
   <br>
-  <a href="#cta"><b><font size="4" color="${palette.primary}">[Cliquez ici : ${cta}]</font></b></a>
+  <a href="#cta" onclick="return demarrerAction();"><b><font size="4" color="${palette.primary}">[Cliquez ici : ${cta}]</font></b></a>
 </center>
+
+<script type="text/javascript">
+  function demarrerAction() {
+    alert("Bonjour ! HTML 3.2 (1997) est l'époque de la standardisation de JavaScript par l'ECMA sous la norme ECMA-262 (Edition 1).");
+    return false;
+  }
+</script>
 
 </body>`;
     }
@@ -1191,7 +1205,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
   <h1>${title}</h1>
   <p><img class="illustration" src="${palette.image}" width="240" alt="Illustration code" /></p>
   <p>${desc}</p>
-  <p><a href="#demo"><b>[ === ${cta} === ]</b></a></p>
+  <p><a href="#demo" onclick="alert('JavaScript 1.2 est actif ! En 1997, Netscape 4.0 et IE 4.0 se faisaient la guerre pour intégrer les premiers calques dynamiques DHTML.'); return false;"><b>[ === ${cta} === ]</b></a></p>
 </center>`;
   }
 
@@ -1221,8 +1235,18 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
   <div class="card-element">
     <p>${desc}</p>
     <p><img src="${palette.image}" width="200" alt="Code base" style="border: 1px solid ${palette.primary};"></p>
-    <p><a href="#run" class="action-link">${cta}</a></p>
+    <p><a href="#run" id="actionBtn" class="action-link">${cta}</a></p>
   </div>
+
+  <script type="text/javascript">
+    var btn = document.getElementById("actionBtn");
+    if (btn) {
+      btn.onclick = function() {
+        alert("DHTML d'époque 1999 ! Nous utilisons ici le DOM primitif de l'HTML 4.01 pour capturer l'événement de clic de façon externe à la balise.");
+        return false;
+      };
+    }
+  </script>
 
 </body>
 </html>`;
@@ -1252,7 +1276,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     <div class="col-left">
       <p>${desc}</p>
       <p style="margin-top:20px;">
-        <a href="#action" class="cta-button">${cta}</a>
+        <a href="#action" id="ctaBtn" class="cta-button">${cta}</a>
       </p>
     </div>
     
@@ -1262,6 +1286,16 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     
     <div class="cleaner"></div>
   </div>
+
+  <script type="text/javascript">
+    var btn = document.getElementById("ctaBtn");
+    if (btn) {
+      btn.onclick = function() {
+        alert("Action 2004 ! C'est le début de l'ère AJAX (Asynchronous JavaScript And XML) popularisée par Gmail, permettant des échanges de données en arrière-plan sans recharger la page.");
+        return false;
+      };
+    }
+  </script>
 
 </body>
 </html>`;
@@ -1273,6 +1307,41 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     const borderStyle = isBrutalist ? '4px solid #000000' : '1px solid var(--border)';
     const shadowStyle = isBrutalist ? '6px 6px 0px #000000' : '0 10px 25px -5px rgba(0,0,0,0.1)';
     const radiusStyle = isBrutalist ? '0px' : '12px';
+
+    const es6Script = `
+  <script>
+    // Script Moderne ES6 sémantique
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.querySelector('.btn') || document.querySelector('.btn-link') || document.querySelector('.cta-btn');
+      if (btn) {
+        let clicks = 0;
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          clicks++;
+          btn.textContent = 'REÇU ! (' + clicks + ' CLIC' + (clicks > 1 ? 'S' : '') + ')';
+          
+          // Toast notification dynamique
+          let toast = document.createElement('div');
+          toast.style.position = 'fixed';
+          toast.style.bottom = '20px';
+          toast.style.right = '20px';
+          toast.style.background = '${palette.primary}';
+          toast.style.color = '${palette.btnText}';
+          toast.style.padding = '12px 20px';
+          toast.style.borderRadius = '8px';
+          toast.style.fontFamily = 'system-ui, sans-serif';
+          toast.style.fontSize = '12px';
+          toast.style.fontWeight = 'bold';
+          toast.style.boxShadow = '0 10px 15px rgba(0,0,0,0.3)';
+          toast.style.zIndex = '99999';
+          toast.textContent = 'Interactivité HTML5/CSS3 active ! ' + clicks + ' action(s) enregistrée(s).';
+          
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 2500);
+        });
+      }
+    });
+  </script>`;
 
     if (css === 'none' || css === 'css1') {
       return `<!-- === LANDING ACADÉMIQUE SÉMANTIQUE (HTML5 SANS FEUILLE COMPARTIMENTÉE) === -->
@@ -1292,7 +1361,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     <article style="background-color: ${palette.surface}; border: 1px solid ${palette.border}; padding: 20px;">
       <p>${desc}</p>
       <p><img src="${palette.image}" width="100%" alt="Visual sémantique" style="max-height: 200px; object-fit: cover;"></p>
-      <button style="background: ${palette.primary}; color: ${palette.btnText}; border: none; padding: 10px 20px; font-weight: bold;">
+      <button class="btn-link" style="background: ${palette.primary}; color: ${palette.btnText}; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer;">
         ${cta}
       </button>
     </article>
@@ -1301,6 +1370,8 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
   <footer>
     <p style="font-size: 11px; opacity: 0.6;">Conçu pour le Musée d'Apprentissage du Code Web / 2026</p>
   </footer>
+
+  ${es6Script}
 
 </body>
 </html>`;
@@ -1337,6 +1408,8 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     </div>
   </main>
 
+  ${es6Script}
+
 </body>
 </html>`;
     }
@@ -1367,7 +1440,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     .card-img { grid-column: span 1; padding: 0; overflow: hidden; position: relative; min-height: 140px; }
     .card-img img { width: 100%; height: 100%; object-fit: cover; }
     h1 { color: var(--primary); font-size: 24px; font-weight: 800; }
-    .btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 10px 20px; text-decoration: none; border-radius: 99px; font-weight: bold; align-self: start; transition: transform 0.2s; }
+    .btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 10px 20px; text-decoration: none; border-radius: 99px; font-weight: bold; align-self: start; transition: transform 0.2s; cursor: pointer; }
     .btn:hover { transform: translateY(-2px); }
   </style>
 </head>
@@ -1388,6 +1461,8 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
       <img src="${palette.image}" alt="Bento visual display" />
     </div>
   </div>
+
+  ${es6Script}
 
 </body>
 </html>`;
@@ -1413,7 +1488,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     .row { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 15px; }
     .content-area { flex: 1; min-width: 250px; }
     .thumbnail { width: 140px; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-    .cta-btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 15px; }
+    .cta-btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 15px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -1455,7 +1530,7 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     .col-visual { flex: 0.8; min-width: 240px; min-height: 240px; position: relative; }
     .col-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
     h1 { color: var(--primary); font-size: 22px; font-weight: 750; margin-bottom: 15px; }
-    .btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; align-self: flex-start; margin-top: 15px; }
+    .btn { display: inline-block; background: var(--primary); color: ${palette.btnText}; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; align-self: flex-start; margin-top: 15px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -1470,6 +1545,8 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
       <img src="${palette.image}" alt="Mockup Visual Banner" />
     </div>
   </div>
+
+  ${es6Script}
 
 </body>
 </html>`;
@@ -1536,11 +1613,12 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
       display: inline-block;
       background-color: var(--primary);
       color: ${palette.btnText};
-      border-none;
+      border: none;
       padding: 10px 24px;
       font-weight: bold;
       text-decoration: none;
       border-radius: 4px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -1555,6 +1633,8 @@ function generateLandingCode(structure: string, stylePreset: string, html: strin
     
     <a href="#action" class="btn-link">${cta}</a>
   </main>
+
+  ${es6Script}
 
 </body>
 </html>`;

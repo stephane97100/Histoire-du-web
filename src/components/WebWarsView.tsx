@@ -29,12 +29,13 @@ import {
   Flame,
   FileCode,
   Eye,
-  Settings
+  Settings,
+  ShieldAlert
 } from 'lucide-react';
 
 interface WebWarsViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
-  warId: 'integration' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war';
+  warId: 'integration' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war' | 'apache_vs_nginx' | 'js_engines';
 }
 
 export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
@@ -268,6 +269,123 @@ export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
     }, 200);
   };
 
+  // --- WAR 6: APACHE vs NGINX ---
+  const [serverSimRunning, setServerSimRunning] = useState<boolean>(false);
+  const [serverSimProgress, setServerSimProgress] = useState<number>(0);
+  const [serverSimRequests, setServerSimRequests] = useState<number>(100);
+  const [serverLogs, setServerLogs] = useState<string[]>([]);
+  const [activeServerTab, setActiveServerTab] = useState<'apache' | 'nginx'>('apache');
+  const [apacheMemory, setApacheMemory] = useState<number>(128); // MB
+  const [nginxMemory, setNginxMemory] = useState<number>(14); // MB
+  const [apacheResponseTime, setApacheResponseTime] = useState<number>(45); // ms
+  const [nginxResponseTime, setNginxResponseTime] = useState<number>(4); // ms
+  const [apacheFailureRate, setApacheFailureRate] = useState<number>(0); // %
+  const [nginxFailureRate, setNginxFailureRate] = useState<number>(0); // %
+
+  const runServerBenchmark = () => {
+    if (serverSimRunning) return;
+    setServerSimRunning(true);
+    setServerSimProgress(0);
+    setServerSimRequests(100);
+    setApacheMemory(128);
+    setNginxMemory(14);
+    setApacheResponseTime(45);
+    setNginxResponseTime(4);
+    setApacheFailureRate(0);
+    setNginxFailureRate(0);
+    setServerLogs(['[Simulation lancée...] Établissement de la connexion...']);
+    playSfx(400, 'triangle', 0.15);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setServerSimProgress(progress);
+
+      setServerSimRequests(r => {
+        const nextRequests = Math.min(10000, r + 990);
+        
+        setApacheMemory(m => {
+          if (nextRequests > 5000) {
+            setApacheFailureRate(fr => Math.min(95, fr + 8));
+            setApacheResponseTime(rt => rt + 80);
+            return Math.min(2048, m + 180);
+          }
+          setApacheResponseTime(rt => rt + 15);
+          return m + 35;
+        });
+
+        setNginxMemory(m => {
+          setNginxResponseTime(rt => Math.min(8, rt + 0.3));
+          return Math.min(18, m + 0.4);
+        });
+
+        if (nextRequests === 1090) {
+          setServerLogs(prev => [`[INFO] Trafic en hausse : 1000 connexions actives. Apache consomme plus de processus.`, ...prev]);
+          playSfx(500, 'sine', 0.05);
+        } else if (nextRequests === 5050) {
+          setServerLogs(prev => [
+            `[WARN] Apache thread pool saturé. Lancement de nouveaux processus lourds...`,
+            `[INFO] Nginx gère l'event-loop asynchrone (epoll/kqueue) sans créer de nouveaux threads.`,
+            ...prev
+          ]);
+          playSfx(400, 'square', 0.08);
+        } else if (nextRequests === 10000) {
+          setServerLogs(prev => [
+            `🔴 [CRASH] Apache : Erreur de segmentation ou Timeout sur 32% des sockets !`,
+            `🟢 [OK] Nginx : 10 000 requêtes gérées avec brio en asynchrone sans faiblir.`,
+            `✅ Simulation C10k terminée avec succès !`,
+            ...prev
+          ]);
+          playSfx(600, 'sine', 0.2);
+        }
+
+        return nextRequests;
+      });
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        setServerSimRunning(false);
+      }
+    }, 250);
+  };
+
+  // --- WAR 7: JS ENGINES ---
+  const [engineType, setEngineType] = useState<'standard' | 'v8'>('standard');
+  const [executionRunning, setExecutionRunning] = useState<boolean>(false);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+  const [engineLogs, setEngineLogs] = useState<string[]>([]);
+
+  const runJsEngineBenchmark = () => {
+    if (executionRunning) return;
+    setExecutionRunning(true);
+    setExecutionTime(null);
+    setEngineLogs(['[JS Code Executor] Lancement du benchmark algorithmique...', 'Calcul de la suite de Fibonacci (N=35)...']);
+    playSfx(300, 'sine', 0.1);
+
+    setTimeout(() => {
+      if (engineType === 'standard') {
+        setExecutionTime(2450);
+        setEngineLogs(prev => [
+          ...prev,
+          '🐢 Interprétation ligne par ligne de l\'AST (Arbre Syntaxique Abstrait)...',
+          '⚠️ Garbage Collector bloquant détecté (Stop-the-world de 150ms).',
+          '❌ Temps total de calcul : 2450 ms'
+        ]);
+        playSfx(150, 'square', 0.4);
+      } else {
+        setExecutionTime(12);
+        setEngineLogs(prev => [
+          ...prev,
+          '🚀 Compilateur JIT V8 : Traduction directe à la volée vers du code machine assembleur natif !',
+          '🔥 Optimisation adaptative (Crankshaft/TurboFan) active.',
+          '✅ Temps total de calcul : 12 ms (Performance brute)'
+        ]);
+        playSfx(880, 'sine', 0.2);
+      }
+      setExecutionRunning(false);
+    }, 1200);
+  };
+
   return (
     <div className="space-y-6" id={`web-war-${warId}`}>
       
@@ -468,32 +586,32 @@ export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
             <div className="flex items-center gap-3">
               <Layers className="w-5 h-5 text-indigo-400 animate-pulse shrink-0" />
               <div>
-                <h2 className="text-xs font-bold leading-none uppercase">La sécession des standards : XHTML (W3C) vs HTML5 (WHATWG)</h2>
-                <p className="text-[10px] opacity-75 mt-0.5">Années 2004 - 2010 • La guerre de la tolérance syntaxique contre le dogmatisme XML.</p>
+                <h2 className="text-xs font-bold leading-none uppercase">La rébellion des standards : W3C (XHTML) vs. WHATWG (HTML5)</h2>
+                <p className="text-[10px] opacity-75 mt-0.5">Années 2004 - 2010 • La pureté théorique contre le pragmatisme du web.</p>
               </div>
             </div>
-            <span className={css.badgeWinner}>Vainqueur : HTML5 (WHATWG)</span>
+            <span className={css.badgeWinner}>Vainqueur : WHATWG (HTML5)</span>
           </div>
 
           <div className="bg-slate-800/60 rounded-xl p-5 border border-slate-750 text-left space-y-3 text-xs leading-relaxed">
             <p>
-              <strong className={css.accentText}>Le conflit :</strong> C'est une guerre institutionnelle. Le W3C (le consortium qui dirige le web) voulait imposer le XHTML, une version ultra-stricte basée sur le XML. La règle était brutale : si tu oubliais de fermer une seule balise dans ton code, le navigateur affichait une page d'erreur fatale (Yellow Screen of Death) et bloquait tout le site.
+              <strong className={css.accentText}>Le conflit :</strong> Celle-ci est moins connue du grand public mais fondamentale pour ceux qui écrivent du code.
             </p>
             <p>
-              Face à ce dogmatisme, les créateurs de navigateurs (Apple, Mozilla, Opera) se sont rebellés, ont fondé le WHATWG, et ont créé le HTML5.
+              <strong className="text-rose-400">Le combat :</strong> Au début des années 2000, le W3C (l'organisme officiel du web) voulait forcer le web à devenir strict avec XHTML 2.0. Si vous oubliez de fermer une balise, la page entière plante. Une approche théorique pure, mais catastrophique pour la réalité du web. Des développeurs de chez Apple, Mozilla et Opera se sont rebellés, ont fondé le WHATWG dans leur coin, et ont commencé à travailler sur HTML5, une évolution pragmatique, rétrocompatible et indulgente envers les erreurs de code.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="bg-rose-950/10 border border-rose-500/20 p-3 rounded-lg">
-                <span className="font-extrabold text-rose-400 block mb-1">📐 XHTML</span>
-                <p className="text-[11px] text-slate-350">La pureté du code, tolérance zéro pour les erreurs.</p>
+                <span className="font-extrabold text-rose-400 block mb-1">📐 XHTML (W3C)</span>
+                <p className="text-[11px] text-slate-350">La pureté du code rigide et strict. Tolérance zéro pour les erreurs syntaxiques sous peine de bloquer tout le rendu (Yellow Screen of Death).</p>
               </div>
               <div className="bg-emerald-950/10 border border-emerald-500/20 p-3 rounded-lg">
-                <span className="font-extrabold text-emerald-400 block mb-1">🛠️ HTML5</span>
-                <p className="text-[11px] text-slate-350">Le pragmatisme, on pardonne les erreurs de code pour ne pas casser les sites existants, et on ajoute des fonctionnalités utiles (vidéo, audio).</p>
+                <span className="font-extrabold text-emerald-400 block mb-1">🛠️ HTML5 (WHATWG)</span>
+                <p className="text-[11px] text-slate-350">Le pragmatisme d'abord. On pardonne les erreurs d'imbrication ou de fermeture pour que l'expérience utilisateur reste fluide et ininterrompue.</p>
               </div>
             </div>
             <p className="text-[11.5px] border-t border-slate-800 pt-2">
-              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> Le HTML5. Le W3C a fini par abandonner le XHTML pour se rallier à la vision du WHATWG.
+              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> Le WHATWG. Le W3C a finalement dû abandonner XHTML 2.0 et adopter HTML5. Aujourd'hui, c'est le WHATWG qui a le contrôle quasi total sur ce qu'est le standard HTML.
             </p>
           </div>
 
@@ -620,29 +738,32 @@ export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
             <div className="flex items-center gap-3">
               <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse shrink-0" />
               <div>
-                <h2 className="text-xs font-bold leading-none uppercase">La guerre de l'interactivité : Adobe Flash vs Open Web (HTML5/JS)</h2>
-                <p className="text-[10px] opacity-75 mt-0.5">Fin des années 2000 - 2010 • Plugins fermés vs Standards ouverts et optimisés.</p>
+                <h2 className="text-xs font-bold leading-none uppercase">La guerre du multimédia : Adobe Flash vs. HTML5</h2>
+                <p className="text-[10px] opacity-75 mt-0.5">Fin des années 2000 - 2010 • Plugins propriétaires vs Standards ouverts.</p>
               </div>
             </div>
-            <span className={css.badgeWinner}>Vainqueur : Open Web (HTML5/JS)</span>
+            <span className={css.badgeWinner}>Vainqueur : HTML5 / Standards ouverts</span>
           </div>
 
           <div className="bg-slate-800/60 rounded-xl p-5 border border-slate-750 text-left space-y-3 text-xs leading-relaxed">
             <p>
-              <strong className={css.accentText}>Le conflit :</strong> Pendant 10 ans, Flash était le roi incontesté. Si tu voulais de la vidéo, des animations fluides, des jeux ou des interfaces interactives, tu utilisais ce plugin propriétaire d'Adobe. Le web "standard" en HTML/JS était jugé trop lent et limité.
+              <strong className={css.accentText}>Le conflit :</strong> Pendant des années, le web natif était trop pauvre pour offer des animations fluides, de la vidéo ou des jeux complexes. Adobe Flash dominait le marché de manière écrasante : si on voulait de l'interactivité avancée, il fallait installer le plugin.
+            </p>
+            <p>
+              <strong className="text-indigo-400">Le combat :</strong> L'arrivée du W3C et du WHATWG avec la spécification HTML5 (intégrant nativement les balises &lt;video&gt;, &lt;canvas&gt;, etc.) a commencé à menacer Flash. Le coup de grâce a été porté en 2010 par Steve Jobs avec sa lettre ouverte "Thoughts on Flash", interdisant la technologie sur iOS pour des raisons de performances, de batterie et de sécurité.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="bg-rose-950/10 border border-rose-500/20 p-3 rounded-lg">
-                <span className="font-extrabold text-rose-400 block mb-1">🎮 Le camp Flash</span>
-                <p className="text-[11px] text-slate-350">Des expériences riches, créatives, qui fonctionnent à l'identique partout (grâce au plugin).</p>
+                <span className="font-extrabold text-rose-400 block mb-1">🎮 Adobe Flash</span>
+                <p className="text-[11px] text-slate-350">Un plugin propriétaire puissant mais lourd, gourmand en batterie, non indexable par Google, et criblé de failles critiques de sécurité.</p>
               </div>
               <div className="bg-emerald-950/10 border border-emerald-500/20 p-3 rounded-lg">
-                <span className="font-extrabold text-emerald-400 block mb-1">🌐 Le camp HTML5/JS</span>
-                <p className="text-[11px] text-slate-350">Flash est lourd, fermé, plein de failles de sécurité, inaccessible aux moteurs de recherche, et pompe la batterie.</p>
+                <span className="font-extrabold text-emerald-400 block mb-1">🌐 HTML5 / standards ouverts</span>
+                <p className="text-[11px] text-slate-350">Rendu matériel natif ultra-rapide via &lt;canvas&gt;, lecteur vidéo intégré sans dépendance, sécurité maximale garantie par le navigateur.</p>
               </div>
             </div>
             <p className="text-[11.5px] border-t border-slate-800 pt-2">
-              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> Le Web ouvert. Le coup de grâce a été porté par Steve Jobs en 2010 avec sa célèbre lettre ouverte "Thoughts on Flash", interdisant purement et simplement Flash sur l'iPhone.
+              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> HTML5 et les standards ouverts du web (JavaScript/CSS3). Flash a officiellement été mis à mort fin 2020.
             </p>
           </div>
 
@@ -781,29 +902,36 @@ export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
             <div className="flex items-center gap-3">
               <Zap className="w-5 h-5 text-indigo-400 animate-pulse shrink-0" />
               <div>
-                <h2 className="text-xs font-bold leading-none uppercase">La guerre des paradigmes Front-End : Angular vs React</h2>
-                <p className="text-[10px] opacity-75 mt-0.5">Les années 2010 • Framework complet &amp; Liaison bidirectionnelle vs Bibliothèque &amp; DOM Virtuel.</p>
+                <h2 className="text-xs font-bold leading-none uppercase">La guerre des frameworks Front-End : Angular vs. React vs. Vue</h2>
+                <p className="text-[10px] opacity-75 mt-0.5">Les années 2010 • Composants réutilisables vs Frameworks prescriptifs.</p>
               </div>
             </div>
-            <span className={css.badgeWinner}>Vainqueur : React (Popularité &amp; Influence)</span>
+            <span className={css.badgeWinner}>Vainqueur : React (Écosystème dominant)</span>
           </div>
 
           <div className="bg-slate-800/60 rounded-xl p-5 border border-slate-750 text-left space-y-3 text-xs leading-relaxed">
             <p>
-              <strong className={css.accentText}>Le conflit :</strong> Avec la montée en puissance de JavaScript, les sites sont devenus de véritables applications (les SPA - Single Page Applications). Il fallait des outils massifs pour gérer la complexité croissante des données et de l'interface utilisateur.
+              <strong className={css.accentText}>Le conflit :</strong> Une fois que JavaScript s'est imposé comme le seul maître du navigateur (après avoir enterré VBScript) et que les applications web sont devenues de plus en plus complexes (les fameuses Single Page Applications ou SPA), la bataille s'est déplacée sur la façon de structurer ce code.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <p>
+              <strong className="text-indigo-400">Le combat :</strong> Au début des années 2010, Google a lancé AngularJS, imposant une architecture lourde et complète. Facebook a contre-attaqué avec React, introduisant le concept de DOM virtuel et une approche basée sur des composants beaucoup plus flexibles. Plus tard, Vue.js est arrivé comme l'outsider indépendant, prenant le meilleur des deux mondes.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
               <div className="bg-rose-950/10 border border-rose-500/20 p-3 rounded-lg">
                 <span className="font-extrabold text-rose-400 block mb-1">🛡️ Angular (Google)</span>
-                <p className="text-[11px] text-slate-350">Un framework lourd et complet. Il utilisait le <strong className="text-rose-300">two-way data binding</strong> (liaison bidirectionnelle automatique : si la donnée change, l'interface change, et vice versa) et imposait une architecture stricte (MVC).</p>
+                <p className="text-[10.5px] text-slate-350">Un framework d'entreprise complet et structuré, particulièrement robuste pour les projets complexes et les équipes à grande échelle.</p>
               </div>
               <div className="bg-emerald-950/10 border border-emerald-500/20 p-3 rounded-lg">
                 <span className="font-extrabold text-emerald-400 block mb-1">⚛️ React (Facebook)</span>
-                <p className="text-[11px] text-slate-350">Une simple bibliothèque (et non un framework complet) qui a introduit un concept choquant à l'époque : le <strong className="text-emerald-300">Virtual DOM</strong> et le fait de mélanger HTML et JavaScript dans le même fichier (le JSX).</p>
+                <p className="text-[10.5px] text-slate-350">Une bibliothèque axée sur l'UI, introduisant le Virtual DOM pour des mises à jour extrêmement rapides et une grande liberté d'outils complémentaires.</p>
+              </div>
+              <div className="bg-cyan-950/10 border border-cyan-500/20 p-3 rounded-lg">
+                <span className="font-extrabold text-cyan-400 block mb-1">🟢 Vue.js (Communauté)</span>
+                <p className="text-[10.5px] text-slate-350">L'alternative progressiste créée par Evan You. Combine l'élégance de React avec la simplicité du HTML/CSS d'AngularJS.</p>
               </div>
             </div>
             <p className="text-[11.5px] border-t border-slate-800 pt-2">
-              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> Pas de mort définitive (les deux restent très utilisés), mais React a largement remporté la bataille de la popularité et de l'influence, imposant son modèle basé sur les composants à toute l'industrie (inspirant même Vue.js).
+              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> Actuellement, React domine très largement l'écosystème professionnel et la communauté, bien qu'Angular reste fort dans les sphères Enterprise (souvent couplé à des back-ends stricts) et que Vue conserve une base de fans très fidèle grâce à sa courbe d'apprentissage plus douce.
             </p>
           </div>
 
@@ -1055,6 +1183,327 @@ export default function WebWarsView({ theme, warId }: WebWarsViewProps) {
                     <div className="flex items-center gap-1.5 text-slate-400 text-[10px] animate-pulse">
                       <RefreshCw className="w-3 h-3 animate-spin text-indigo-400" />
                       <span>Traitement des flux d'assemblage...</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {warId === 'apache_vs_nginx' && (
+        <div className="space-y-4">
+          <div className={`${
+            theme === 'ie6' ? 'bg-[#c0c0c0] text-[#000080] border-2 border-white' : 
+            theme === 'terminal' ? 'bg-amber-955/10 border border-amber-500/30 text-amber-500 font-mono' : 
+            'bg-gradient-to-r from-indigo-950/20 to-slate-900 border border-slate-750/80'
+          } p-4 rounded-xl flex justify-between items-center text-xs flex-wrap gap-2 text-left`}>
+            <div className="flex items-center gap-3">
+              <ShieldAlert className="w-5 h-5 text-indigo-400 animate-pulse shrink-0" />
+              <div>
+                <h2 className="text-xs font-bold leading-none uppercase">La guerre des serveurs web : Apache vs. Nginx</h2>
+                <p className="text-[10px] opacity-75 mt-0.5">Années 2004 - Présent • Processus/Threads vs Boucles d'événements asynchrones.</p>
+              </div>
+            </div>
+            <span className={css.badgeWinner}>Vainqueur : Nginx (Asynchrone haute performance)</span>
+          </div>
+
+          <div className="bg-slate-800/60 rounded-xl p-5 border border-slate-750 text-left space-y-3 text-xs leading-relaxed">
+            <p>
+              <strong className={css.accentText}>Le conflit :</strong> Pendant la première décennie du web, <strong className="text-indigo-400">Apache</strong> régnait en maître absolu (faisant tourner plus de 70% des serveurs). Mais à mesure que le nombre d'internautes explosait, le problème connu sous le nom de <strong className="text-amber-400">"C10k"</strong> (gérer 10 000 connexions simultanées sur une seule machine) est devenu critique.
+            </p>
+            <p>
+              <strong className="text-indigo-400">Le combat :</strong> Apache fonctionne sur un modèle "un thread/processus par connexion". S'il y a 5 000 requêtes en cours, Apache tente de lancer 5 000 threads, ce qui consomme une quantité phénoménale de mémoire vive RAM et ralentit la machine jusqu'au crash (coût de commutation de contexte).
+              <br/>
+              L'alternative russe <strong className="text-emerald-400">Nginx</strong> a introduit une architecture événementielle asynchrone non-bloquante (une boucle d'événements unique gère des milliers de connexions sur un seul thread CPU sans consommer de mémoire additionnelle).
+            </p>
+            <p className="text-[11.5px] border-t border-slate-800 pt-2">
+              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> <strong className="text-white">Nginx</strong> a largement pris le dessus pour les sites à très fort trafic et sert aujourd'hui de proxy inverse ou de cache frontal incontournable devant Apache ou des serveurs d'applications (Node.js, Python, PHP).
+            </p>
+          </div>
+
+          {/* Interactive Benchmark Simulator */}
+          <div className={css.card}>
+            <div className="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <span className="text-[10.5px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                <Settings className="w-3.5 h-3.5 text-indigo-400" /> Simulateur d'impact C10k (Charge de Trafic Massif)
+              </span>
+              <button
+                onClick={runServerBenchmark}
+                disabled={serverSimRunning}
+                className="bg-indigo-650 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold py-1 px-3 rounded-lg text-[10px] cursor-pointer"
+              >
+                {serverSimRunning ? 'Attaque C10k en cours...' : "Lancer l'Attaque C10k (10k Connexions actives)"}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+              
+              {/* Stats & Gauges for Apache */}
+              <div className="md:col-span-4 space-y-4 bg-rose-950/5 border border-rose-500/10 p-4 rounded-xl">
+                <div className="flex justify-between items-center border-b border-rose-500/20 pb-1">
+                  <span className="font-extrabold text-rose-400 text-xs">🔴 APACHE SERVER STATS</span>
+                  <span className="text-[9px] font-mono bg-rose-500/10 px-1.5 py-0.5 rounded text-rose-300">Thread-per-Connection</span>
+                </div>
+
+                <div className="space-y-3 font-mono text-xs text-left">
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Utilisation Mémoire :</span>
+                      <strong className={apacheMemory > 1000 ? 'text-rose-400 animate-pulse' : 'text-slate-300'}>
+                        {apacheMemory >= 2048 ? '2.0 GB (Saturé)' : `${apacheMemory} MB`}
+                      </strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-rose-500 transition-all duration-300" style={{ width: `${Math.min(100, (apacheMemory / 2048) * 100)}%` }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Temps de réponse moyen :</span>
+                      <strong className={apacheResponseTime > 150 ? 'text-rose-400 font-extrabold' : 'text-slate-300'}>{apacheResponseTime} ms</strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-rose-500 transition-all duration-300" style={{ width: `${Math.min(100, (apacheResponseTime / 400) * 100)}%` }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Taux d'échec (Drop requis) :</span>
+                      <strong className={apacheFailureRate > 20 ? 'text-rose-500 animate-pulse font-extrabold' : 'text-slate-300'}>{apacheFailureRate}%</strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-rose-600 transition-all duration-300" style={{ width: `${apacheFailureRate}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats & Gauges for Nginx */}
+              <div className="md:col-span-4 space-y-4 bg-emerald-950/5 border border-emerald-500/10 p-4 rounded-xl">
+                <div className="flex justify-between items-center border-b border-emerald-500/20 pb-1">
+                  <span className="font-extrabold text-emerald-400 text-xs">🟢 NGINX SERVER STATS</span>
+                  <span className="text-[9px] font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded text-emerald-300">Event-driven Loop</span>
+                </div>
+
+                <div className="space-y-3 font-mono text-xs text-left">
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Utilisation Mémoire :</span>
+                      <strong className="text-emerald-400">{nginxMemory.toFixed(1)} MB</strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-emerald-500 transition-all duration-300" style={{ width: `${(nginxMemory / 18) * 100}%` }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Temps de réponse moyen :</span>
+                      <strong className="text-emerald-400">{nginxResponseTime.toFixed(1)} ms</strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-emerald-500 transition-all duration-300" style={{ width: `${(nginxResponseTime / 10) * 100}%` }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span>Taux d'échec (Drop requis) :</span>
+                      <strong className="text-emerald-400">0%</strong>
+                    </div>
+                    <div className="h-2 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-emerald-600" style={{ width: '0%' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Real-time Load Console Logs */}
+              <div className="md:col-span-4 space-y-2 text-left">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9.5px] font-mono text-slate-400 uppercase tracking-wider block">Terminal Load Output :</span>
+                  <span className="text-[10px] font-mono text-indigo-400 font-extrabold">{serverSimRequests} req/s</span>
+                </div>
+                
+                <div className="bg-slate-950 border border-slate-900 p-3 rounded-xl font-mono text-[10.5px] text-indigo-300 h-[142px] overflow-y-auto scrollbar-thin text-left space-y-1">
+                  {serverLogs.length === 0 ? (
+                    <p className="text-slate-600 italic text-[10px]">En attente de charge... Cliquez sur "Lancer l'Attaque" pour inonder les serveurs de connexions actives.</p>
+                  ) : (
+                    serverLogs.map((log, idx) => (
+                      <p 
+                        key={idx} 
+                        className={
+                          log.startsWith('🟢') || log.includes('✅') ? 'text-emerald-400 font-extrabold text-[9.5px]' : 
+                          log.startsWith('🔴') ? 'text-rose-400 font-extrabold animate-pulse text-[9.5px]' : 
+                          log.startsWith('[WARN]') ? 'text-amber-400 text-[9.5px]' :
+                          'text-slate-350 text-[9.5px]'
+                        }
+                      >
+                        {log}
+                      </p>
+                    ))
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {warId === 'js_engines' && (
+        <div className="space-y-4">
+          <div className={`${
+            theme === 'ie6' ? 'bg-[#c0c0c0] text-[#000080] border-2 border-white' : 
+            theme === 'terminal' ? 'bg-amber-955/10 border border-amber-500/30 text-amber-500 font-mono' : 
+            'bg-gradient-to-r from-indigo-950/20 to-slate-900 border border-slate-750/80'
+          } p-4 rounded-xl flex justify-between items-center text-xs flex-wrap gap-2 text-left`}>
+            <div className="flex items-center gap-3">
+              <Zap className="w-5 h-5 text-indigo-400 animate-pulse shrink-0" />
+              <div>
+                <h2 className="text-xs font-bold leading-none uppercase">La guerre des moteurs de JavaScript (La course à la performance)</h2>
+                <p className="text-[10px] opacity-75 mt-0.5">2008 - Présent • Compilation à la volée (JIT) vs Interprétation pure.</p>
+              </div>
+            </div>
+            <span className={css.badgeWinner}>Vainqueur : Moteurs JIT (V8 de Google Chrome, SpiderMonkey de Firefox)</span>
+          </div>
+
+          <div className="bg-slate-800/60 rounded-xl p-5 border border-slate-750 text-left space-y-3 text-xs leading-relaxed">
+            <p>
+              <strong className={css.accentText}>Le conflit :</strong> Jusqu'en 2008, JavaScript était vu comme un petit langage de script extrêmement lent, bon uniquement à animer des flocons de neige ou valider des formulaires. Les moteurs interprétaient le code ligne par ligne lors de l'exécution, ce qui était une catastrophe pour le calcul lourd.
+            </p>
+            <p>
+              <strong className="text-indigo-400">Le combat :</strong> Tout a changé avec le lancement de Google Chrome en 2008 et son moteur <strong className="text-emerald-400">V8</strong>. Plutôt que de simplement interpréter, V8 a introduit la compilation **Just-In-Time (JIT)**. Il analyse le code à la volée, détecte les fonctions fréquemment exécutées ("hot functions") et les compile directement en **code machine assembleur natif**, exécuté directement par le processeur hôte !
+              <br/>
+              Mozilla a immédiatement répliqué avec <strong className="text-indigo-400">TraceMonkey</strong> puis <strong className="text-indigo-400">SpiderMonkey</strong> pour garder Firefox dans la course. Cette rivalité a déclenché une course à la performance brute sans précédent, transformant JavaScript en un langage ultra-rapide capable de propulser des serveurs (Node.js) et des jeux 3D complexes.
+            </p>
+            <p className="text-[11.5px] border-t border-slate-800 pt-2">
+              🏆 <strong className="text-emerald-400">Le vainqueur :</strong> La communauté des développeurs ! Cette course folle aux optimisations a permis de multiplier la vitesse de JavaScript par **plus de 100**, ouvrant la voie à l'émergence des applications modernes comme Google Maps, Figma ou VS Code dans nos navigateurs.
+            </p>
+          </div>
+
+          {/* Execution speed benchmark playground */}
+          <div className={css.card}>
+            <div className="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <span className="text-[10.5px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                <Cpu className="w-3.5 h-3.5 text-indigo-400" /> Algorithmic Performance Benchmarks (Suite de Fibonacci)
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setEngineType('standard'); setEngineLogs([]); setExecutionTime(null); playSfx(200); }}
+                  className={`${engineType === 'standard' ? css.btnActive : css.btnInactive} py-1 px-2 text-[10px]`}
+                >
+                  Moteur Interprété (Pré-2008)
+                </button>
+                <button
+                  onClick={() => { setEngineType('v8'); setEngineLogs([]); setExecutionTime(null); playSfx(300); }}
+                  className={`${engineType === 'v8' ? css.btnActive : css.btnInactive} py-1 px-2 text-[10px]`}
+                >
+                  Moteur JIT V8 (Chrome 2008+)
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+              
+              {/* Algorithm & execution triggers */}
+              <div className="md:col-span-5 space-y-4">
+                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 space-y-2 text-left">
+                  <span className="text-[10.5px] font-mono font-bold text-indigo-400 block uppercase">
+                    Code JavaScript à exécuter :
+                  </span>
+                  <pre className="text-[9px] font-mono bg-slate-950 p-2.5 rounded text-indigo-200 border border-indigo-950">
+{`function fibonacci(n) {
+  if (n < 2) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+// Calcul intensif de fibonacci(35)
+const result = fibonacci(35);`}
+                  </pre>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={runJsEngineBenchmark}
+                      disabled={executionRunning}
+                      className="w-full bg-emerald-650 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold p-2.5 rounded-lg text-xs cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${executionRunning ? 'animate-spin' : ''}`} />
+                      <span>{executionRunning ? 'Calcul en cours...' : "Exécuter l'Algorithme"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Benchmark Gauge bar */}
+                <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-2">
+                  <span className="text-[9.5px] font-mono text-slate-500 uppercase block">📉 Performance relative (temps de calcul) :</span>
+                  
+                  <div className="space-y-1 text-[10px] font-mono text-slate-400 text-left">
+                    <div className="flex justify-between items-center">
+                      <span>Interprétation standard (Lente) :</span>
+                      <span className="text-rose-400 font-extrabold">2450 ms</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-rose-500" style={{ width: '100%' }} />
+                    </div>
+
+                    <div className="flex justify-between items-center pt-2">
+                      <span>Google JIT V8 (Ultra-Rapide) :</span>
+                      <span className="text-emerald-400 font-extrabold">12 ms</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-950 rounded overflow-hidden">
+                      <div className="h-full bg-emerald-500" style={{ width: '0.5%' }} />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Engine Logs output */}
+              <div className="md:col-span-7 space-y-2 text-left">
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold font-mono">📟 Console Execution Log :</span>
+                
+                <div className="bg-slate-950 border border-slate-900 p-4 rounded-xl font-mono text-xs text-indigo-300 min-h-[220px] flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <p className="text-slate-500 text-[9px] mb-1">
+                      $ node --harmony run_benchmark.js
+                    </p>
+                    {engineLogs.length === 0 ? (
+                      <p className="text-slate-600 italic text-[11px]">Prêt à exécuter. Choisissez le type de moteur ci-dessus puis cliquez sur "Exécuter l'Algorithme"...</p>
+                    ) : (
+                      engineLogs.map((log, idx) => (
+                        <p 
+                          key={idx} 
+                          className={
+                            log.includes('✅') || log.startsWith('🚀') ? 'text-emerald-400 font-extrabold mt-1 pt-1' : 
+                            log.startsWith('🐢') || log.includes('❌') ? 'text-rose-400 font-medium' : 
+                            log.startsWith('⚠️') ? 'text-amber-400' :
+                            'text-slate-350'
+                          }
+                        >
+                          {log}
+                        </p>
+                      ))
+                    )}
+                  </div>
+
+                  {executionRunning && (
+                    <div className="flex items-center gap-1.5 text-slate-400 text-[10px] animate-pulse">
+                      <RefreshCw className="w-3 h-3 animate-spin text-indigo-400" />
+                      <span>Analyse statique et profilage de l'AST...</span>
+                    </div>
+                  )}
+
+                  {executionTime && (
+                    <div className="border-t border-slate-900 pt-2 text-[11px] font-bold text-slate-400 flex justify-between">
+                      <span>Vitesse de calcul :</span>
+                      <span className={engineType === 'v8' ? 'text-emerald-400' : 'text-rose-400 animate-pulse'}>
+                        {engineType === 'v8' ? '🚀 12ms (x204 plus rapide !)' : '🐢 2450ms'}
+                      </span>
                     </div>
                   )}
                 </div>

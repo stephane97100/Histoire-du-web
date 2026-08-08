@@ -308,6 +308,40 @@ export default function GlossaryView({ theme }: GlossaryViewProps) {
               </div>
             )}
 
+            {/* Compatibility Specifications Matrix */}
+            {activeTag.compatibility && (
+              <div className="pt-2 border-t border-slate-700/60">
+                <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-450 block mb-2">Compatibilité historique :</span>
+                <div className="grid grid-cols-5 gap-1.5 text-center">
+                  <div className="p-1.5 bg-slate-900/50 border border-slate-750 rounded-lg">
+                    <span className="text-sm block">🌐</span>
+                    <span className="text-[8px] text-slate-400 block font-sans font-semibold">Chrome</span>
+                    <span className="text-[9px] text-indigo-400 font-mono font-semibold block truncate mt-0.5" title={activeTag.compatibility.chrome}>{activeTag.compatibility.chrome}</span>
+                  </div>
+                  <div className="p-1.5 bg-slate-900/50 border border-slate-750 rounded-lg">
+                    <span className="text-sm block">🦊</span>
+                    <span className="text-[8px] text-slate-400 block font-sans font-semibold">Firefox</span>
+                    <span className="text-[9px] text-indigo-400 font-mono font-semibold block truncate mt-0.5" title={activeTag.compatibility.firefox}>{activeTag.compatibility.firefox}</span>
+                  </div>
+                  <div className="p-1.5 bg-slate-900/50 border border-slate-750 rounded-lg">
+                    <span className="text-sm block">🧭</span>
+                    <span className="text-[8px] text-slate-400 block font-sans font-semibold">Safari</span>
+                    <span className="text-[9px] text-indigo-400 font-mono font-semibold block truncate mt-0.5" title={activeTag.compatibility.safari}>{activeTag.compatibility.safari}</span>
+                  </div>
+                  <div className="p-1.5 bg-slate-900/50 border border-slate-750 rounded-lg">
+                    <span className="text-sm block">🟦</span>
+                    <span className="text-[8px] text-slate-400 block font-sans font-semibold">IE</span>
+                    <span className="text-[9px] text-indigo-400 font-mono font-semibold block truncate mt-0.5" title={activeTag.compatibility.ie}>{activeTag.compatibility.ie}</span>
+                  </div>
+                  <div className="p-1.5 bg-slate-900/50 border border-slate-750 rounded-lg">
+                    <span className="text-sm block">🕸️</span>
+                    <span className="text-[8px] text-slate-400 block font-sans font-semibold">Netscape</span>
+                    <span className="text-[9px] text-indigo-400 font-mono font-semibold block truncate mt-0.5" title={activeTag.compatibility.netscape}>{activeTag.compatibility.netscape}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
 
