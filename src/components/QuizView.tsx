@@ -9,6 +9,7 @@ import { quizQuestions } from '../data/quizQuestions';
 import { QuizQuestion } from '../types';
 import { Award, CheckCircle, XCircle, RotateCcw, AlertCircle, HelpCircle, Trophy, Sparkles, BookOpen, Timer, Clock } from 'lucide-react';
 import ShareButtons from './ShareButtons';
+import { safeStorage } from '../lib/safeStorage';
 
 interface QuizViewProps {
   theme: 'modern' | 'ie6' | 'terminal';
@@ -72,7 +73,7 @@ export default function QuizView({ theme }: QuizViewProps) {
   // Reactively load specific difficulty highscore
   useEffect(() => {
     if (selectedDifficulty) {
-      const saved = localStorage.getItem(`web_history_high_score_${selectedDifficulty}`);
+      const saved = safeStorage.getItem(`web_history_high_score_${selectedDifficulty}`);
       if (saved) {
         setHighScore(parseInt(saved, 10));
       } else {
@@ -107,7 +108,7 @@ export default function QuizView({ theme }: QuizViewProps) {
             setIsAnswered(false);
           } else {
             setQuizFinished(true);
-            localStorage.setItem('web_history_chrono_badge_unlocked', 'true');
+            safeStorage.setItem('web_history_chrono_badge_unlocked', 'true');
           }
         }
       }, 1000);
@@ -130,7 +131,7 @@ export default function QuizView({ theme }: QuizViewProps) {
       setQuizFinished(true);
       if (finalScoreCandidate > highScore) {
         setHighScore(finalScoreCandidate);
-        localStorage.setItem(`web_history_high_score_${selectedDifficulty}`, finalScoreCandidate.toString());
+        safeStorage.setItem(`web_history_high_score_${selectedDifficulty}`, finalScoreCandidate.toString());
       }
     }
   };
@@ -465,7 +466,7 @@ export default function QuizView({ theme }: QuizViewProps) {
                       <span>Réessayer le Défi Chrono</span>
                     </button>
                     <button
-                      button="button"
+                      type="button"
                       onClick={changeDifficulty}
                       className="px-5 py-2.5 bg-slate-900 hover:bg-slate-950 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold cursor-pointer transition select-none"
                     >

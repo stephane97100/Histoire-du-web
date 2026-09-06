@@ -385,8 +385,8 @@ export default function CaseStudiesView({ theme }: CaseStudiesViewProps) {
                         <table border={1} cellPadding={4} cellSpacing={0} width="100%" className="border-collapse border-slate-400 bg-[#d4d0c8] text-[10px]">
                           <tbody>
                             <tr>
-                              <td width="30%" bgcolor="#808080" className="text-white font-bold p-1">Rubriques</td>
-                              <td bgcolor="white" className="p-2 font-serif text-left">
+                              <td width="30%" style={{ backgroundColor: '#808080' }} className="text-white font-bold p-1">Rubriques</td>
+                              <td style={{ backgroundColor: 'white' }} className="p-2 font-serif text-left">
                                 <b>Bienvenue</b><br />
                                 Le contenu est statique et figé horizontalement...
                               </td>

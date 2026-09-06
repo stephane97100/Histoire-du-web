@@ -427,3 +427,74 @@ export function playFloppyDrive() {
   motor.stop(now + 2.2);
 }
 
+/**
+ * Synthesizes a nostalgic CRT Monitor power-on click, degauss thunk, and flyback transformer hum.
+ */
+export function playCrtPowerSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
+
+  const now = ctx.currentTime;
+
+  // Master Gain
+  const masterGain = ctx.createGain();
+  masterGain.gain.setValueAtTime(0.2, now);
+  masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+  masterGain.connect(ctx.destination);
+
+  // 1. Initial Relay Click / Pop
+  const popOsc = ctx.createOscillator();
+  const popGain = ctx.createGain();
+  popOsc.type = 'square';
+  popOsc.frequency.setValueAtTime(800, now);
+  popOsc.frequency.exponentialRampToValueAtTime(80, now + 0.03);
+
+  popGain.gain.setValueAtTime(0.4, now);
+  popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+  popOsc.connect(popGain);
+  popGain.connect(masterGain);
+  popOsc.start(now);
+  popOsc.stop(now + 0.05);
+
+  // 2. 50Hz/60Hz CRT Degauss Coil Thunk & Coil Decay
+  const degaussOsc = ctx.createOscillator();
+  const degaussGain = ctx.createGain();
+  degaussOsc.type = 'sawtooth';
+  degaussOsc.frequency.setValueAtTime(120, now + 0.02);
+  degaussOsc.frequency.exponentialRampToValueAtTime(50, now + 0.35);
+
+  degaussGain.gain.setValueAtTime(0, now);
+  degaussGain.gain.setValueAtTime(0.3, now + 0.02);
+  degaussGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+  const lowpass = ctx.createBiquadFilter();
+  lowpass.type = 'lowpass';
+  lowpass.frequency.setValueAtTime(250, now);
+
+  degaussOsc.connect(lowpass);
+  lowpass.connect(degaussGain);
+  degaussGain.connect(masterGain);
+  degaussOsc.start(now + 0.02);
+  degaussOsc.stop(now + 0.45);
+
+  // 3. High-Frequency Flyback Whistle (15.7kHz CRT whine simulated down a bit to ~4kHz)
+  const flybackOsc = ctx.createOscillator();
+  const flybackGain = ctx.createGain();
+  flybackOsc.type = 'sine';
+  flybackOsc.frequency.setValueAtTime(3800, now + 0.05);
+
+  flybackGain.gain.setValueAtTime(0, now);
+  flybackGain.gain.setValueAtTime(0.05, now + 0.05);
+  flybackGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+
+  flybackOsc.connect(flybackGain);
+  flybackGain.connect(masterGain);
+  flybackOsc.start(now + 0.05);
+  flybackOsc.stop(now + 0.7);
+}
+
