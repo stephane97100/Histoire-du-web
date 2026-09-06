@@ -85,7 +85,8 @@ import {
   Gamepad2,
   WifiOff,
   Wifi,
-  X
+  X,
+  Home
 } from 'lucide-react';
 
 type AppTab = 'timeline' | 'history_of_the_web' | 'protocols' | 'glossary' | 'duel_client' | 'duel_server' | 'integration_war' | 'xhtml_vs_html5' | 'flash_vs_html5' | 'angular_vs_react' | 'tool_war' | 'apache_vs_nginx' | 'js_engines' | 'legacy_challenge' | 'sandbox' | 'quiz' | 'cemetery' | 'webmaster_evolution' | 'clean_code' | 'soundboard' | 'w3c_versioner' | 'modern_tech' | 'france_contributions' | 'web_revolutions' | 'phpbb_forums' | 'tchat_with_me' | 'pour_adultes' | 'torrent' | 'easter_eggs' | 'web_philosophy' | 'outside_code' | 'page_renderer' | 'case_studies' | 'web_resistors' | 'framework_impacts' | 'git_impact' | 'ai_webdev' | 'goats' | 'domain_names' | 'inspiring_projects';
@@ -347,6 +348,21 @@ export default function App() {
               </div>
               <span className="font-semibold text-sm tracking-tight md:text-base">MÉMOIRE DU WEB & DESIGN RÉTRO</span>
             </span>
+
+            <button
+              onClick={() => setActiveTab('timeline')}
+              className={`ml-2 px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors cursor-pointer ${
+                themeMode === 'modern' 
+                  ? 'bg-[#1a1a1e] hover:bg-[#2a2a2e] text-[#e0e0e0] border border-[#2a2a2e]' 
+                  : themeMode === 'terminal'
+                  ? 'border border-[#ffb000]/30 hover:border-[#ffb000]/60 text-[#ffb000] bg-[#ffb000]/10 hover:bg-[#ffb000]/20'
+                  : 'bg-[#d4d0c8] border-2 border-t-white border-l-white border-b-gray-500 border-r-gray-500 active:border-t-gray-500 active:border-l-gray-500 active:border-b-white active:border-r-white text-black font-bold'
+              }`}
+              title="Retour à l'accueil (Frise Chronologique)"
+            >
+              <Home className="w-4 h-4" />
+              <span className="text-xs font-bold hidden sm:inline">Accueil</span>
+            </button>
           </div>
 
           {/* Controls Bar Row */}
